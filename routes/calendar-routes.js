@@ -7,7 +7,7 @@ router.get('/' , (req,res) => {
         res.status(200).json({cal})
     })
     .catch(error => {
-        res.status(500).json({message : 'Could not get Calendar'})
+        res.status(500).json({message : 'Could not get Calendar', error:error})
     })
 }) 
 

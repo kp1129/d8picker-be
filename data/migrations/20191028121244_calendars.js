@@ -1,11 +1,12 @@
 
-exports.up = function(knex) {
+exports.up = function(knex, Promise) {
   return knex.schema 
   .createTable('users', table => {
       table.increments();
       table.string('name', 255).notNullable();
       table.string('username', 255).notNullable().unique();
       table.string('email').notNullable().unique();
+      table.integer('phoneNumber').notNullable();
       table.string('password').notNullable();
       table.boolean('isAdmin').notNullable().defaultTo(false);
       
@@ -65,7 +66,7 @@ exports.up = function(knex) {
       .onUpdate('CASCADE');
   })
 }
-exports.down = function(knex) {
+exports.down = function(knex, Promise) {
   return knex.schema
     .dropTableIfExists("calendarEvents")
     .dropTableIfExists("events") 

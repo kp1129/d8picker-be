@@ -9,8 +9,14 @@ update
 } 
 
 function get(){
-    return db('calendars')
-    .select('calendarName', 'calendarDescription')
+    return db('calendarEvents')
+    .join('events', 'calendars')
+    .select(
+        'calendarName',
+        'calendarDescription',
+        'calendarID',
+        'eventID'
+        )
 } 
 function getById(calId){
   return db('calendars')
