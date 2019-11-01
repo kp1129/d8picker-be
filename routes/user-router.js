@@ -15,6 +15,7 @@ router.get('/', (req, res) => {
     });
   });  
 
+// get user calendars with user id 
 router.get('/:id/calendar' , (req, res) => {
   const { id } = req.params
 

@@ -1,17 +1,27 @@
 const router = require('express').Router();
 const Calendar = require('./calendar-model')
 
-router.get('/:id/calendar' , (req, res) => {
-    const { id } = req.params
-
-    Calendar.get(id)
-    .then(calendars => {
-        res.status(200).json({ calendars })
+// gets calendar all calendars
+router.get('/' , (req, res) => {
+    Calendar.get()
+    .then(cal => {
+        res.status(200).json({cal})
     })
     .catch(error => {
-        res.status(500).json({ message : 'Could not get Calendar', error:error })
+        res.status(500).json({message : 'Could not get Calendar', error:error})
     })
-}) 
+})
+//get calendar event with calendar id 
+router.get('/:id/event', (req, res) => {
+    const { id } = req.params
+
+    Calendar.getEvents(id)
+    .then(events => {
+        res.status(200).json({ events })
+    })
+    .catch(err => console.log('couln not get calendar events', err))
+})
+
 
 router.post('/' , (req,res) => {
     let cal = req.body
