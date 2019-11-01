@@ -8,8 +8,8 @@ exports.up = function(knex, Promise) {
       table.string('email').notNullable().unique();
       table.integer('phoneNumber').notNullable();
       table.string('password').notNullable();
+      table.integer('phone');
       table.boolean('isAdmin').notNullable().defaultTo(false);
-      
   }) 
   .createTable("calendars" , table => {
      table.increments();
