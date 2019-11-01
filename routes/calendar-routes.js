@@ -19,8 +19,11 @@ router.get('/:id/event', (req, res) => {
     .then(events => {
         res.status(200).json({ events })
     })
-    .catch(err => console.log('couln not get calendar events', err))
-})
+    .catch(err => {
+        console.log(err)
+        res.status(500).json({ message: 'could not find events', err:err})
+    }
+)})
 
 
 router.post('/' , (req,res) => {
@@ -61,4 +64,4 @@ router.put('/:calId' , (req,res) => {
         res.status(500).json({message:error})
     })
 })  
-module.exports = router;
+module.exports = router

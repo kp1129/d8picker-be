@@ -11,12 +11,17 @@ update
 
 function get(){
     return db('calendars')
-    .select('calendarName','calendarDescription')
+    .select('calendarName','calendarDescription', 'userId')
 }
 function getEvents(id) {
     return db('calendars as c')
     .join('events as e', 'e.calendarId', 'c.id')
-    .select('e.eventName', 'e.eventInfo', 'e.calendarId')
+    .select(
+        'e.id', 
+        'e.eventName', 
+        'e.eventInfo', 
+        'e.calendarId',
+        )
     .where('e.calendarId', id)
 }
 function getById(calId){
