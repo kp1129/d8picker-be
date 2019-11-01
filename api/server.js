@@ -10,9 +10,9 @@ server.use(cors());
 server.use(express.json());
 
 //setting up routes
-const userRouter = require('../routes/user-router');
+const userRouter = require('../routes/user-routes');
 const authRouter = require('../auth/auth-router')
-const eventRouter = require('../routes/event-router')
+const eventRouter = require('../routes/event-routes')
 const calendarRouter = require('../routes/calendar-routes')
 
 //routes

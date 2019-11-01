@@ -4,8 +4,8 @@ module.exports ={
     add,
     get,
     getCalendar,
-    findById,
-    findBy,
+    getById,
+    getBy,
     update,
     remove
 }
