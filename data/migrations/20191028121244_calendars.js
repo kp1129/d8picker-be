@@ -15,6 +15,12 @@ exports.up = function(knex, Promise) {
      table.increments();
      table.string("calendarName")
      table.string('calendarDescription')
+     table.integer('userId')
+      .unsigned()
+      .references('id')
+      .inTable('users')
+      .onDelete('CASCADE')
+      .onUpdate('CASCADE')
   })
   .createTable('userCalendars', table => {
     table.increments()
@@ -26,7 +32,7 @@ exports.up = function(knex, Promise) {
       .onDelete('CASCADE')
       .onUpdate('CASCADE');
    table
-      .integer('calenderId')
+      .integer('calendarId')
       .unsigned()
       .references('id')
       .inTable('calendars')

@@ -9,8 +9,8 @@ module.exports = {
 }
 
 function find() {
-    return db('calendarEvents')
-    .select('calendarID', 'eventsID')
+    return db('events')
+    .select('eventName', 'eventInfo')
 }
 
 function findById(id) {

@@ -19,7 +19,7 @@ const calendarRouter = require('../routes/calendar-routes')
 server.use('/api/users', userRouter);
 server.use('/api/auth', authRouter);
 server.use('/api/calendar', calendarRouter)
-server.use('/api/events', eventRouter);
+server.use('/api/event', eventRouter);
 // server.use('/api/calendar/:id/admins', adminRouter)
 // server.use('/api/calendar/:id/subscribers', subscriberRouter)
 

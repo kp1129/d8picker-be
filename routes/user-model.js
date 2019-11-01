@@ -9,9 +9,24 @@ module.exports ={
     remove
 }
 
+// // function getTasks(id) {
+//   return db('projects as p')
+//   .join('tasks as t', 't.project_id', 'p.id')
+//   .select('t.id', 't.description', 't.notes', 't.completed')
+//   .where('t.project_id', id);
+
+
 function find() {
     return db('users')
-    .select('id', 'username', 'password');
+    .select(
+        'id', 
+        'name', 
+        'username', 
+        'password',
+        'email', 
+        "phoneNumber",
+        'isAdmin'
+        );
 }
 function findBy(filter) {
     return db('users')
