@@ -15,4 +15,16 @@ router.get('/', (req, res) => {
     });
   });  
 
+router.get('/:id/calendar' , (req, res) => {
+  const { id } = req.params
+
+  Users.getCalendar(id)
+  .then(calendars => {
+      res.status(200).json({ calendars })
+  })
+  .catch(error => {
+      res.status(500).json({ message : 'Could not get Calendar', error:error })
+  })
+}) 
+
 module.exports = router;

@@ -3,6 +3,7 @@ const db = require('../data/db-config.js');
 module.exports ={
     add,
     get,
+    getCalendar,
     findById,
     findBy,
     update,
@@ -20,6 +21,17 @@ function get() {
         "phoneNumber",
         'isAdmin'
         );
+}
+function getCalendar(id) {
+    return db('users as u')
+    .join('calendars as c', 'c.userId', 'u.id')
+    .select(
+        'c.id',
+        'c.calendarName', 
+        'c.calendarDescription',
+        'c.userId',
+        )
+    .where('c.userId', id)
 }
 function findBy(filter) {
     return db('users')

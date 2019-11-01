@@ -8,15 +8,15 @@ remove,
 update
 } 
 
-function get(){
-    return db('calendarEvents')
-    .join('events', 'calendars')
+function get(id){
+    return db('users as u')
+    .join('calendars as c',  'c.userId', 'u.id')
     .select(
-        'calendarName',
-        'calendarDescription',
-        'calendarID',
-        'eventID'
-        )
+        'c.id',
+        'c.calendarName',
+        'c.calendarDescription'
+    )
+    .where('c.userId', id)
 } 
 function getById(calId){
   return db('calendars')
