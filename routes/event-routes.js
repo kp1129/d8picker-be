@@ -26,6 +26,8 @@ router.get('/:cal_id/events/:id', async (req, res) => {
     }
 })
 
+
+
 router.post('/:cal_id/events/', async (req, res) => {
     try {
         const { cal_id } = req.params;
