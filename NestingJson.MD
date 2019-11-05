@@ -1,7 +1,7 @@
 users = [
     {
-        id:
-        name:
+        id: us1
+        name: user1
         username:
         email:
         password:
@@ -9,30 +9,33 @@ users = [
         isAdmin:
         calendars = [
             {
-                id:
+                id: c1
                 calendarName:
                 calendarDescription:
                 events = [
                     {
-                        id:
+                        id: e1
                         eventName:
                         eventInfo:
+                        calendarid: c1
                     },
                     {
-                        id:
+                        id: e2
                         evnentName:
                         eventInfo:
+                        calendarid: c1
                     }
                 ]
             },
             {
-                id:
+                id: c1
                 calendarName:
                 calendarDescription:
                 events = [
-                    id:
+                    id: e3
                     eventName:
                     eventInfo:
+                    calendarid: c2
                 ]
  
             }

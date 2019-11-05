@@ -53,14 +53,6 @@ exports.up = function(knex, Promise) {
     table.increments();
     table.string('eventName')
     table.string('eventInfo')
-    table
-    .integer('calendarId')
-    .unsigned()
-    .notNullable()
-    .references('id')
-    .inTable('calendars')
-    .onDelete('CASCADE')
-    .onUpdate('CASCADE');
 
   })
   .createTable('calendarEvents' , table => {

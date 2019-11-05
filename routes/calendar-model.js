@@ -20,7 +20,6 @@ function getEvents(id) {
         'e.id', 
         'e.eventName', 
         'e.eventInfo', 
-        'e.calendarId',
         )
     .where('e.calendarId', id)
 }
@@ -32,9 +31,9 @@ function getById(calId){
 
 function add(calender){
   return db('calendars')
-
   .insert(calender , 'id')
 } 
+
 function remove(id){
   return db('calendars') 
   .where({id})
