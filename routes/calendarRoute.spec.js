@@ -27,15 +27,15 @@ describe("/" , () => {
     })
 })  
 
-// for status code 500
-describe("/" , () => { 
-    it("returns status 500" , async() => {
-        const response = await request(server) 
-        .post("/api/calendars/")
-        .send({calendarName : "hello" ,
-        calendarDescription : "99999"
-     })
-        expect(response.status).toBe(500);
-    })
+// // for status code 500
+// describe("/" , () => { 
+//     it("returns status 500" , async() => {
+//         const response = await request(server) 
+//         .post("/api/calendars/")
+//         .send({calendarName : "hello" ,
+//         calendarDescription : "99999"
+//      })
+//         expect(response.status).toBe(500);
+//     })
 
-})  
+// })  

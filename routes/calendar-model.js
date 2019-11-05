@@ -16,9 +16,9 @@ function getById(id){
       return db('calendars')
        .where({id});
     } 
-function add(calender){
+function add(calendar){
   return db('calendars')
-  .insert(calender , 'id')
+  .insert(calendar , 'id')
 } 
 function remove(id){
   return db('calendars') 
