@@ -23,7 +23,7 @@ router.get('/:id' , (req,res) => {
 router.post('/' , (req,res) => {
     let cal = req.body
     Calendar.add( cal )
-    .then(response => res.json({ response }))
+    .then(response => res.status(200).json({ response }))
     .catch(error => {
         res.status(500).json({message:'could not post', error:error})
     })
