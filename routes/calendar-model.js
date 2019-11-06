@@ -28,10 +28,13 @@ function getById(calId){
    .where('calId' , calId);
 
 } 
-
-function add(calender){
+function getById(id){
+      return db('calendars')
+       .where({id});
+    } 
+function add(calendar){
   return db('calendars')
-  .insert(calender , 'id')
+  .insert(calendar , 'id')
 } 
 
 function remove(id){

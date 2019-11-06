@@ -4,9 +4,9 @@
   "description": "🚫 Note: All lines that start with 🚫 are instructions and should be deleted before this is posted to your portfolio. This is intended to be a guideline. Feel free to add your own flare to it.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "server": "nodemon index.js",
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "jest --watch"
   },
   "repository": {
     "type": "git",
@@ -25,11 +25,13 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "helmet": "^3.21.2",
+    "jest": "^24.9.0",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.20.0",
     "minipass": "^3.1.1",
     "pg": "^7.12.1",
-    "sqlite3": "^4.1.0"
+    "sqlite3": "^4.1.0",
+    "supertest": "^4.0.2"
   },
   "devDependencies": {
     "nodemon": "^1.19.4"

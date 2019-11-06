@@ -26,27 +26,18 @@ router.get('/:cal_id/events/:id', async (req, res) => {
     }
 })
 
-router.post('/', (req, res) => {
-    let events = req.body
-    Events.add( events )
-    .then(event => {
-        res.json({ event })
-    })
-    .catch(err=> {
-        console.log(err)
-        res.status(500).json({message: 'error adding feature'})
-    })
-    // try {
-    //     // const { cal_id } = req.params;
-    //     // const { event } = req.body;
-    //     // const response = await Events.add(cal_id, event);
+router.post('/:cal_id/events/', async (req, res) => {
+    try {
+        const { cal_id } = req.params;
+        const { event } = req.body;
+        const response = await Events.add(cal_id, event);
+        console.log("res ",response)
 
-    //     res.status(200).json(response);
-    // } catch (err) {
-    //     console.log('event POST error', err);
-    //     res.status(400).json({ message: 'error adding event', error: `${err}`});
-    // }
-})
+        res.status(200).json(response);
+    } catch (err) {
+        console.log('event POST error', err);
+        res.status(400).json({ message: 'error adding event', error: `${err}`});
+    }})
 
 router.delete('/:cal_id/events/:id', async (req, res) => {
     try {
