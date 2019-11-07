@@ -1,37 +1,45 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const uuidv1 = require("uuid/v1");
 
 const Users = require('../routes/user-model.js');
-const secrets = require('../config/secrets.js')
-
-//post register
-router.post('/register', (req, res) => {
+const secrets = require('../config/secrets.js');
+const  {validateRegistration, validateLogin } = require("../auth/auth-router-middleware");
+// post register
+router.post('/register', validateRegistration, (req, res) => {
   // implement registration
-  let user = req.body;
-  const hash = bcrypt.hashSync(user.password, 10);
-  user.password = hash;
-  Users.add(user)
+  let { firstName, lastName, username, email, password }= req.body;
+  const hashedPassword = bcrypt.hashSync(password, 10);
+  
+  const newUser = {
+    firstName, lastName, username, email, password:hashedPassword, uuid: uuidv1()
+  }
+  Users.add(newUser)
     .then(saved => {
-      res.status(201).json(saved)
+      const token = generateToken(saved.uuid)
+      res.status(201).json({accessToken: token})
     })
     .catch(err => {
       console.log(err);
       res.status(500).json(err)
     })
+  
 });
 
 //post login
 router.post('/login', (req, res) => {
   // implement login
-  let { username, password }= req.body;
+  let { userId, password }= req.body;
 
-  Users.findBy({ username })
-  .first()
+  Users.find( userId )
+  
   .then( user => {
+    
     if( user && bcrypt.compareSync(password, user.password)) {
+      
       const token = generateToken(user);
-      res.status(200).json({ token });
+      res.status(200).json({accessToken: token});
 
     }else{
       res.status(401).json({ message: 'invalid credentials'});
