@@ -3,15 +3,16 @@ const router = require('express').Router();
 // const authenticate = require('../auth/authenticate-middleware');
 const Events = require('./event-model');
 
-router.get('/:cal_id/events/', async (req, res) => {
-    try {
-        const { cal_id } = req.params;
-        const response = await Events.get(cal_id);
-        res.status(200).json(response);
-    } catch (err) {
+router.get('/:cal_id/events/', (req, res) => {
+    const { cal_id } = req.params;
+    Events.get(cal_id)
+    .then(events => {
+        res.status(200).json(events);
+    })
+    .catch(err => {
         console.log('event GET error', err);
         res.status(400).json({ message: 'error fetching events', error: `${err}`});
-    }
+    })
 })
 
 router.get('/:cal_id/events/:id', async (req, res) => {

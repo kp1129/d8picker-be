@@ -3,7 +3,7 @@ const db = require('../data/db-config.js');
 module.exports = {
     get,
     getById,
-    add,
+    // add,
     remove, 
     update,
     getEventById

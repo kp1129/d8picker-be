@@ -23,11 +23,10 @@ function getEvents(id) {
         )
     .where('e.calendarId', id)
 }
-function getById(calId){
-  return db('calendars')
-   .where('calId' , calId);
-
-} 
+// function getById(calId){
+//   return db('calendars')
+//    .where('calId' , calId);
+// } 
 function getById(id){
       return db('calendars')
        .where({id});
