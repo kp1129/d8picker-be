@@ -60,7 +60,14 @@ exports.up = function(knex) {
     table.increments();
     table.string('eventName', 255).notNullable()
     table.string('eventInfo', 255).notNullable()
+    table.date("startDate").notNullable().defaultTo(knex.fn.now());
+    table.date("endDate").notNullable().defaultTo(knex.fn.now());
+    table.timestamp("startTime").notNullable().defaultTo(knex.fn.now());
+    table.timestamp("endTime").notNullable().defaultTo(knex.fn.now());
+    table.boolean("isFullDayEvent").notNullable().defaultTo(false);
+    table.boolean("isRecurring").notNullable().defaultTo(false);
     table.timestamps(true, true);
+    
   })
   .createTable('calendarEvents' , table => {
     table.increments()
