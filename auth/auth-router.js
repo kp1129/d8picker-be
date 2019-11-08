@@ -7,7 +7,7 @@ const Users = require('../routes/user-model.js');
 const secrets = require('../config/secrets.js');
 const  {validateRegistration, validateLogin } = require("../auth/auth-router-middleware");
 // post register
-router.post('/register', validateRegistration, (req, res) => {
+router.post('/register', (req, res) => {
   // implement registration
   let { firstName, lastName, username, email, password }= req.body;
   const hashedPassword = bcrypt.hashSync(password, 10);

@@ -7,34 +7,38 @@ exports.seed = function(knex, Promise) {
       return knex('users').insert([
         {
           id: 1,
-          name: 'user1',
           username:'username1',
+          firstName: 'user1',
+          lastName: 'user1 lastname',
           email:'email1',
+          phone:123,
           password:'password1',
-          phoneNumber:123,
           isAdmin:true,
-          // calendarsId: 1
+          uuid: 1
+
         },
         {
           id: 2,
-          name: 'user2',
           username:'username2',
+          firstName: 'user2',
+          lastName: 'user2 lastname',
           email:'email2',
-          password:'password2',
-          phoneNumber:123456,
+          phone:1232,
+          password:'password1',
           isAdmin:true,
-          // calendarsId: 1
+          uuid: 2
 
         },
         {
           id: 3,
-          name: 'user3',
           username:'username3',
+          firstName: 'user3',
+          lastName: 'user3 lastname',
           email:'email3',
-          password:'password3',
-          phoneNumber:1234,
-          isAdmin:false,
-          // calendarsId: 2
+          phone:1233,
+          password:'password1',
+          isAdmin:true,
+          uuid: 3
         },
       ]);
     });

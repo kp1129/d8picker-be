@@ -2,6 +2,7 @@ const db = require('../data/db-config.js');
 
 module.exports = {
     get,
+    getAll,
     getById,
     // add,
     remove, 
@@ -15,6 +16,20 @@ function get(calendarId) {
             .where({calendarId})
             .join('events', 'eventsId', 'events.id')
             .select('eventName', 'eventInfo')
+    )
+}
+function getAll() { 
+    return (
+        db('events')
+            .select(
+                'eventName',
+                'eventInfo',
+                'startDate',
+                'endDate',
+                'endTime',
+                'isFullDayEvent',
+                'isRecurring',
+                )
     )
 }
 

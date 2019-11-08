@@ -9,19 +9,19 @@ exports.seed = function(knex, Promise) {
           id: 1,
           calendarName: 'calendar1',
           calendarDescription:'descrition for first calendar',
-          userId: 1
+          calendarId: 1
         },
         {
           id: 2,
           calendarName: 'calendar2',
           calendarDescription:'descrition for second calendar',
-          userId: 1
+          calendarId: 1
         },
         {
           id: 3,
           calendarName: 'calendar3',
           calendarDescription:'descrition for third calendar',
-          userId: 2
+          calendarId: 2
         },
       ]);
     });

@@ -1,68 +1,84 @@
-const request = require('supertest');
-const events = require('../api/server')  
-// const Events = require('./event-model')
 
-// Tests for getEndpoint
+const app = require('../api/server')  
+const supertest = require('supertest');
+const request = supertest(app)
 
-describe("get/:cal_id/events/" , () => {
-    it('gets status code of 200', ()  => {
-    return request(events)
-        .get('/api/event/:cal_id/events/')
-        .expect(200)
-        .then(res => {
-            expect(res.status).toBe(200)  
-        })
+// Tests for event Endpoint
+
+describe('GET starting endpoint', () => {
+    it('responds with json', function(done) {
+        request
+            .get('/api/event')
+            .set('Accept', 'aplication/json')
+            .expect('Content-Type', /json/)
+            .expect(200, done)
     })
-    it('get array from res', ()  => {
-        return request(events)
-        .get('/api/event/:cal_id/events/')
-        .expect('Content-Type', /json/)
-        .then(res => {
-            expect(res.body).toBeInstanceOf(Array)  
-        })
-    })
-
 })
-describe("get/:cal_id/events/:id" , () => {
-    it('gets status code of 200', ()  => {
-    return request(events)
-        .get('/api/event/:cal_id/events/:id')
-        .expect(200)
-        .then(res => {
-            expect(res.status).toBe(200)  
-        })
-    })
-    it('get array from res', ()  => {
-        return request(events)
-        .get('/api/event/:cal_id/events/:id')
-        .expect('Content-Type', /json/)
-        .then(res => {
-            expect(res.body)
-        })
-    })
 
-})
-describe("post events to array" , () => {
-    it('gets status code of 200', async(done)  => {
-        const post = {
-            
-        }
-    return request(events)
-        .post('/api/event/:cal_id/events/')
-        .expect(200)
-        .then(res => {
-            expect(res.status).toBe(200)  
-        })
-    })
-    it('get array from res', ()  => {
-        return request(events)
-        .get('/api/event/:cal_id/events/:id')
-        .expect('Content-Type', /json/)
-        .then(res => {
-            expect(res.body)
-        })
-    })
 
-})
+
+
+
+
+
+
+
+
+
+
+// describe("get/:cal_id/events/" , () =>  {
+//     it('gets event to calendar', async ()  => {
+//         const events = await post(`testingevnt`, demoEvent).expect(200)
+//         expect(res.body)
+//     })
+//     // it('post event to calendar', async ()  => {
+    //     const events = await post(`testingevnt`, demoEvent).expect(200)
+    //     expect(res.body)
+    // })
+    
+// })
+
+
+// describe("get/:cal_id/events/:id" , () => {
+//     it('gets status code of 200', ()  => {
+//     return request(events)
+//         .get('/api/event/:cal_id/events/:id')
+//         .expect(200)
+//         .then(res => {
+//             expect(res.status).toBe(200)  
+//         })
+//     })
+//     it('get array from res', ()  => {
+//         return request(events)
+//         .get('/api/event/:cal_id/events/:id')
+//         .expect('Content-Type', /json/)
+//         .then(res => {
+//             expect(res.body)
+//         })
+//     })
+
+// })
+// describe("post events to array" , () => {
+//     it('gets status code of 200', async(done)  => {
+//         const post = {
+
+//         }
+//     return request(events)
+//         .post('/api/event/:cal_id/events/')
+//         .expect(200)
+//         .then(res => {
+//             expect(res.status).toBe(200)  
+//         })
+//     })
+//     it('get array from res', ()  => {
+//         return request(events)
+//         .get('/api/event/:cal_id/events/:id')
+//         .expect('Content-Type', /json/)
+//         .then(res => {
+//             expect(res.body)
+//         })
+//     })
+
+// })
 
 // 

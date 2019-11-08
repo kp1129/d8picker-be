@@ -31,10 +31,10 @@
     "minipass": "^3.1.1",
     "pg": "^7.12.1",
     "sqlite3": "^4.1.0",
-    "supertest": "^4.0.2",
     "uuid": "^3.3.3"
   },
   "devDependencies": {
-    "nodemon": "^1.19.4"
+    "nodemon": "^1.19.4",
+    "supertest": "^4.0.2"
   }
 }

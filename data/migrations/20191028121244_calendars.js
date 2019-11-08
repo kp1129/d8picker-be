@@ -3,14 +3,12 @@ exports.up = function(knex, Promise) {
   return knex.schema 
   .createTable('users', table => {
       table.increments();
-      table.string('name', 255).notNullable();
       table.string('username', 255).notNullable().unique();
-      table.string("firstName");
+      table.string("firstName").notNullable();
       table.string("lastName");
       table.string('email').notNullable().unique();
-      table.integer('phoneNumber').notNullable();
-      table.string('password').notNullable();
       table.integer('phone');
+      table.string('password').notNullable();
       table.boolean('isAdmin').notNullable().defaultTo(false);
       table.string("uuid").notNullable().unique().defaultTo(1);
       table.timestamps(true, true);
@@ -18,6 +16,7 @@ exports.up = function(knex, Promise) {
   .createTable("calendars" , table => {
      table.increments();
      table.string("calendarName")
+     table.string("calendarDescription")
      table.integer("calendarId")
      table.timestamps(true, true);
   })    
@@ -59,15 +58,15 @@ exports.up = function(knex, Promise) {
   }) 
   .createTable("events" , table => {
     table.increments();
-<<<<<<< HEAD
-    table.string('eventName')
-    table.string('eventInfo')
-
-=======
     table.string('eventName', 255).notNullable()
     table.string('eventInfo', 255).notNullable()
+    table.date("startDate").notNullable().defaultTo(knex.fn.now());
+    table.date("endDate").notNullable().defaultTo(knex.fn.now());
+    table.timestamp("startTime").notNullable().defaultTo(knex.fn.now());
+    table.timestamp("endTime").notNullable().defaultTo(knex.fn.now());
+    table.boolean("isFullDayEvent").notNullable().defaultTo(false);
+    table.boolean("isRecurring").notNullable().defaultTo(false);
     table.timestamps(true, true);
->>>>>>> 39e26e4a1b924687b4cf56a5bbdf1de970692532
   })
   .createTable('calendarEvents' , table => {
     table.increments()
