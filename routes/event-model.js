@@ -4,7 +4,7 @@ module.exports = {
     get,
     getAll,
     getById,
-    // add,
+    add,
     remove, 
     update,
     getEventById
@@ -44,13 +44,30 @@ function getById(calendarId, eventsId) {
 }
 function getEventById(id){
     return (
-        db("events").insert(event).then(events => {
-            return db("calendarEvents").insert({calendarid: calendarId, eventsid: events[0]}).then(calendarEvent => {
+        db("events")
+        .insert(event)
+        .then(events => {
+            return db("calendarEvents")
+            .insert({calendarid: calendarId, eventsid: events[0]})
+            .then(calendarEvent => {
                 return getById(calendarId, calendarEvent[0])
             })
         })
     )
 } //fix
+function add(calendarId, event) {
+    return (
+        db("events")
+        .insert(event)
+        .then(events => {
+            return db("calendarEvents")
+            .insert({calendarid: calendarId, eventsid: events[0]})
+            .then(calendarEvent => {
+                return getById(calendarId, calendarEvent[0])
+            })
+        })
+    )
+} 
 
 function remove(calendarId, eventsId) {
     return (
@@ -67,7 +84,10 @@ function update(calendarId, eventsId, changes) {
             .where({calendarId, eventsId})
             .then(calendarEvent => {
                 const id = calendarEvent[0].id
-                return db("events").where({id}).update(changes).then(update => {
+                return db("events")
+                .where({id})
+                .update(changes)
+                .then(update => {
                     return update
                 })
             })

@@ -9,9 +9,26 @@ describe('GET starting endpoint', () => {
     it('responds with json', function(done) {
         request
             .get('/api/event')
-            .set('Accept', 'aplication/json')
+            .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(200, done)
+    })
+})
+
+describe('POST /event', () => {
+    it('addes an event to table', function(done) {
+        request
+            .post('/api/event/:cal_id/events/')
+            .send('eventName=testevent')
+            .set('Accept', 'application/json')
+            .expect(function(res) {
+                res.body.id = '1';
+                res.body.eventName= res.body.eventName
+            })
+            .expect(200,{
+                id:'1',
+                eventName: 'testevent'
+            }, done)
     })
 })
 

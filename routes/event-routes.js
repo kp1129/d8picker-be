@@ -43,11 +43,11 @@ router.post('/:cal_id/events/', async (req, res) => {
         const { event } = req.body;
         const response = await Events.add(cal_id, event);
         console.log("res ",response)
-
         res.status(200).json(response);
+        
     } catch (err) {
         console.log('event POST error', err);
-        res.status(400).json({ message: 'error adding event', error: `${err}`});
+        res.status(500).json({ message: 'error adding event', error: `${err}`});
     }})
 
 router.delete('/:cal_id/events/:id', async (req, res) => {
