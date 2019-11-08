@@ -12,7 +12,7 @@ describe("/" , () => {
             expect(res.status).toBe(200);
         })
     })
-})    
+})      
 
 // Tests for Post 
 
@@ -38,4 +38,24 @@ describe("/" , () => {
         expect(response.status).toBe(500);
     })
 
-})  
+})    
+
+// Tests for put or update 
+
+// describe('/:id', () => {
+//     it('returns status code 200', () => {
+//         return (
+//             request(server)
+//                 .post('/api/calendars')
+//                 .send({  })
+//                 .expect(200)
+//         )
+//     })
+//     it('returns status code 500', () => {
+//         return (
+//             request(server)
+//                 .post('/api/calendars')
+//                 .expect(500)
+//         )
+//     })
+//})

@@ -23,7 +23,7 @@ router.get('/:id' , (req,res) => {
 router.post('/' , (req,res) => {
     let cal = req.body
     Calendar.add( cal )
-    .then(response => res.status(200).json({ response }))
+    .then(response => res.status().json({ response }))
     .catch(error => {
         res.status(500).json({message:'could not post', error:error})
     })
@@ -44,16 +44,16 @@ router.put('/:id' , (req,res) => {
 
     Calendar.update(id, updated)
     .then(response => {
-        if(response > 0){
+       // if(response > 0){
             Calendar.getById(id)
             .then(result => {
                 res.status(200).json({result})
             })
         } 
-        else {
-            res.status(404).json({message : "server error"})
-        } 
-    }) 
+        // else {
+        //     res.status(404).json({message : "server error"})
+        // } 
+    ) 
     .catch(error => {
         res.status(500).json({message:error})
     })
