@@ -70,4 +70,5 @@ function generateToken(user) {
   return jwt.sign(payload, secrets.jwtSecrets, options);
 }
 
+
 module.exports = router;
