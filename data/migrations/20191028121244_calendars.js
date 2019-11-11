@@ -17,7 +17,7 @@ exports.up = function(knex) {
   .createTable("calendars" , table => {
      table.increments();
      table.string("calendarName")
-     table.integer("calendarId")
+     table.integer("calendarId") 
      table.timestamps(true, true);
   })    
   // .createTable("Events" , table => {
