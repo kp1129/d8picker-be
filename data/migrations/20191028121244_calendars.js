@@ -37,7 +37,7 @@ exports.up = function(knex) {
       .onDelete('CASCADE')
       .onUpdate('CASCADE');
     table
-      .integer('calenderId')
+      .integer('calendarId')
       .unsigned()
       .references('id')
       .inTable('calendars')
@@ -55,7 +55,7 @@ exports.up = function(knex) {
       .onDelete('CASCADE')
       .onUpdate('CASCADE');
       table
-      .integer('calenderId')
+      .integer('calendarId')
       .unsigned()
       .references('id')
       .inTable('calendars')

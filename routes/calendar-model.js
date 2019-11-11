@@ -10,7 +10,7 @@ update
 
 function get(){
     return db('calendars')
-    .select('calendarName', 'calendarDescription')
+    .select('calendarName')
 } 
 function getById(id){
       return db('calendars')
