@@ -2,7 +2,6 @@ const db = require('../data/db-config.js');   // Calendar-Modal
 
 module.exports = {
 get ,
-getEvents,
 getById,
 add,
 remove,

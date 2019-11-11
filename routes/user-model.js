@@ -14,12 +14,14 @@ function get() {
     return db('users')
     .select(
         'id', 
-        'name', 
-        'username', 
-        'password',
+        'username',
+        'firstName',
+        'lastName',
         'email', 
-        "phoneNumber",
-        'isAdmin'
+        'phone',
+        'password',
+        'isAdmin',
+        'uuid'
         );
 }
 function getCalendar(id) {
