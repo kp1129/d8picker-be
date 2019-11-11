@@ -54,6 +54,13 @@ exports.up = function(knex) {
       .inTable('users')
       .onDelete('CASCADE')
       .onUpdate('CASCADE');
+      table
+      .integer('calenderId')
+      .unsigned()
+      .references('id')
+      .inTable('calendars')
+      .onDelete('CASCADE')
+      .onUpdate('CASCADE');
       table.timestamps(true, true);
   }) 
   .createTable("events" , table => {
