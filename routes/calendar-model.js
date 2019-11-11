@@ -11,22 +11,8 @@ update
 
 function get(){
     return db('calendars')
-    .select('calendarName','calendarDescription', 'userId')
-}
-function getEvents(id) {
-    return db('calendars as c')
-    .join('events as e', 'e.calendarId', 'c.id')
-    .select(
-        'e.id', 
-        'e.eventName', 
-        'e.eventInfo', 
-        )
-    .where('e.calendarId', id)
-}
-// function getById(calId){
-//   return db('calendars')
-//    .where('calId' , calId);
-// } 
+    .select('calendarName')
+} 
 function getById(id){
       return db('calendars')
        .where({id});

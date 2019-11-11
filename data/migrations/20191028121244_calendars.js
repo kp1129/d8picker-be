@@ -36,7 +36,7 @@ exports.up = function(knex, Promise) {
       .inTable('users')
       .onDelete('CASCADE')
       .onUpdate('CASCADE');
-   table
+    table
       .integer('calendarId')
       .unsigned()
       .references('id')
@@ -52,6 +52,13 @@ exports.up = function(knex, Promise) {
       .unsigned()
       .references('id')
       .inTable('users')
+      .onDelete('CASCADE')
+      .onUpdate('CASCADE');
+      table
+      .integer('calendarId')
+      .unsigned()
+      .references('id')
+      .inTable('calendars')
       .onDelete('CASCADE')
       .onUpdate('CASCADE');
       table.timestamps(true, true);

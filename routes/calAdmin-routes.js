@@ -4,10 +4,10 @@ const router = require('express').Router();
 const CalAdmin = require('./calAdmin-model');
 
 
-router.get('/:cal_id/admins/', (req, res) => {
+router.get('/:cal_id/admins/', async (req, res) => {
     try {
         const { cal_id } = req.params;
-        const response = CalAdmin.get(cal_id);
+        const response = await CalAdmin.get(cal_id);
 
         res.status(200).json(response);
     } catch (err) {
@@ -16,10 +16,10 @@ router.get('/:cal_id/admins/', (req, res) => {
     }
 })
 
-router.get('/:cal_id/admins/:id', (req, res) => {
+router.get('/:cal_id/admins/:id', async (req, res) => {
     try {
         const { cal_id, id } = req.params;
-        const response = CalAdmin.getById(cal_id, id);
+        const response = await CalAdmin.getById(cal_id, id);
 
         res.status(200).json(response);
     } catch (err) {
@@ -28,11 +28,11 @@ router.get('/:cal_id/admins/:id', (req, res) => {
     }
 })
 
-router.post('/:cal_id/admins/', (req, res) => {
+router.post('/:cal_id/admins/', async (req, res) => {
     try {
         const { cal_id } = req.params;
         const { admin } = req.body;
-        const response = CalAdmin.add(cal_id, admin);
+        const response = await CalAdmin.add(cal_id, admin);
 
         res.status(200).json(response);
     } catch (err) {
@@ -41,10 +41,10 @@ router.post('/:cal_id/admins/', (req, res) => {
     }
 })
 
-router.delete('/:cal_id/admins/:id', (req, res) => {
+router.delete('/:cal_id/admins/:id', async (req, res) => {
     try {
         const { cal_id, id } = req.params;
-        const response = CalAdmin.remove(cal_id, id)
+        const response = await CalAdmin.remove(cal_id, id)
 
         res.status(200).json(response);
     } catch (err) {
@@ -53,11 +53,11 @@ router.delete('/:cal_id/admins/:id', (req, res) => {
     }
 })
 
-router.put('/:cal_id/admins/:id', (req, res) => {
+router.put('/:cal_id/admins/:id', async (req, res) => {
     try {
         const { cal_id, id } = req.params;
         const { admin } = req.body;
-        const response = CalAdmin.update(cal_id, id, admin);
+        const response = await CalAdmin.update(cal_id, id, admin);
 
         res.status(200).json(response);
     } catch (err) {
