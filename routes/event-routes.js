@@ -7,6 +7,7 @@ router.get('/:cal_id/events/', async (req, res) => {
     try {
         const { cal_id } = req.params;
         const response = await Events.get(cal_id);
+
         res.status(200).json(response);
     } catch (err) {
         console.log('event GET error', err);
@@ -31,7 +32,6 @@ router.post('/:cal_id/events/', async (req, res) => {
         const { cal_id } = req.params;
         const { event } = req.body;
         const response = await Events.add(cal_id, event);
-        console.log("res ",response)
 
         res.status(200).json(response);
     } catch (err) {

@@ -7,7 +7,7 @@ const CalSubs = require('./calSubs-model');
 router.get('/:cal_id/subscribers/', async (req, res) => {
     try {
         const { cal_id } = req.params;
-        const response = CalSubs.get(cal_id);
+        const response = await CalSubs.get(cal_id);
 
         res.status(200).json(response);
     } catch (err) {
@@ -19,7 +19,7 @@ router.get('/:cal_id/subscribers/', async (req, res) => {
 router.get('/:cal_id/subscribers/:id', async (req, res) => {
     try {
         const { cal_id, id } = req.params;
-        const response = CalSubs.getById(cal_id, id);
+        const response = await CalSubs.getById(cal_id, id);
 
         res.status(200).json(response);
     } catch (err) {
@@ -32,7 +32,7 @@ router.post('/:cal_id/subscribers/', async (req, res) => {
     try {
         const { cal_id } = req.params;
         const { subscriber } = req.body;
-        const response = CalSubs.add(cal_id, subscriber);
+        const response = await CalSubs.add(cal_id, subscriber);
 
         res.status(200).json(response);
     } catch (err) {
@@ -44,7 +44,7 @@ router.post('/:cal_id/subscribers/', async (req, res) => {
 router.delete('/:cal_id/subscribers/:id', async (req, res) => {
     try {
         const { cal_id, id } = req.params;
-        const response = CalSubs.remove(cal_id, id);
+        const response = await CalSubs.remove(cal_id, id);
 
         res.status(200).json(response);
     } catch (err) {
@@ -57,7 +57,7 @@ router.put('/:cal_id/subscribers/:id', async (req, res) => {
     try {
         const { cal_id, id } = req.params;
         const { subscriber } = req.body;
-        const response = CalSubs.update(cal_id, id, subscriber);
+        const response = await CalSubs.update(cal_id, id, subscriber);
 
         res.status(200).json(response);
     } catch (err) {
