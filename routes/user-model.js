@@ -26,14 +26,26 @@ function get() {
 }
 function getCalendar(id) {
     return db('users as u')
-    .join('calendars as c', 'c.userId', 'u.id')
-    .select(
-        'c.id',
-        'c.calendarName', 
-        'c.calendarDescription',
-        'c.userId',
+        .join('userCalendars as uc', 'uc.userId', 'u.id')
+        .join('calendars as c', 'c.id', 'uc.calendarId')
+        .select(
+            'uc.id',
+            'c.calendarName',
+            'c.calendarDescription',
+            'u.id',
+            'u.username',
+            'c.id'
         )
-    .where('c.userId', id)
+        .where('uc.userId', id)
+    // return db('users as u')
+    // .join('calendars as c', 'c.calendarId', 'u.id')
+    // .select(
+    //     'c.id',
+    //     'c.calendarName', 
+    //     'c.calendarDescription',
+    //     'c.userId',
+    //     )
+    // .where('c.userId', id)
 }
 function getBy(filter) {
     return db('users')
