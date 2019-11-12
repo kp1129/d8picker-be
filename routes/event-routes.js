@@ -4,16 +4,12 @@ const router = require("express").Router();
 const Events = require("./event-model");
 const Calendars = require("../routes/calendar-model");
 
-// get all events via a calendar id
-router.get("/:calendar_uuid/events/", async (req, res) => {
+router.get("/:cal_id/events/", async (req, res) => {
 	try {
-		const { calendar_uuid } = req.params;
-		const response = await Events.get(calendar_uuid);
-		if (response.length > 0) {
-			res.status(200).json(response);
-		} else {
-			res.status(200).json({ message: "There are no events found." });
-		}
+		const { cal_id } = req.params;
+		const response = await Events.get(cal_id);
+
+		res.status(200).json(response);
 	} catch (err) {
 		console.log("event GET error", err);
 		res.status(400).json({ message: "error fetching events", error: `${err}` });
@@ -43,8 +39,17 @@ router.post("/:calendar_uuid/events/", async (req, res) => {
 		const { event } = req.body;
 		const calendar = await Calendars.getByUuid(calendar_uuid);
 		const response = await Events.add(calendar.calendarId, event);
+	} catch (err) {
+		console.log("event POST error", err);
+		res.status(400).json({ message: "error adding event", error: `${err}` });
+	}
+});
 
-		res.status(200).json(response);
+router.post("/:cal_id/events/", async (req, res) => {
+	try {
+		const { cal_id } = req.params;
+		const { event } = req.body;
+		const response = await Events.add(cal_id, event);
 	} catch (err) {
 		console.log("event POST error", err);
 		res.status(400).json({ message: "error adding event", error: `${err}` });

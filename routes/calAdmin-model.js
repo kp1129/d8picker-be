@@ -47,6 +47,11 @@ function update(calendarId, adminId, changes) {
     return (
         db('adminCalendars')
             .where({calendarId, adminId})
-            .update(changes)
+            .then(adminCalendar => {
+                const id = adminCalendar[0].id
+                return db('users').where({id}).update(changes).then(update => {
+                    return update
+                })
+            })
     )
 }
