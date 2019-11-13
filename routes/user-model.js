@@ -4,6 +4,8 @@ module.exports = {
 	add,
 	get,
 	getById,
+	getByUuid,
+	find,
 	getBy,
 	update,
 	remove
@@ -14,6 +16,20 @@ function get() {
 }
 function getBy(filter) {
 	return db("users").where(filter);
+}
+
+function getByUuid(uuid) {
+	return db("users")
+		.where(uuid)
+		.first();
+}
+
+function find(userId, password) {
+	return db("users")
+		.where({ username: userId })
+		.orWhere({ email: userId })
+		.andWhere({ password })
+		.first();
 }
 function add(user) {
 	return db("users")
@@ -28,6 +44,7 @@ function getById(id) {
 		.where({ id })
 		.first();
 }
+
 function update(changes, id) {
 	return db("users")
 		.where("id", id)

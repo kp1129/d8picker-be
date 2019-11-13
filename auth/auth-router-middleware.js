@@ -1,18 +1,23 @@
 const validateRegistration = (req, res, next) => {
-    if(Object.keys(req.body) === 0){
-        res.status(400).json({message: "auth/missing form information"})
-    }
+	if (Object.keys(req.body) === 0) {
+		res.status(400).json({ message: "auth/missing form information" });
+	}
 
-    if(!req.body.firstName || !req.body.lastName || !req.body.username || !req.body.email || !req.body.password){
-        res.status(400).json({message: "auth/missing one or more request combination."})
-    }
-    
+	if (
+		!req.body.firstName ||
+		!req.body.lastName ||
+		!req.body.username ||
+		!req.body.email ||
+		!req.body.password
+	) {
+		res
+			.status(400)
+			.json({ message: "auth/missing one or more request combination." });
+	}
 
-    next();
-}
+	next();
+};
 
-const validateLogin = (req, res, next) => {
+const validateLogin = (req, res, next) => {};
 
-}
-
-module.exports = {validateRegistration, validateLogin}
+module.exports = { validateRegistration, validateLogin };
