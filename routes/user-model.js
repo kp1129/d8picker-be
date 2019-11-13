@@ -1,4 +1,4 @@
-const db = require('../data/db-config.js');
+const db = require("../data/db-config.js");
 
 module.exports ={
     add,
@@ -39,32 +39,46 @@ function getCalendar(id) {
         .where('uc.userId', id)
 }
 function getBy(filter) {
-    return db('users')
-    .where(filter);
+	return db("users").where(filter);
+}
+
+function getByUuid(uuid) {
+	return db("users")
+		.where(uuid)
+		.first();
+}
+
+function find(userId, password) {
+	return db("users")
+		.where({ username: userId })
+		.orWhere({ email: userId })
+		.andWhere({ password })
+		.first();
 }
 function add(user) {
-    return db('users')
-    .insert(user, 'id')
-    .then(ids => {
-        const [id] = ids;
-        return getById(id);
-    })
+	return db("users")
+		.insert(user, "id")
+		.then(ids => {
+			const [id] = ids;
+			return getById(id);
+		});
 }
 function getById(id) {
-    return db('users')
-    .where({ id })
-    .first();
+	return db("users")
+		.where({ id })
+		.first();
 }
+
 function update(changes, id) {
-    return db('users')
-    .where('id', id)
-    .update(changes)
-    .then(count => {
-        count > 0 ? this.get(id) : null 
-    })
+	return db("users")
+		.where("id", id)
+		.update(changes)
+		.then(count => {
+			count > 0 ? this.get(id) : null;
+		});
 }
 function remove(id) {
-    return db('users')
-    .where('id', id)
-    .del();
+	return db("users")
+		.where("id", id)
+		.del();
 }
