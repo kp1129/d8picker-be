@@ -9,8 +9,7 @@
     "test": "jest --watch",
     "h:latest": "npx heroku run knex migrate:latest -a school-calendar-mataka",
     "h:rollback": "npx heroku run knex migrate:rollback -a school-calendar-mataka",
-    "h:seed":"npx heroku run knex seed:run -a school-calendar-mataka"
-
+    "h:seed": "npx heroku run knex seed:run -a school-calendar-mataka"
   },
   "repository": {
     "type": "git",
