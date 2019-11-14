@@ -35,12 +35,11 @@ router.post("/register", validateRegistration, (req, res) => {
 });
 
 //post login
-router.post("/login", (req, res) => {
+router.post("/login", validateLogin, (req, res) => {
 	// implement login
-	let { userId, password } = req.body;
+	let { username, email, password } = req.body;
 
-	Users.find(userId, password)
-
+	Users.find(username, email, password)
 		.then(user => {
 			if (user && bcrypt.compareSync(password, user.password)) {
 				const token = generateToken(user);
