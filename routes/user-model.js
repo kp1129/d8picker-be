@@ -1,18 +1,43 @@
 const db = require("../data/db-config.js");
 
-module.exports = {
-	add,
-	get,
-	getById,
-	getByUuid,
-	find,
-	getBy,
-	update,
-	remove
-};
+module.exports ={
+    add,
+    get,
+    getCalendar,
+    getById,
+    getBy,
+    update,
+    remove,
+    find
+}
 
 function get() {
-	return db("users").select("id", "username", "password");
+    return db('users')
+    .select(
+        'id', 
+        'username',
+        'firstName',
+        'lastName',
+        'email', 
+        'phone',
+        'password',
+        'isAdmin',
+        'uuid'
+        );
+}
+function getCalendar(id) {
+    return db('users as u')
+        .join('userCalendars as uc', 'uc.userId', 'u.id')
+        .join('calendars as c', 'c.id', 'uc.calendarId')
+        .select(
+            'uc.id',
+            'c.calendarName',
+            'c.calendarDescription',
+            'u.id',
+            'u.username',
+            'c.id'
+        )
+        .where('uc.userId', id)
 }
 function getBy(filter) {
 	return db("users").where(filter);
@@ -24,14 +49,13 @@ function getByUuid(uuid) {
 		.first();
 }
 
-function find(userId, password) {
-	return db("users")
-		.where({ username: userId })
-		.orWhere({ email: userId })
-		.andWhere({ password })
-		.first();
-}
-function add(user) {
+function find(userName, userEmail, password) {
+    return db("users")
+        .where({ username: userName })
+        .orWhere({ email: userEmail })
+        .andWhere({ password })
+        .first();
+}function add(user) {
 	return db("users")
 		.insert(user, "id")
 		.then(ids => {

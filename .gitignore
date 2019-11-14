@@ -1,2 +1,6 @@
 node_modules/
 .DS_Store
+<<<<<<< HEAD
+=======
+./data/database_file.db3
+>>>>>>> a7cdb784e21e9509d91c487c499dab830c062bed

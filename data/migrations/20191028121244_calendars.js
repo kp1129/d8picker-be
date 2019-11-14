@@ -3,25 +3,24 @@ exports.up = function(knex) {
 		knex.schema
 			.createTable("users", table => {
 				table.increments();
-				table.string("name", 255).notNullable();
 				table
 					.string("username", 255)
 					.notNullable()
 					.unique();
-				table.string("firstName");
-				table.string("lastName");
+				table.string("firstName", 255);
+				table.string("lastName", 255);
 				table
 					.string("email")
 					.notNullable()
 					.unique();
-				table.string("password").notNullable();
+				table.string("password", 255).notNullable();
 				table.integer("phone");
 				table
 					.boolean("isAdmin")
 					.notNullable()
 					.defaultTo(false);
 				table
-					.string("uuid")
+					.string("uuid", 255)
 					.notNullable()
 					.unique()
 					.defaultTo(1);
@@ -29,17 +28,10 @@ exports.up = function(knex) {
 			})
 			.createTable("calendars", table => {
 				table.increments();
-				table.string("calendarName");
+				table.string("calendarName", 255);
 				table.integer("calendarId");
 				table.timestamps(true, true);
 			})
-			// .createTable("Events" , table => {
-			//   table.increments();
-			//   table.integer("eventId")
-			//   table.increments('eventName')
-			//   table.increments('eventInfo')
-			// })
-
 			.createTable("userCalendars", table => {
 				table.increments();
 				table
