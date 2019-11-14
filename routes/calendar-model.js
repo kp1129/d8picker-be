@@ -12,10 +12,16 @@ function get() {
 	return db("calendars").select("calendarName");
 }
 function getById(id) {
-	return db("calendars").where({ id });
+	return db("calendars")
+		.where({ id })
+		.first();
 }
 function add(calendar) {
-	return db("calendars").insert(calendar, "id");
+	return db("calendars")
+		.insert(calendar)
+		.then(ids => {
+			return getById(ids[0]);
+		});
 }
 function remove(id) {
 	return db("calendars")

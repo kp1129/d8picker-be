@@ -1,6 +1,11 @@
 const router = require("express").Router();
 const Calendar = require("./calendar-model");
-const uuidv1 = require("uuidv/v1");
+const AdminCalendars = require("./calAdmin-model");
+const uuidv1 = require("uuid/v1");
+
+const authenticate = require("../auth/authenticate-middleware");
+const verify = require("../auth/verify-user-middleware");
+
 router.get("/", (req, res) => {
 	Calendar.get()
 		.then(cal => {
@@ -20,14 +25,20 @@ router.get("/:id", (req, res) => {
 			res.status(500).json({ message: "Could not get Calendar" });
 		});
 });
-router.post("/", (req, res) => {
+router.post("/", [authenticate, verify], async (req, res) => {
 	let cal = req.body;
-	cal.uuid = uuiv1();
-	Calendar.add(cal)
-		.then(response => res.json({ response }))
-		.catch(error => {
-			res.status(500).json({ message: "could not post", error: error });
-		});
+	cal.uuid = uuidv1();
+	try {
+		const calendar = await Calendar.add(cal);
+
+		const adminCalendar = await AdminCalendars.add(calendar.id, req.user.id);
+		if (adminCalendar) {
+			res.status(200).json(calendar);
+		}
+	} catch (err) {
+		console.log("calendar ADD error", err);
+		res.status(400).json({ message: "error adding calendar", error: `${err}` });
+	}
 });
 router.delete("/:id", (req, res) => {
 	var id = req.params.id;

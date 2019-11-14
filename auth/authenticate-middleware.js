@@ -3,6 +3,10 @@ const secrets = require("../config/secrets");
 
 module.exports = (req, res, next) => {
 	const authorizationHeader = req.headers.authorization;
+
+	if (!authorizationHeader) {
+		res.status(401).json({ message: "Invalid authorization header." });
+	}
 	const bearer = authorizationHeader.split(" ");
 	const token = bearer[1];
 
