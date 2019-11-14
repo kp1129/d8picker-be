@@ -7,7 +7,8 @@ module.exports ={
     getById,
     getBy,
     update,
-    remove
+    remove,
+    find
 }
 
 function get() {
@@ -48,14 +49,13 @@ function getByUuid(uuid) {
 		.first();
 }
 
-function find(userId, password) {
-	return db("users")
-		.where({ username: userId })
-		.orWhere({ email: userId })
-		.andWhere({ password })
-		.first();
-}
-function add(user) {
+function find(userName, userEmail, password) {
+    return db("users")
+        .where({ username: userName })
+        .orWhere({ email: userEmail })
+        .andWhere({ password })
+        .first();
+}function add(user) {
 	return db("users")
 		.insert(user, "id")
 		.then(ids => {
