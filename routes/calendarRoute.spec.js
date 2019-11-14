@@ -1,8 +1,8 @@
-const request = require("supertest");
-const server = require("../api/server.js");     
-const Calendar = require("../routes/calendar-model.js");
+// const request = require("supertest");
+// const server = require("../api/server.js");     
+// const Calendar = require("../routes/calendar-model.js");
 
-// Tests for getEndpoint
+// // Tests for getEndpoint
 
 describe("/" , () => {
     it('returns 200 status', ()  => {
@@ -18,12 +18,12 @@ describe("/" , () => {
 
 describe("/" , () => {
     it("should return request status 200" , async () => {
-        const tstResult = await request(server)
+        const testResult = await request(server)
         .post("/api/calendars/")
         .send({calendarName : "first Calendar" ,  
         calendarDescription : "Description for Calendar 1"
     })
-       expect(tstResult.status).toBe(200);
+       expect(testResult.status).toBe(200);
     })
 })  
 

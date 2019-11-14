@@ -1,45 +1,84 @@
-const db = require('../data/db-config.js');
+const db = require("../data/db-config.js");
 
 module.exports ={
     add,
     get,
+    getCalendar,
     getById,
     getBy,
     update,
-    remove
+    remove,
+    find
 }
 
 function get() {
     return db('users')
-    .select('id', 'username', 'password');
+    .select(
+        'id', 
+        'username',
+        'firstName',
+        'lastName',
+        'email', 
+        'phone',
+        'password',
+        'isAdmin',
+        'uuid'
+        );
+}
+function getCalendar(id) {
+    return db('users as u')
+        .join('userCalendars as uc', 'uc.userId', 'u.id')
+        .join('calendars as c', 'c.id', 'uc.calendarId')
+        .select(
+            'uc.id',
+            'c.calendarName',
+            'c.calendarDescription',
+            'u.id',
+            'u.username',
+            'c.id'
+        )
+        .where('uc.userId', id)
 }
 function getBy(filter) {
-    return db('users')
-    .where(filter);
+	return db("users").where(filter);
 }
-function add(user) {
-    return db('users')
-    .insert(user, 'id')
-    .then(ids => {
-        const [id] = ids;
-        return getById(id);
-    })
+
+function getByUuid(uuid) {
+	return db("users")
+		.where(uuid)
+		.first();
+}
+
+function find(userName, userEmail, password) {
+    return db("users")
+        .where({ username: userName })
+        .orWhere({ email: userEmail })
+        .andWhere({ password })
+        .first();
+}function add(user) {
+	return db("users")
+		.insert(user, "id")
+		.then(ids => {
+			const [id] = ids;
+			return getById(id);
+		});
 }
 function getById(id) {
-    return db('users')
-    .where({ id })
-    .first();
+	return db("users")
+		.where({ id })
+		.first();
 }
+
 function update(changes, id) {
-    return db('users')
-    .where('id', id)
-    .update(changes)
-    .then(count => {
-        count > 0 ? this.get(id) : null 
-    })
+	return db("users")
+		.where("id", id)
+		.update(changes)
+		.then(count => {
+			count > 0 ? this.get(id) : null;
+		});
 }
 function remove(id) {
-    return db('users')
-    .where('id', id)
-    .del();
+	return db("users")
+		.where("id", id)
+		.del();
 }
