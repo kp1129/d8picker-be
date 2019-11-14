@@ -7,32 +7,37 @@ const Users = require("../routes/user-model.js");
 const secrets = require("../config/secrets.js");
 const {
 	validateRegistration,
-	validateLogin
+	validateLogin,
+	validateInvitationCode
 } = require("../auth/auth-router-middleware");
 // post register
-router.post("/register", validateRegistration, (req, res) => {
-	// implement registration
-	let { firstName, lastName, username, email, password } = req.body;
-	const hashedPassword = bcrypt.hashSync(password, 10);
-
-	const newUser = {
-		firstName,
-		lastName,
-		username,
-		email,
-		password: hashedPassword,
-		uuid: uuidv1()
-	};
-	Users.add(newUser)
-		.then(saved => {
-			const token = generateToken(saved.uuid);
-			res.status(201).json({ accessToken: token });
-		})
-		.catch(err => {
-			console.log(err);
-			res.status(500).json(err);
-		});
-});
+router.post(
+	"/register",
+	[validateRegistration, validateInvitationCode],
+	(req, res) => {
+		// implement registration
+		const { firstName, lastName, username, email, password, code } = req.body;
+		const hashedPassword = bcrypt.hashSync(password, 10);
+		console.log("Code ", code);
+		// const newUser = {
+		// 	firstName,
+		// 	lastName,
+		// 	username,
+		// 	email,
+		// 	password: hashedPassword,
+		// 	uuid: uuidv1()
+		// };
+		// Users.add(newUser)
+		// 	.then(saved => {
+		// 		const token = generateToken(saved.uuid);
+		// 		res.status(201).json({ accessToken: token });
+		// 	})
+		// 	.catch(err => {
+		// 		console.log(err);
+		// 		res.status(500).json(err);
+		// 	});
+	}
+);
 
 //post login
 router.post("/login", (req, res) => {

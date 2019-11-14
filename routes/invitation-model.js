@@ -7,6 +7,12 @@ function get(id) {
 		.first();
 }
 
+function getBy(filter) {
+	return db("invitations")
+		.where(filter)
+		.first();
+}
+
 function create(userId) {
 	return db("invitations")
 		.insert({ userId, invitationCode: shortid.generate() })
@@ -17,5 +23,6 @@ function create(userId) {
 
 module.exports = {
 	get,
+	getBy,
 	create
 };

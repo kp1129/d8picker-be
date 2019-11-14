@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const Calendar = require("./calendar-model");
-
+const uuidv1 = require("uuidv/v1");
 router.get("/", (req, res) => {
 	Calendar.get()
 		.then(cal => {
@@ -22,6 +22,7 @@ router.get("/:id", (req, res) => {
 });
 router.post("/", (req, res) => {
 	let cal = req.body;
+	cal.uuid = uuiv1();
 	Calendar.add(cal)
 		.then(response => res.json({ response }))
 		.catch(error => {
