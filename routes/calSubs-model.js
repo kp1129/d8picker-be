@@ -13,7 +13,7 @@ function get(calendarId) {
         db('userCalendars')
             .where({calendarId})
             .join('users', 'userId', 'users.id')
-            .select('name', 'username', 'email', 'phone')
+            .select('username', 'email', 'phone')
     )
 }
 
@@ -22,7 +22,7 @@ function getById(calendarId, userId) {
         db('userCalendars')
             .where({calendarId, userId})
             .join('users', 'userId', 'users.id')
-            .select('name', 'username', 'email', 'phone')
+            .select('username', 'email', 'phone')
             .first()
     )
 }

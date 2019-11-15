@@ -12,14 +12,14 @@ function get(calendarId) {
 	return db("adminCalendars")
 		.where({ calendarId })
 		.join("users", "adminId", "users.id")
-		.select("name", "username", "email", "phone");
+		.select("username", "email", "phone");
 }
 
 function getByIds(calendarId, adminId) {
 	return db("adminCalendars")
 		.where({ calendarId, adminId })
 		.join("users", "adminId", "users.id")
-		.select("name", "username", "email", "phone")
+		.select("username", "email", "phone")
 		.first();
 }
 
