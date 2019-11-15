@@ -16,35 +16,35 @@ router.post(
 	[validateRegistration, validateInvitationCode],
 	(req, res) => {
 		// implement registration
-		const { firstName, lastName, username, email, password, code } = req.body;
+		const { firstName, lastName, username, email, password } = req.body;
 		const hashedPassword = bcrypt.hashSync(password, 10);
-		console.log("Code ", code);
-		// const newUser = {
-		// 	firstName,
-		// 	lastName,
-		// 	username,
-		// 	email,
-		// 	password: hashedPassword,
-		// 	uuid: uuidv1()
-		// };
-		// Users.add(newUser)
-		// 	.then(saved => {
-		// 		const token = generateToken(saved.uuid);
-		// 		res.status(201).json({ accessToken: token });
-		// 	})
-		// 	.catch(err => {
-		// 		console.log(err);
-		// 		res.status(500).json(err);
-		// 	});
+
+		const newUser = {
+			firstName,
+			lastName,
+			username,
+			email,
+			password: hashedPassword,
+			uuid: uuidv1()
+		};
+		Users.add(newUser)
+			.then(saved => {
+				const token = generateToken(saved.uuid);
+				res.status(201).json({ accessToken: token });
+			})
+			.catch(err => {
+				console.log(err);
+				res.status(500).json(err);
+			});
 	}
 );
 
 //post login
 router.post("/login", validateLogin, (req, res) => {
 	// implement login
-	let { username, email, password } = req.body;
+	let { userId, password } = req.body;
 
-	Users.find(username, email, password)
+	Users.find(userId, password)
 		.then(user => {
 			if (user && bcrypt.compareSync(password, user.password)) {
 				const token = generateToken(user);
