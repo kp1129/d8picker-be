@@ -4,40 +4,48 @@ const jwt = require("jsonwebtoken");
 const uuidv1 = require("uuid/v1");
 
 const Users = require("../routes/user-model.js");
+const Calendars = require("../routes/calendar-model");
 const secrets = require("../config/secrets.js");
 const {
 	validateRegistration,
-	validateLogin,
-	validateInvitationCode
+	validateLogin
 } = require("../auth/auth-router-middleware");
 // post register
-router.post(
-	"/register",
-	[validateRegistration, validateInvitationCode],
-	(req, res) => {
-		// implement registration
-		const { firstName, lastName, username, email, password } = req.body;
-		const hashedPassword = bcrypt.hashSync(password, 10);
+router.post("/register", validateRegistration, async (req, res) => {
+	// implement registration
+	const { firstName, lastName, username, email, password } = req.body;
+	const hashedPassword = bcrypt.hashSync(password, 10);
 
-		const newUser = {
-			firstName,
-			lastName,
-			username,
-			email,
-			password: hashedPassword,
-			uuid: uuidv1()
-		};
-		Users.add(newUser)
-			.then(saved => {
-				const token = generateToken(saved.uuid);
-				res.status(201).json({ accessToken: token });
-			})
-			.catch(err => {
-				console.log(err);
-				res.status(500).json(err);
-			});
+	const newUser = {
+		firstName,
+		lastName,
+		username,
+		email,
+		password: hashedPassword,
+		uuid: uuidv1()
+	};
+
+	try {
+		const user = await Users.add(newUser);
+		const token = generateToken({
+			username: user.username,
+			uuid: user.uuid
+		});
+		const calendar = await Calendars.addDefaultCalendar(user.id);
+
+		res.status(201).json({
+			profile: {
+				firstName: user.firstName,
+				lastName: user.lastName,
+				email: user.email
+			},
+			accessToken: token
+		});
+	} catch (err) {
+		console.log(err);
+		res.status(500).json(err);
 	}
-);
+});
 
 //post login
 router.post("/login", validateLogin, (req, res) => {
@@ -47,8 +55,18 @@ router.post("/login", validateLogin, (req, res) => {
 	Users.find(userId, password)
 		.then(user => {
 			if (user && bcrypt.compareSync(password, user.password)) {
-				const token = generateToken(user);
-				res.status(200).json({ accessToken: token });
+				const token = generateToken({
+					username: user.username,
+					uuid: user.uuid
+				});
+				res.status(200).json({
+					profile: {
+						firstName: user.firstName,
+						lastName: user.lastName,
+						email: user.email
+					},
+					accessToken: token
+				});
 			} else {
 				res.status(401).json({ message: "invalid credentials" });
 			}

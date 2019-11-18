@@ -3,9 +3,11 @@ const db = require("../data/db-config.js");
 module.exports = {
 	add,
 	get,
-	getCalendar,
+	getCalendars,
+	getDefaultCalendar,
 	getById,
 	getBy,
+	getByUuid,
 	update,
 	remove,
 	find
@@ -24,19 +26,58 @@ function get() {
 		"uuid"
 	);
 }
-function getCalendar(id) {
+function getCalendars(userId) {
 	return db("users as u")
-		.join("userCalendars as uc", "uc.userId", "u.id")
-		.join("calendars as c", "c.id", "uc.calendarId")
+		.join("adminCalendars as ac", "ac.adminId", "u.id")
+		.join("calendars as c", "c.id", "ac.calendarId")
 		.select(
-			"uc.id",
 			"c.calendarName",
 			"c.calendarDescription",
-			"u.id",
-			"u.username",
-			"c.id"
+			"c.calendarColor",
+			"c.isPrivate",
+			"c.isDefault",
+			"c.uuid"
 		)
-		.where("uc.userId", id);
+		.where({ "u.id": userId, "c.isDefault": true })
+		.then(calendars => {
+			return calendars[0];
+		});
+}
+
+function getDefaultCalendar(userId) {
+	return db("users as u")
+		.join("adminCalendars as ac", "ac.adminId", "u.id")
+		.join("calendars as c", "c.id", "ac.calendarId")
+		.select(
+			"c.calendarName",
+			"c.calendarDescription",
+			"c.calendarColor",
+			"c.isPrivate",
+			"c.isDefault",
+			"c.uuid"
+		)
+		.where("u.id", userId)
+		.then(calendars => {
+			return calendars;
+		});
+}
+
+function getCalendars(userId) {
+	return db("users as u")
+		.join("adminCalendars as ac", "ac.adminId", "u.id")
+		.join("calendars as c", "c.id", "ac.calendarId")
+		.select(
+			"c.calendarName",
+			"c.calendarDescription",
+			"c.calendarColor",
+			"c.isPrivate",
+			"c.isDefault",
+			"c.uuid"
+		)
+		.where("u.id", userId)
+		.then(calendars => {
+			return calendars;
+		});
 }
 function getBy(filter) {
 	return db("users").where(filter);
@@ -59,8 +100,7 @@ function add(user) {
 	return db("users")
 		.insert(user, "id")
 		.then(ids => {
-			const [id] = ids;
-			return getById(id);
+			return getById(ids[0]);
 		});
 }
 function getById(id) {

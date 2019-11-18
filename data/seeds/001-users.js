@@ -8,7 +8,6 @@ exports.seed = function(knex) {
 			// Inserts seed entries
 			return knex("users").insert([
 				{
-					name: "Bob Smith",
 					firstName: "Bob",
 					lastName: "Smith",
 					username: "bsmith",

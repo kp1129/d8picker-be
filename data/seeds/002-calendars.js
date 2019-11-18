@@ -1,3 +1,4 @@
+const uuidv1 = require("uuid/v1");
 exports.seed = function(knex) {
 	// Deletes ALL existing entries
 	return knex("calendars")
@@ -6,13 +7,25 @@ exports.seed = function(knex) {
 			// Inserts seed entries
 			return knex("calendars").insert([
 				{
-					calendarName: "calendar 1"
+					calendarName: "Primary",
+					calendarDescription: "Default calendar",
+					isDefault: true,
+					uuid: uuidv1()
 				},
 				{
-					calendarName: "calendar 2"
+					calendarName: "Home",
+					calendarDescription: "Home calendar",
+					uuid: uuidv1()
 				},
 				{
-					calendarName: "calendar 3"
+					calendarName: "Work",
+					calendarDescription: "School calendar",
+					uuid: uuidv1()
+				},
+				{
+					calendarName: "Lambda",
+					calendarDescription: "Course calendar",
+					uuid: uuidv1()
 				}
 			]);
 		});
