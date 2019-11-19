@@ -8,11 +8,14 @@ exports.seed = function(knex) {
 			// Inserts seed entries
 			return knex("users").insert([
 				{
-					firstName: "Bob",
-					lastName: "Smith",
-					username: "bsmith",
-					email: "bsmith@email.dev",
-					password: bcrypt.hashSync("password", 10),
+					firstName: "Thai",
+					lastName: "Nguyen",
+					username: "tnguyen",
+					email: "tnguyen@email.dev",
+					password: bcrypt.hashSync(
+						process.env.SEED_PASSWORD || "password",
+						10
+					),
 					isAdmin: 1,
 					uuid: uuidv1()
 				}
