@@ -88,11 +88,11 @@ function getByUuid(uuid) {
 }
 function add(event) {
 	event.uuid = uuidv1();
-
+	console.log("New event ", event);
 	return db("events")
 		.insert(event)
 		.then(eventIds => {
-			console.log("Event Id from add event ", eventIds[0]);
+			console.log("Event Id from add event ", eventIds);
 			return eventIds[0];
 		});
 }
