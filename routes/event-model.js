@@ -6,6 +6,7 @@ module.exports = {
 	getByUuid,
 	getById,
 	add,
+	addCalendarEvents,
 	remove,
 	update
 };
@@ -85,17 +86,21 @@ function getByUuid(uuid) {
 		)
 		.first();
 }
-function add(calendarId, event) {
+function add(event) {
 	event.uuid = uuidv1();
 
 	return db("events")
 		.insert(event)
-		.then(events => {
-			return db("calendarEvents")
-				.insert({ calendarId: calendarId, eventsId: events[0] })
-				.then(calendarEvents => {
-					return getByCalendarEventsId(calendarEvents[0]);
-				});
+		.then(eventIds => {
+			return eventIds[0];
+		});
+}
+
+function addCalendarEvents(calendarId, eventId) {
+	return db("calendarEvents")
+		.insert({ calendarId, eventsId: eventId })
+		.then(calendarEventIds => {
+			return getByCalendarEventsId(calendarEventIds[0]);
 		});
 }
 

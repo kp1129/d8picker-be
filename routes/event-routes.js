@@ -41,9 +41,13 @@ router.post(
 	[authenticateUser, verifyUser, verifyCalendar],
 	async (req, res) => {
 		try {
-			const response = await Events.add(req.calendarId, req.body);
+			const eventId = await Events.add(req.body);
+			const calendarEvent = await Events.addCalendarEvents(
+				req.calendarId,
+				eventId
+			);
 
-			res.status(200).json(response);
+			res.status(200).json(calendarEvent);
 		} catch (err) {
 			console.log("event POST error", err);
 			res.status(400).json({ message: "error adding event", error: `${err}` });
