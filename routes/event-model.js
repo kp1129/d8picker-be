@@ -14,7 +14,7 @@ module.exports = {
 function get(calendarId) {
 	return db("calendarEvents")
 		.where({ calendarId })
-		.join("events", "eventsId", "events.id")
+		.join("events", "eventId", "events.id")
 		.select(
 			"eventTitle",
 			"eventNote",
@@ -33,7 +33,7 @@ function get(calendarId) {
 function getByCalendarEventsId(calendarEventsId) {
 	return db("calendarEvents")
 		.where({ "calendarEvents.id": calendarEventsId })
-		.join("events", "calendarEvents.eventsId", "events.id")
+		.join("events", "calendarEvents.eventId", "events.id")
 		.select(
 			"eventTitle",
 			"eventNote",
@@ -97,9 +97,11 @@ function add(event) {
 }
 
 function addCalendarEvents(calendarId, eventId) {
+	console.log("Event ID ", eventId);
 	return db("calendarEvents")
-		.insert({ calendarId, eventsId: eventId })
+		.insert({ calendarId, eventId })
 		.then(calendarEventIds => {
+			console.log("Calendar Event ID ", calendarEventIds[0]);
 			return getByCalendarEventsId(calendarEventIds[0]);
 		});
 }
