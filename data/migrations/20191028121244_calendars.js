@@ -1,7 +1,7 @@
 exports.up = function(knex) {
 	return knex.schema
 		.createTable("users", table => {
-			table.increments();
+			table.increments().primary();
 			table
 				.string("username", 255)
 				.notNullable()
@@ -26,7 +26,7 @@ exports.up = function(knex) {
 			table.timestamps(true, true);
 		})
 		.createTable("calendars", table => {
-			table.increments();
+			table.increments().primary();
 			table.string("calendarName", 255);
 			table.string("calendarDescription", 255);
 			table.string("calendarColor", 255).defaultTo("#A35629");
@@ -36,7 +36,7 @@ exports.up = function(knex) {
 			table.timestamps(true, true);
 		})
 		.createTable("userCalendars", table => {
-			table.increments();
+			table.increments().primary();
 			table
 				.integer("userId")
 				.unsigned()
@@ -54,7 +54,7 @@ exports.up = function(knex) {
 			table.timestamps(true, true);
 		})
 		.createTable("adminCalendars", table => {
-			table.increments();
+			table.increments().primary();
 			table
 				.integer("adminId")
 				.unsigned()
@@ -72,7 +72,7 @@ exports.up = function(knex) {
 			table.timestamps(true, true);
 		})
 		.createTable("events", table => {
-			table.increments();
+			table.increments().primary();
 			table.string("eventTitle", 255).notNullable();
 			table.string("eventNote", 255).notNullable();
 			table.string("eventLocation", 255);
@@ -105,7 +105,7 @@ exports.up = function(knex) {
 			table.timestamps(true, true);
 		})
 		.createTable("calendarEvents", table => {
-			table.increments();
+			table.increments().primary();
 			table
 				.integer("calendarId")
 				.unsigned()
@@ -114,7 +114,7 @@ exports.up = function(knex) {
 				.onDelete("CASCADE")
 				.onUpdate("CASCADE");
 			table
-				.integer("eventsId")
+				.integer("eventId")
 				.unsigned()
 				.references("id")
 				.inTable("events")
