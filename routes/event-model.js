@@ -92,6 +92,7 @@ function add(event) {
 	return db("events")
 		.insert(event)
 		.then(eventIds => {
+			console.log("Event Id from add event ", eventIds[0]);
 			return eventIds[0];
 		});
 }
