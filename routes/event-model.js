@@ -92,7 +92,7 @@ function add(calendarId, event) {
 		.insert(event)
 		.then(events => {
 			return db("calendarEvents")
-				.insert({ calendarid: calendarId, eventsId: events[0] })
+				.insert({ calendarId: calendarId, eventsId: events[0] })
 				.then(calendarEvents => {
 					return getByCalendarEventsId(calendarEvents[0]);
 				});
