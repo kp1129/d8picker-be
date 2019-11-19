@@ -33,6 +33,8 @@ router.post("/register", validateRegistration, async (req, res) => {
 		});
 		const calendar = await Calendars.addDefaultCalendar(user.id);
 
+		console.log("New Calendar ", calendar);
+
 		res.status(201).json({
 			profile: {
 				firstName: user.firstName,
@@ -54,7 +56,6 @@ router.post("/login", validateLogin, (req, res) => {
 
 	Users.find(userId)
 		.then(user => {
-			console.log("User ", user);
 			if (user && bcrypt.compareSync(password, user.password)) {
 				const token = generateToken({
 					username: user.username,
