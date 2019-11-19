@@ -89,11 +89,11 @@ function getByUuid(uuid) {
 		.first();
 }
 
-function find(userId, password) {
+function find(userId) {
 	return db("users")
-		.where({ username: userId })
-		.orWhere({ email: userId })
-		.andWhere({ password })
+		.where(function() {
+			this.where("username", "=", userId).orWhere("email", "=", userId);
+		})
 		.first();
 }
 function add(user) {
