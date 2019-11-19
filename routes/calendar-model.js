@@ -37,6 +37,7 @@ function addDefaultCalendar(adminId) {
 		.insert(calendar)
 		.then(ids => {
 			const calendarId = ids[0];
+			console.log("New User Calendar ID: ", calendarId);
 			return db("adminCalendars")
 				.insert({ adminId, calendarId })
 				.then(ids => {
