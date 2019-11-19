@@ -10,7 +10,7 @@ router.post('/', async (req, res) => {
         console.log(phone);
         client.messages
         .create({
-           body: 'Invitation to Calendar',
+           body: 'Invitation to Calendar: https://admiring-aryabhata-ada124.netlify.com/admin-dashboard',
            from: '+12017405267',
            to: `+1${phone}`
          })
