@@ -30,9 +30,9 @@ function get(calendarId) {
 }
 
 function getByCalendarEventsId(calendarEventsId) {
-	return db("calendarEvents as ce")
-		.where({ "ce.id": calendarEventsId })
-		.join("events", "ce.eventsId", "events.id")
+	return db("calendarEvents")
+		.where({ "calendarEvents.id": calendarEventsId })
+		.join("events", "calendarEvents.eventsId", "events.id")
 		.select(
 			"eventTitle",
 			"eventNote",
