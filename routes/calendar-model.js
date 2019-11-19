@@ -27,9 +27,10 @@ function getByUuid(uuid) {
 
 function addDefaultCalendar(adminId) {
 	const calendar = {
-		calendarName: "Calendar",
-		calendarDescription: "Default calendar",
+		calendarName: "Primary",
+		calendarDescription: "Primary calendar",
 		calendarColor: "#A35629",
+		isDefault: true,
 		uuid: uuidv1()
 	};
 	return db("calendars")

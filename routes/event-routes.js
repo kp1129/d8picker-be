@@ -43,8 +43,6 @@ router.post(
 		try {
 			const response = await Events.add(req.calendarId, req.body);
 
-			console.log("New event ", response);
-
 			res.status(200).json(response);
 		} catch (err) {
 			console.log("event POST error", err);
@@ -58,7 +56,6 @@ router.delete(
 	[authenticateUser, verifyUser, verifyEvent],
 	async (req, res) => {
 		try {
-			console.log("EventId ", req.eventId);
 			const response = await Events.remove(req.eventId);
 
 			res.status(200).json(response);
