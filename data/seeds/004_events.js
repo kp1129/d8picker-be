@@ -4,7 +4,7 @@ const moment = require("moment");
 exports.seed = function(knex) {
 	// Deletes ALL existing entries
 	return knex("events")
-		.truncate()
+		.del()
 		.then(function() {
 			// Inserts seed entries
 			return knex("events").insert([
