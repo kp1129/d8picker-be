@@ -34,10 +34,9 @@ function addDefaultCalendar(adminId) {
 		uuid: uuidv1()
 	};
 	return db("calendars")
-		.insert(calendar)
+		.insert(calendar, "id")
 		.then(ids => {
 			const calendarId = ids[0];
-			console.log("New User Calendar ID: ", calendarId);
 			return db("adminCalendars")
 				.insert({ adminId, calendarId })
 				.then(ids => {
@@ -47,7 +46,7 @@ function addDefaultCalendar(adminId) {
 }
 function add(calendar) {
 	return db("calendars")
-		.insert(calendar)
+		.insert(calendar, "id")
 		.then(ids => {
 			return getById(ids[0]);
 		});
