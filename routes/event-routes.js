@@ -17,9 +17,10 @@ router.get(
 			res.status(200).json(response);
 		} catch (err) {
 			console.log("event GET error", err);
-			res
-				.status(400)
-				.json({ message: "error fetching events", error: `${err}` });
+			res.status(500).json({
+				message: "events/cannot get calendar events",
+				error: `${err}`
+			});
 		}
 	}
 );
@@ -50,7 +51,9 @@ router.post(
 			res.status(200).json(calendarEvent);
 		} catch (err) {
 			console.log("event POST error", err);
-			res.status(400).json({ message: "error adding event", error: `${err}` });
+			res
+				.status(500)
+				.json({ message: "events/cannot create new event", error: `${err}` });
 		}
 	}
 );
@@ -66,8 +69,8 @@ router.delete(
 		} catch (err) {
 			console.log("event DELETE error", err);
 			res
-				.status(400)
-				.json({ message: "error deleting event", error: `${err}` });
+				.status(500)
+				.json({ message: "events/cannot delete event", error: `${err}` });
 		}
 	}
 );
@@ -83,8 +86,8 @@ router.put(
 		} catch (err) {
 			console.log("event PUT error", err);
 			res
-				.status(400)
-				.json({ message: "error updating event", error: `${err}` });
+				.status(500)
+				.json({ message: "events/cannot update event", error: `${err}` });
 		}
 	}
 );
