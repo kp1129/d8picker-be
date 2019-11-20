@@ -98,10 +98,8 @@ function find(userId) {
 }
 function add(user) {
 	return db("users")
-		.insert(user)
+		.insert(user, "id")
 		.then(ids => {
-			console.log("New user ", ids);
-
 			return getById(ids[0]);
 		});
 }

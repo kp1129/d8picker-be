@@ -33,8 +33,6 @@ router.post("/register", validateRegistration, async (req, res) => {
 		});
 		const calendar = await Calendars.addDefaultCalendar(user.id);
 
-		console.log("New Calendar ", calendar);
-
 		res.status(201).json({
 			profile: {
 				firstName: user.firstName,
