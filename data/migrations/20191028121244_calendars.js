@@ -76,22 +76,10 @@ exports.up = function(knex) {
 			table.string("eventTitle", 255).notNullable();
 			table.string("eventNote", 255).notNullable();
 			table.string("eventLocation", 255);
-			table
-				.date("startDate")
-				.notNullable()
-				.defaultTo(knex.fn.now());
-			table
-				.date("endDate")
-				.notNullable()
-				.defaultTo(knex.fn.now());
-			table
-				.timestamp("startTime")
-				.notNullable()
-				.defaultTo(knex.fn.now());
-			table
-				.timestamp("endTime")
-				.notNullable()
-				.defaultTo(knex.fn.now());
+			table.date("startDate").notNullable();
+			table.date("endDate").notNullable();
+			table.timestamp("startTime");
+			table.timestamp("endTime");
 			table
 				.boolean("isAllDayEvent")
 				.notNullable()
