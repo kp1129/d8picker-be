@@ -27,11 +27,12 @@ router.post("/register", validateRegistration, async (req, res) => {
 
 	try {
 		const user = await Users.add(newUser);
+
 		const token = generateToken({
 			username: user.username,
 			uuid: user.uuid
 		});
-		const calendar = await Calendars.addDefaultCalendar(user.id);
+		await Calendars.addDefaultCalendar(user.userId);
 
 		res.status(201).json({
 			profile: {
@@ -43,7 +44,9 @@ router.post("/register", validateRegistration, async (req, res) => {
 		});
 	} catch (err) {
 		console.log(err);
-		res.status(500).json(err);
+		res
+			.status(500)
+			.json({ message: "users/cannot create new user at this time" });
 	}
 });
 

@@ -1,38 +1,18 @@
 const router = require("express").Router();
-const Calendar = require("./calendar-model");
-const AdminCalendars = require("./calAdmin-model");
+const Calendars = require("./calendar-model");
+const Events = require("../routes/event-model");
 const uuidv1 = require("uuid/v1");
 
-const authenticate = require("../auth/authenticate-middleware");
-const verify = require("../auth/verify-user-middleware");
-
-router.get("/", (req, res) => {
-	Calendar.get()
-		.then(cal => {
-			res.status(200).json({ cal });
-		})
-		.catch(error => {
-			res.status(500).json({ message: "Could not get Calendar" });
-		});
-});
-router.get("/:id", (req, res) => {
-	var id = req.params.id;
-	Calendar.getById(id)
-		.then(cal => {
-			res.status(200).json({ cal });
-		})
-		.catch(error => {
-			res.status(500).json({ message: "Could not get Calendar" });
-		});
-});
-router.post("/", [authenticate, verify], async (req, res) => {
+const authenticateUser = require("../auth/authenticate-middleware");
+const verifyUser = require("../auth/verify-user-middleware");
+const verifyCalendar = require("../middleware/verify-calendar-uuid-middleware");
+router.post("/", [authenticateUser, verifyUser], async (req, res) => {
 	let cal = req.body;
 	cal.uuid = uuidv1();
 	try {
-		const calendar = await Calendar.add(cal);
+		const calendar = await Calendars.add(cal);
 
-		const adminCalendar = await AdminCalendars.add(calendar.id, req.user.id);
-		if (adminCalendar) {
+		if (calendar) {
 			res.status(200).json(calendar);
 		}
 	} catch (err) {
@@ -40,9 +20,10 @@ router.post("/", [authenticate, verify], async (req, res) => {
 		res.status(400).json({ message: "error adding calendar", error: `${err}` });
 	}
 });
+
 router.delete("/:id", (req, res) => {
 	var id = req.params.id;
-	Calendar.remove(id)
+	Calendars.remove(id)
 		.then(deleted => {
 			res.json({ deleted });
 		})
@@ -54,10 +35,10 @@ router.put("/:id", (req, res) => {
 	var updated = req.body;
 	var id = req.params.id;
 
-	Calendar.update(id, updated)
+	Calendars.update(id, updated)
 		.then(response => {
 			if (response > 0) {
-				Calendar.getById(id).then(result => {
+				Calendars.getById(id).then(result => {
 					res.status(200).json({ result });
 				});
 			} else {
@@ -68,4 +49,42 @@ router.put("/:id", (req, res) => {
 			res.status(500).json({ message: error });
 		});
 });
+router.get(
+	"/:cal_uuid/events/",
+	[authenticateUser, verifyUser, verifyCalendar],
+	async (req, res) => {
+		try {
+			const response = await Events.get(req.calendarId);
+
+			res.status(200).json(response);
+		} catch (err) {
+			console.log("event GET error", err);
+			res.status(500).json({
+				message: "calendars/cannot get calendar events",
+				error: `${err}`
+			});
+		}
+	}
+);
+router.post(
+	"/:cal_uuid/events/",
+	[authenticateUser, verifyUser, verifyCalendar],
+	async (req, res) => {
+		try {
+			const eventId = await Events.add(req.body);
+			const calendarEvent = await Events.addCalendarsEvents(
+				req.calendarId,
+				eventId
+			);
+
+			res.status(200).json(calendarEvent);
+		} catch (err) {
+			console.log("event POST error", err);
+			res.status(500).json({
+				message: "calendars/cannot create new event",
+				error: `${err}`
+			});
+		}
+	}
+);
 module.exports = router;

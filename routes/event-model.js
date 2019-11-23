@@ -2,19 +2,19 @@ const db = require("../data/db-config.js");
 const uuidv1 = require("uuid/v1");
 module.exports = {
 	get,
-	getByCalendarEventsId,
+	getByCalendarsEventsId,
 	getByUuid,
 	getById,
 	add,
-	addCalendarEvents,
+	addCalendarsEvents,
 	remove,
 	update
 };
 
 function get(calendarId) {
-	return db("calendarEvents")
+	return db("calendarsEvents as ce")
 		.where({ calendarId })
-		.join("events", "eventId", "events.id")
+		.join("events", "ce.eventId", "events.eventId")
 		.select(
 			"eventTitle",
 			"eventNote",
@@ -25,15 +25,16 @@ function get(calendarId) {
 			"endTime",
 			"isAllDayEvent",
 			"isRepeatingEvent",
+			"isPrivate",
 			"eventColor",
-			"uuid"
+			"events.uuid"
 		);
 }
 
-function getByCalendarEventsId(calendarEventsId) {
-	return db("calendarEvents")
-		.where({ "calendarEvents.id": calendarEventsId })
-		.join("events", "calendarEvents.eventId", "events.id")
+function getByCalendarsEventsId(calendarsEventsId) {
+	return db("calendarsEvents")
+		.where({ "calendarsEvents.calendarsEventsId": calendarsEventsId })
+		.join("events", "calendarsEvents.eventId", "events.eventId")
 		.select(
 			"eventTitle",
 			"eventNote",
@@ -44,14 +45,15 @@ function getByCalendarEventsId(calendarEventsId) {
 			"endTime",
 			"isAllDayEvent",
 			"isRepeatingEvent",
+			"isPrivate",
 			"eventColor",
-			"uuid"
+			"events.uuid"
 		)
 		.first();
 }
-function getById(id) {
+function getById(eventId) {
 	return db("events")
-		.where({ id })
+		.where({ eventId })
 		.select(
 			"eventTitle",
 			"eventNote",
@@ -63,6 +65,7 @@ function getById(id) {
 			"isAllDayEvent",
 			"isRepeatingEvent",
 			"eventColor",
+			"isPrivate",
 			"uuid"
 		)
 		.first();
@@ -71,7 +74,7 @@ function getByUuid(uuid) {
 	return db("events")
 		.where({ uuid })
 		.select(
-			"id",
+			"eventId",
 			"eventTitle",
 			"eventNote",
 			"eventLocation",
@@ -82,6 +85,7 @@ function getByUuid(uuid) {
 			"isAllDayEvent",
 			"isRepeatingEvent",
 			"eventColor",
+			"isPrivate",
 			"uuid"
 		)
 		.first();
@@ -89,29 +93,30 @@ function getByUuid(uuid) {
 function add(event) {
 	event.uuid = uuidv1();
 	return db("events")
-		.insert(event, "id")
+		.insert(event, "eventId")
 		.then(ids => {
 			return ids[0];
 		});
 }
 
-function addCalendarEvents(calendarId, eventId) {
-	return db("calendarEvents")
-		.insert({ calendarId, eventId }, "id")
-		.then(calendarEventIds => {
-			return getByCalendarEventsId(calendarEventIds[0]);
+function addCalendarsEvents(calendarId, eventId) {
+	const uuid = uuidv1();
+	return db("calendarsEvents")
+		.insert({ calendarId, eventId, uuid }, "calendarsEventsId")
+		.then(calendarsEventIds => {
+			return getByCalendarsEventsId(calendarsEventIds[0]);
 		});
 }
 
 function remove(eventId) {
 	return db("events")
-		.where({ id: eventId })
+		.where({ eventId })
 		.del();
 }
 
 function update(eventId, changes) {
 	return db("events")
-		.where({ id: eventId })
+		.where({ eventId })
 		.update(changes)
 		.then(update => {
 			if (update === 1) {

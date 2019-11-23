@@ -2,64 +2,12 @@ const router = require("express").Router();
 
 const authenticateUser = require("../auth/authenticate-middleware");
 const verifyUser = require("../auth/verify-user-middleware");
-const verifyCalendar = require("../middleware/verify-calendar-uuid-middleware");
 const verifyEvent = require("../middleware/verify-event-uuid-middleware");
 
 const Events = require("./event-model");
 
-router.get(
-	"/:cal_uuid/events/",
-	[authenticateUser, verifyUser, verifyCalendar],
-	async (req, res) => {
-		try {
-			const response = await Events.get(req.calendarId);
-
-			res.status(200).json(response);
-		} catch (err) {
-			console.log("event GET error", err);
-			res.status(500).json({
-				message: "events/cannot get calendar events",
-				error: `${err}`
-			});
-		}
-	}
-);
-
-router.get("/:cal_id/events/:id", async (req, res) => {
-	try {
-		const { cal_id, id } = req.params;
-		const response = await Events.getById(cal_id, id);
-
-		res.status(200).json(response);
-	} catch (err) {
-		console.log("event GET BY ID error", err);
-		res.status(400).json({ message: "error fetching event", error: `${err}` });
-	}
-});
-
-router.post(
-	"/:cal_uuid/events/",
-	[authenticateUser, verifyUser, verifyCalendar],
-	async (req, res) => {
-		try {
-			const eventId = await Events.add(req.body);
-			const calendarEvent = await Events.addCalendarEvents(
-				req.calendarId,
-				eventId
-			);
-
-			res.status(200).json(calendarEvent);
-		} catch (err) {
-			console.log("event POST error", err);
-			res
-				.status(500)
-				.json({ message: "events/cannot create new event", error: `${err}` });
-		}
-	}
-);
-
 router.delete(
-	"/events/:event_uuid",
+	"/:event_uuid",
 	[authenticateUser, verifyUser, verifyEvent],
 	async (req, res) => {
 		try {
@@ -67,7 +15,7 @@ router.delete(
 
 			res.status(200).json(response);
 		} catch (err) {
-			console.log("event DELETE error", err);
+			console.log("events/cannot delete event", err);
 			res
 				.status(500)
 				.json({ message: "events/cannot delete event", error: `${err}` });
@@ -76,7 +24,7 @@ router.delete(
 );
 
 router.put(
-	"/events/:event_uuid",
+	"/:event_uuid",
 	[authenticateUser, verifyUser, verifyEvent],
 	async (req, res) => {
 		try {
@@ -84,7 +32,7 @@ router.put(
 
 			res.status(200).json(response);
 		} catch (err) {
-			console.log("event PUT error", err);
+			console.log("events/cannot update event", err);
 			res
 				.status(500)
 				.json({ message: "events/cannot update event", error: `${err}` });

@@ -20,6 +20,7 @@ module.exports = (req, res, next) => {
 						username: decodedToken.username,
 						uuid: decodedToken.uuid
 					};
+
 					next();
 				}
 			});
