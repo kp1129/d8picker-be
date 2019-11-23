@@ -25,6 +25,7 @@ exports.seed = function(knex) {
 						.toISOString(true),
 					isAllDayEvent: false,
 					isRepeatingEvent: true,
+					isPrivate: true,
 					uuid: uuidv1()
 				},
 				{
@@ -47,6 +48,7 @@ exports.seed = function(knex) {
 						.toISOString(true),
 					isAllDayEvent: false,
 					isRepeatingEvent: true,
+					isPrivate: true,
 					uuid: uuidv1()
 				},
 				{
@@ -69,6 +71,7 @@ exports.seed = function(knex) {
 						.toISOString(true),
 					isAllDayEvent: false,
 					isRepeatingEvent: true,
+					isPrivate: true,
 					uuid: uuidv1()
 				}
 			]);

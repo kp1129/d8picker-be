@@ -10,21 +10,28 @@ exports.seed = function(knex) {
 					calendarName: "Primary",
 					calendarDescription: "Default calendar",
 					isDefault: true,
+					isPrivate: true,
 					uuid: uuidv1()
 				},
 				{
 					calendarName: "Home",
 					calendarDescription: "Home calendar",
+					isDefault: false,
+					isPrivate: true,
 					uuid: uuidv1()
 				},
 				{
 					calendarName: "Work",
 					calendarDescription: "School calendar",
+					isDefault: false,
+					isPrivate: true,
 					uuid: uuidv1()
 				},
 				{
 					calendarName: "Lambda",
 					calendarDescription: "Course calendar",
+					isDefault: false,
+					isPrivate: true,
 					uuid: uuidv1()
 				}
 			]);
