@@ -76,6 +76,7 @@ exports.up = function(knex) {
 			table.string("eventTitle", 255).notNullable();
 			table.string("eventNote", 255).notNullable();
 			table.string("eventLocation", 255);
+			table.string("timeZone", 255);
 			table
 				.date("startDate")
 				.notNullable()
@@ -100,6 +101,7 @@ exports.up = function(knex) {
 				.boolean("isRepeatingEvent")
 				.notNullable()
 				.defaultTo(false);
+			table.string("recurrence");
 			table.string("eventColor").defaultTo("#1A73E8");
 			table.string("uuid");
 			table.timestamps(true, true);
