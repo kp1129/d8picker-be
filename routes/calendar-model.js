@@ -1,8 +1,7 @@
 const db = require("../data/db-config.js"); // Calendar-Modal
 const uuidv1 = require("uuid/v1");
 module.exports = {
-	get,
-	getById,
+	getByCalendarId,
 	getByUuid,
 	add,
 	addDefaultCalendar,
@@ -10,12 +9,9 @@ module.exports = {
 	update
 };
 
-function get() {
-	return db("calendars").select("calendarName");
-}
-function getById(id) {
+function getByCalendarId(calendarId) {
 	return db("calendars")
-		.where({ id })
+		.where({ calendarId })
 		.first();
 }
 
@@ -25,20 +21,21 @@ function getByUuid(uuid) {
 		.first();
 }
 
-function addDefaultCalendar(adminId) {
+function addDefaultCalendar(userId) {
 	const calendar = {
 		calendarName: "Primary",
 		calendarDescription: "Primary calendar",
 		calendarColor: "#A35629",
 		isDefault: true,
+		isPrivate: true,
 		uuid: uuidv1()
 	};
 	return db("calendars")
-		.insert(calendar, "id")
+		.insert(calendar, "calendarId")
 		.then(ids => {
 			const calendarId = ids[0];
-			return db("adminCalendars")
-				.insert({ adminId, calendarId })
+			return db("usersCalendars")
+				.insert({ userId, calendarId, uuid: uuidv1() }, "usersCalendarsId")
 				.then(ids => {
 					return ids[0];
 				});
@@ -46,18 +43,18 @@ function addDefaultCalendar(adminId) {
 }
 function add(calendar) {
 	return db("calendars")
-		.insert(calendar, "id")
+		.insert(calendar, "calendarId")
 		.then(ids => {
 			return getById(ids[0]);
 		});
 }
-function remove(id) {
+function remove(calendarId) {
 	return db("calendars")
-		.where({ id })
+		.where({ calendarId })
 		.del();
 }
-function update(id, updated) {
+function update(calendarId, updated) {
 	return db("calendars")
-		.where({ id })
+		.where({ calendarId })
 		.update(updated);
 }

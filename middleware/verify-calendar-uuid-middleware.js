@@ -12,7 +12,7 @@ const verifyCalendarUuid = async (req, res, next) => {
 			res.status(200).json({ message: "Invalid calendar uuid." });
 		}
 
-		req.calendarId = calendar.id;
+		req.calendarId = calendar.calendarId;
 
 		next();
 	} catch (err) {
