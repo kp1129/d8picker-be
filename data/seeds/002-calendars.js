@@ -33,6 +33,13 @@ exports.seed = function(knex) {
 					isDefault: false,
 					isPrivate: true,
 					uuid: uuidv1()
+				},
+				{
+					calendarName: "Primary",
+					calendarDescription: "Default calendar",
+					isDefault: false,
+					isPrivate: true,
+					uuid: uuidv1()
 				}
 			]);
 		});

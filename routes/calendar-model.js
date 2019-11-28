@@ -2,19 +2,46 @@ const db = require("../data/db-config.js"); // Calendar-Modal
 const uuidv1 = require("uuid/v1");
 module.exports = {
 	getByCalendarId,
+	getByUsersCalendarsId,
 	getByUuid,
 	add,
 	addDefaultCalendar,
 	remove,
-	update
+	update,
+	subscribe
 };
 
 function getByCalendarId(calendarId) {
-	return db("calendars")
-		.where({ calendarId })
+	return db("calendars as c")
+		.join("usersCalendars as uc", "c.calendarId", "uc.calendarId")
+		.where({ "c.calendarId": calendarId })
+		.select(
+			"calendarName",
+			"calendarDescription",
+			"calendarColor",
+			"isPrivate",
+			"isDefault",
+			"uc.isOwner",
+			"c.uuid"
+		)
 		.first();
 }
 
+function getByUsersCalendarsId(usersCalendarsId) {
+	return db("usersCalendars as uc")
+		.join("calendars as c", "uc.calendarId", "c.calendarId")
+		.where({ usersCalendarsId })
+		.select(
+			"calendarName",
+			"calendarDescription",
+			"calendarColor",
+			"isPrivate",
+			"isDefault",
+			"uc.isOwner",
+			"c.uuid"
+		)
+		.first();
+}
 function getByUuid(uuid) {
 	return db("calendars")
 		.where({ uuid })
@@ -35,7 +62,10 @@ function addDefaultCalendar(userId) {
 		.then(ids => {
 			const calendarId = ids[0];
 			return db("usersCalendars")
-				.insert({ userId, calendarId, uuid: uuidv1() }, "usersCalendarsId")
+				.insert(
+					{ userId, calendarId, isOwner: true, uuid: uuidv1() },
+					"usersCalendarsId"
+				)
 				.then(ids => {
 					return ids[0];
 				});
@@ -56,5 +86,17 @@ function remove(calendarId) {
 function update(calendarId, updated) {
 	return db("calendars")
 		.where({ calendarId })
-		.update(updated);
+		.update(updated)
+		.then(update => {
+			if (update === 1) {
+				return getByCalendarId(calendarId);
+			}
+		});
+}
+function subscribe(calendarId, userId) {
+	return db("usersCalendars")
+		.insert({ calendarId, userId, uuid: uuidv1() }, "usersCalendarsId")
+		.then(ids => {
+			return getByUsersCalendarsId(ids[0]);
+		});
 }

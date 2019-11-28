@@ -1,11 +1,14 @@
 const router = require("express").Router();
 const Calendars = require("./calendar-model");
 const Events = require("../routes/event-model");
+const Invitations = require("../routes/invitation-model");
 const uuidv1 = require("uuid/v1");
 
 const authenticateUser = require("../auth/authenticate-middleware");
 const verifyUser = require("../auth/verify-user-middleware");
 const verifyCalendar = require("../middleware/verify-calendar-uuid-middleware");
+const verifyCalendarIsPublic = require("../middleware/verify-calendar-public-middleware");
+
 router.post("/", [authenticateUser, verifyUser], async (req, res) => {
 	let cal = req.body;
 	cal.uuid = uuidv1();
@@ -21,34 +24,6 @@ router.post("/", [authenticateUser, verifyUser], async (req, res) => {
 	}
 });
 
-router.delete("/:id", (req, res) => {
-	var id = req.params.id;
-	Calendars.remove(id)
-		.then(deleted => {
-			res.json({ deleted });
-		})
-		.catch(error => {
-			res.status(500).json({ message: error });
-		});
-});
-router.put("/:id", (req, res) => {
-	var updated = req.body;
-	var id = req.params.id;
-
-	Calendars.update(id, updated)
-		.then(response => {
-			if (response > 0) {
-				Calendars.getById(id).then(result => {
-					res.status(200).json({ result });
-				});
-			} else {
-				res.status(404).json({ message: "server error" });
-			}
-		})
-		.catch(error => {
-			res.status(500).json({ message: error });
-		});
-});
 router.get(
 	"/:cal_uuid/events/",
 	[authenticateUser, verifyUser, verifyCalendar],
@@ -87,4 +62,61 @@ router.post(
 		}
 	}
 );
+
+router.get(
+	"/:cal_uuid/",
+	[authenticateUser, verifyUser, verifyCalendar, verifyCalendarIsPublic],
+	async (req, res) => {
+		const { subscribableLink } = req.query;
+		const { cal_uuid } = req.params;
+
+		let url = process.env.URL;
+
+		if (subscribableLink) {
+			try {
+				const link = `${url}/subscribe/?calendar=true&id=${cal_uuid}`;
+				res.status(200).json(link);
+			} catch (error) {
+				console.log("calendars/cannot create subscribable calendar link");
+				res
+					.status(500)
+					.json({
+						message: "calendars/cannot create subscribable calendar link"
+					});
+			}
+		}
+
+		res.status(200).json("no link");
+	}
+);
+
+router.put(
+	"/:cal_uuid/",
+	[authenticateUser, verifyUser, verifyCalendar],
+
+	async (req, res) => {
+		if (Object.keys(req.query).length > 0) {
+			const { subscribe } = req.query;
+			if (subscribe) {
+				const subscribed = await Calendars.subscribe(
+					req.calendarId,
+					req.user.userId
+				);
+
+				res.status(200).json(subscribed);
+			}
+		} else {
+			try {
+				console.log("Body ", req.body);
+				const updated = await Calendars.update(req.calendarId, req.body);
+
+				res.status(200).json(updated);
+			} catch (error) {
+				console.log("calendars/cannot update calendar");
+				res.status(500).json({ message: "calendars/cannot update calendar" });
+			}
+		}
+	}
+);
+
 module.exports = router;

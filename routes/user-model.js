@@ -36,6 +36,7 @@ function getCalendars(userId) {
 			"c.calendarColor",
 			"c.isPrivate",
 			"c.isDefault",
+			"uc.isOwner",
 			"c.uuid"
 		)
 		.where({ "u.userId": userId })
