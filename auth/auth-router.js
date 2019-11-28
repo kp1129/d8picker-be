@@ -10,6 +10,8 @@ const {
 	validateRegistration,
 	validateLogin
 } = require("../auth/auth-router-middleware");
+
+const verifyCalendarSubscriptionOnboarding = require("../middleware/verify-calendar-subscription-onboard");
 // post register
 router.post("/register", validateRegistration, async (req, res) => {
 	// implement registration
@@ -51,34 +53,39 @@ router.post("/register", validateRegistration, async (req, res) => {
 });
 
 //post login
-router.post("/login", validateLogin, (req, res) => {
-	// implement login
-	let { userId, password } = req.body;
+router.post(
+	"/login",
+	[validateLogin, verifyCalendarSubscriptionOnboarding],
+	(req, res) => {
+		// implement login
+		let { userId, password } = req.body;
 
-	Users.find(userId)
-		.then(user => {
-			if (user && bcrypt.compareSync(password, user.password)) {
-				const token = generateToken({
-					username: user.username,
-					uuid: user.uuid
-				});
-				res.status(200).json({
-					profile: {
-						firstName: user.firstName,
-						lastName: user.lastName,
-						email: user.email
-					},
-					accessToken: token
-				});
-			} else {
-				res.status(401).json({ message: "invalid credentials" });
-			}
-		})
-		.catch(err => {
-			console.log(err);
-			res.status(500).json({ message: `server 500 error ${err}` });
-		});
-});
+		Users.find(userId)
+			.then(user => {
+				if (user && bcrypt.compareSync(password, user.password)) {
+					const token = generateToken({
+						username: user.username,
+						uuid: user.uuid
+					});
+					res.status(200).json({
+						profile: {
+							firstName: user.firstName,
+							lastName: user.lastName,
+							email: user.email
+						},
+
+						accessToken: token
+					});
+				} else {
+					res.status(401).json({ message: "invalid credentials" });
+				}
+			})
+			.catch(err => {
+				console.log(err);
+				res.status(500).json({ message: `server 500 error ${err}` });
+			});
+	}
+);
 
 //get logout
 router.get("/logout", (req, res) => {

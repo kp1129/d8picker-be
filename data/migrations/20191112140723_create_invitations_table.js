@@ -20,6 +20,7 @@ exports.up = function(knex) {
 			.string("uuid")
 			.notNullable()
 			.unique();
+		table.timestamp("expired_at");
 		table.timestamps(true, true);
 	});
 };

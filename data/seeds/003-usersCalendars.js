@@ -9,7 +9,8 @@ exports.seed = function(knex) {
 				{ userId: 1, calendarId: 1, isOwner: true, uuid: uuidv1() },
 				{ userId: 1, calendarId: 2, isOwner: true, uuid: uuidv1() },
 				{ userId: 1, calendarId: 3, isOwner: true, uuid: uuidv1() },
-				{ userId: 1, calendarId: 4, isOwner: true, uuid: uuidv1() }
+				{ userId: 1, calendarId: 4, isOwner: true, uuid: uuidv1() },
+				{ userId: 2, calendarId: 5, isOwner: true, uuid: uuidv1() }
 			]);
 		});
 };

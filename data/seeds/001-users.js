@@ -18,6 +18,18 @@ exports.seed = function(knex) {
 					),
 					isAdmin: 1,
 					uuid: uuidv1()
+				},
+				{
+					firstName: "Bob",
+					lastName: "Smith",
+					username: "bsmith",
+					email: "bsmith@email.dev",
+					password: bcrypt.hashSync(
+						process.env.SEED_PASSWORD || "password",
+						10
+					),
+					isAdmin: 1,
+					uuid: uuidv1()
 				}
 			]);
 		});
