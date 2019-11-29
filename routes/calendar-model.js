@@ -8,7 +8,8 @@ module.exports = {
 	addDefaultCalendar,
 	remove,
 	update,
-	subscribe
+	subscribe,
+	unsubscribe
 };
 
 function getByCalendarId(calendarId) {
@@ -99,4 +100,10 @@ function subscribe(calendarId, userId) {
 		.then(ids => {
 			return getByUsersCalendarsId(ids[0]);
 		});
+}
+
+function unsubscribe(calendarId, userId) {
+	return db("usersCalendars")
+		.where({ calendarId, userId })
+		.del();
 }
