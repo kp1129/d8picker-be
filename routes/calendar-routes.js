@@ -1,7 +1,6 @@
 const router = require("express").Router();
 const Calendars = require("./calendar-model");
 const Events = require("../routes/event-model");
-const Invitations = require("../routes/invitation-model");
 const uuidv1 = require("uuid/v1");
 
 const authenticateUser = require("../auth/authenticate-middleware");
@@ -29,7 +28,12 @@ router.get(
 	[authenticateUser, verifyUser, verifyCalendar],
 	async (req, res) => {
 		try {
-			const response = await Events.get(req.calendarId);
+			const events = await Events.get(req.calendarId);
+
+			const response = {
+				calendarUuid: req.calendarUuid,
+				events
+			};
 
 			res.status(200).json(response);
 		} catch (err) {
@@ -78,11 +82,9 @@ router.get(
 				res.status(200).json(link);
 			} catch (error) {
 				console.log("calendars/cannot create subscribable calendar link");
-				res
-					.status(500)
-					.json({
-						message: "calendars/cannot create subscribable calendar link"
-					});
+				res.status(500).json({
+					message: "calendars/cannot create subscribable calendar link"
+				});
 			}
 		}
 
@@ -96,18 +98,26 @@ router.put(
 
 	async (req, res) => {
 		if (Object.keys(req.query).length > 0) {
-			const { subscribe } = req.query;
-			if (subscribe) {
+			const subscribe = req.query.subscribe;
+
+			if (subscribe == "true") {
 				const subscribed = await Calendars.subscribe(
 					req.calendarId,
 					req.user.userId
 				);
 
 				res.status(200).json(subscribed);
+			} else if (subscribe == "false") {
+				const unsubscribed = await Calendars.unsubscribe(
+					req.calendarId,
+					req.user.userId
+				);
+				res.status(200).json(unsubscribed);
+			} else {
+				res.status(400).json({ message: "calendars/invalid request" });
 			}
 		} else {
 			try {
-				console.log("Body ", req.body);
 				const updated = await Calendars.update(req.calendarId, req.body);
 
 				res.status(200).json(updated);

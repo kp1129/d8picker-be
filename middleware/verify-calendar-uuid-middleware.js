@@ -13,6 +13,7 @@ const verifyCalendarUuid = async (req, res, next) => {
 		}
 
 		req.calendarId = calendar.calendarId;
+		req.calendarUuid = cal_uuid;
 
 		next();
 	} catch (err) {
