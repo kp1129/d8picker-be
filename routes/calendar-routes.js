@@ -9,17 +9,14 @@ const verifyCalendar = require("../middleware/verify-calendar-uuid-middleware");
 const verifyCalendarIsPublic = require("../middleware/verify-calendar-public-middleware");
 
 router.post("/", [authenticateUser, verifyUser], async (req, res) => {
-	let cal = req.body;
-	cal.uuid = uuidv1();
 	try {
-		const calendar = await Calendars.add(cal);
-
+		const calendar = await Calendars.add(req.user.id, req.body);
 		if (calendar) {
 			res.status(200).json(calendar);
 		}
 	} catch (err) {
-		console.log("calendar ADD error", err);
-		res.status(400).json({ message: "error adding calendar", error: `${err}` });
+		console.log("calendars/error adding calendar", err);
+		res.status(400).json({ message: "calendars/error adding calendar" });
 	}
 });
 
@@ -119,12 +116,29 @@ router.put(
 		} else {
 			try {
 				const updated = await Calendars.update(req.calendarId, req.body);
-
-				res.status(200).json(updated);
+				if (updated) {
+					res.status(200).json(updated);
+				}
 			} catch (error) {
 				console.log("calendars/cannot update calendar");
 				res.status(500).json({ message: "calendars/cannot update calendar" });
 			}
+		}
+	}
+);
+
+router.delete(
+	"/:cal_uuid",
+	[authenticateUser, verifyUser, verifyCalendar],
+	async (req, res) => {
+		try {
+			const deleted = await Calendars.remove(req.calendarId);
+			if (deleted) {
+				res.status(200).json(deleted);
+			}
+		} catch (error) {
+			console.log("calendars/cannot delete calendar ", error);
+			res.status(500).json({ message: "calendars/cannot delete calendar" });
 		}
 	}
 );
