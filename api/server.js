@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
-
+const swaggerDoc = require("../swaggerDoc");
 const server = express();
 
 server.use(helmet());
@@ -21,6 +21,8 @@ server.use("/auth", authRouter);
 server.use("/api/calendars/", calendarRouter);
 server.use("/api/events/", eventRouter);
 server.use("/api/invitations/", invitationRouter);
+
+swaggerDoc(server);
 
 //testing server
 server.get("/", (req, res) => {
