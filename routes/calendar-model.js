@@ -72,13 +72,23 @@ function addDefaultCalendar(userId) {
 				});
 		});
 }
-function add(calendar) {
+function add(userId, calendar) {
+	calendar.uuid = uuidv1();
 	return db("calendars")
 		.insert(calendar, "calendarId")
 		.then(ids => {
-			return getById(ids[0]);
+			const calendarId = ids[0];
+			return db("usersCalendars")
+				.insert(
+					{ userId, calendarId, isOwner: true, uuid: uuidv1() },
+					"usersCalendarsId"
+				)
+				.then(ids => {
+					return getByUsersCalendarsId(ids[0]);
+				});
 		});
 }
+
 function remove(calendarId) {
 	return db("calendars")
 		.where({ calendarId })

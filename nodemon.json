@@ -1,5 +1,4 @@
 {
 	"ignore": [".git", "node_modules/**/node_modules"],
-	"ext": "js, json, yaml",
-	"watch": ["swagger/"]
+	"ext": "js, json, yaml"
 }
