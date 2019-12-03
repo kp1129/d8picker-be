@@ -74,6 +74,93 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ArrayOfCalendarsObject"
+  /api/calendars:
+    post:
+      tags:
+        - Calendar
+      summary: "Add a new calendar"
+      operationId: "addCalendar"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            $ref: "#/components/schemas/Authorization"
+          required: true
+      requestBody:
+        description: "new calendar"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewCalendarRequest"
+      responses:
+        "200":
+          description: "Calendar updated successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewCalendarResponse"
+
+  /api/calendars/{calendarUuid}:
+    put:
+      tags:
+        - Calendar
+      summary: "Update a calendar"
+      operationId: "updateCalendar"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            $ref: "#/components/schemas/Authorization"
+          required: true
+        - name: calendarUuid
+          in: path
+          type: string
+          required: true
+      requestBody:
+        description: "update calendar"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewCalendarRequest"
+      responses:
+        "200":
+          description: "Calendar updated successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewCalendarResponse"
+    delete:
+      tags:
+        - Calendar
+      summary: "Delete a calendar"
+      operationId: "deleteCalendar"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            $ref: "#/components/schemas/Authorization"
+          required: true
+        - name: calendarUuid
+          in: path
+          type: string
+          required: true
+
+      responses:
+        "200":
+          description: "Calendar deleted successfully"
+          content:
+            schema:
+              type: integer
+              example: 1
+
   /api/calendars/{calendarUuid}/?subscribe=true:
     put:
       tags:
@@ -185,7 +272,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CalendarEventsResponse"
-
   /api/events/{eventUuid}:
     put:
       tags:
@@ -255,6 +341,34 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
+    NewCalendarRequest:
+      type: object
+      properties:
+        calendarName:
+          type: string
+        calendarDescription:
+          type: string
+        calendarColor:
+          type: string
+        isPrivate:
+          type: boolean
+    NewCalendarResponse:
+      type: object
+      properties:
+        calendarName:
+          type: string
+        calendarDescription:
+          type: string
+        calendarColor:
+          type: string
+        isPrivate:
+          type: integer
+        isDefault:
+          type: integer
+        isOwner:
+          type: integer
+        uuid:
+          type: string
     NewEventRequest:
       type: object
       properties:
