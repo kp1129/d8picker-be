@@ -4,12 +4,15 @@ module.exports = {
 	getByCalendarId,
 	getByUsersCalendarsId,
 	getByUuid,
+	getSubscribers,
+	getByCalendarIdAndUserId,
 	add,
 	addDefaultCalendar,
 	remove,
 	update,
 	subscribe,
-	unsubscribe
+	unsubscribe,
+	removeCalendarSubscribers
 };
 
 function getByCalendarId(calendarId) {
@@ -46,6 +49,23 @@ function getByUsersCalendarsId(usersCalendarsId) {
 function getByUuid(uuid) {
 	return db("calendars")
 		.where({ uuid })
+		.first();
+}
+
+function getSubscribers(calendarId, userId) {
+	return db("usersCalendars as uc")
+		.join("users as u", "uc.userId", "u.userId")
+		.where("calendarId", calendarId)
+		.whereNot({ "uc.userId": userId })
+		.select("firstName", "lastName", "email")
+		.then(users => {
+			return users;
+		});
+}
+
+function getByCalendarIdAndUserId(calendarId, userId) {
+	return db("usersCalendars")
+		.where({ calendarId, userId })
 		.first();
 }
 
@@ -115,5 +135,13 @@ function subscribe(calendarId, userId) {
 function unsubscribe(calendarId, userId) {
 	return db("usersCalendars")
 		.where({ calendarId, userId })
+		.del();
+}
+
+// remove usersCalendars who are not an owner
+function removeCalendarSubscribers(calendarId) {
+	return db("usersCalendars")
+		.where({ calendarId })
+		.andWhere("isOwner", 0)
 		.del();
 }

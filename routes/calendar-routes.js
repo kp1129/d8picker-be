@@ -1,16 +1,16 @@
 const router = require("express").Router();
 const Calendars = require("./calendar-model");
 const Events = require("../routes/event-model");
-const uuidv1 = require("uuid/v1");
 
 const authenticateUser = require("../auth/authenticate-middleware");
 const verifyUser = require("../auth/verify-user-middleware");
 const verifyCalendar = require("../middleware/verify-calendar-uuid-middleware");
-const verifyCalendarIsPublic = require("../middleware/verify-calendar-public-middleware");
+const isCalendarPublic = require("../middleware/verify-calendar-public-middleware");
+const isCalendarOwner = require("../middleware/verify-calendar-owner-middleware");
 
 router.post("/", [authenticateUser, verifyUser], async (req, res) => {
 	try {
-		const calendar = await Calendars.add(req.user.id, req.body);
+		const calendar = await Calendars.add(req.user.userId, req.body);
 		if (calendar) {
 			res.status(200).json(calendar);
 		}
@@ -22,7 +22,7 @@ router.post("/", [authenticateUser, verifyUser], async (req, res) => {
 
 router.get(
 	"/:cal_uuid/events/",
-	[authenticateUser, verifyUser, verifyCalendar],
+	[authenticateUser, verifyUser, verifyCalendar, isCalendarOwner],
 	async (req, res) => {
 		try {
 			const events = await Events.get(req.calendarId);
@@ -44,7 +44,7 @@ router.get(
 );
 router.post(
 	"/:cal_uuid/events/",
-	[authenticateUser, verifyUser, verifyCalendar],
+	[authenticateUser, verifyUser, verifyCalendar, isCalendarOwner],
 	async (req, res) => {
 		try {
 			const eventId = await Events.add(req.body);
@@ -66,7 +66,13 @@ router.post(
 
 router.get(
 	"/:cal_uuid/",
-	[authenticateUser, verifyUser, verifyCalendar, verifyCalendarIsPublic],
+	[
+		authenticateUser,
+		verifyUser,
+		verifyCalendar,
+		isCalendarPublic,
+		isCalendarOwner
+	],
 	async (req, res) => {
 		const { subscribableLink } = req.query;
 		const { cal_uuid } = req.params;
@@ -89,10 +95,75 @@ router.get(
 	}
 );
 
+router.get(
+	"/:cal_uuid/subscribers",
+	[
+		authenticateUser,
+		verifyUser,
+		verifyCalendar,
+		isCalendarPublic,
+		isCalendarOwner
+	],
+	async (req, res) => {
+		try {
+			const subscribers = await Calendars.getSubscribers(
+				req.calendarId,
+				req.user.userId
+			);
+
+			res.status(200).json(subscribers);
+		} catch (error) {
+			console.log("calendars/cannot get calendar subscribers ", error);
+			res.status(500).json({
+				message: "calendars/cannot get calendar subscribers"
+			});
+		}
+	}
+);
+
 router.put(
 	"/:cal_uuid/",
-	[authenticateUser, verifyUser, verifyCalendar],
+	[authenticateUser, verifyUser, verifyCalendar, isCalendarOwner],
 
+	async (req, res) => {
+		try {
+			const updated = await Calendars.update(req.calendarId, req.body);
+			if (updated) {
+				res.status(200).json(updated);
+			}
+		} catch (error) {
+			console.log("calendars/cannot update calendar");
+			res.status(500).json({ message: "calendars/cannot update calendar" });
+		}
+	}
+);
+
+router.put(
+	"/:cal_uuid/privacy",
+	[authenticateUser, verifyUser, verifyCalendar, isCalendarOwner],
+	async (req, res) => {
+		const { isPrivate } = req.body;
+
+		try {
+			const calendar = await Calendars.update(req.calendarId, req.body);
+			if (calendar) {
+				if (isPrivate) {
+					await Calendars.removeCalendarSubscribers(req.calendarId);
+				}
+				res.status(200).json(calendar);
+			}
+		} catch (error) {
+			console.log("calendars/cannot update calendar privacy ", error);
+			res
+				.status(500)
+				.json({ message: "calendars/cannot update calendar privacy" });
+		}
+	}
+);
+
+router.put(
+	"/:cal_uuid/subscriptions",
+	[authenticateUser, verifyUser, verifyCalendar],
 	async (req, res) => {
 		if (Object.keys(req.query).length > 0) {
 			const subscribe = req.query.subscribe;
@@ -111,25 +182,20 @@ router.put(
 				);
 				res.status(200).json(unsubscribed);
 			} else {
-				res.status(400).json({ message: "calendars/invalid request" });
+				res
+					.status(400)
+					.json({ message: "calendar-subscriptions/invalid request" });
 			}
 		} else {
-			try {
-				const updated = await Calendars.update(req.calendarId, req.body);
-				if (updated) {
-					res.status(200).json(updated);
-				}
-			} catch (error) {
-				console.log("calendars/cannot update calendar");
-				res.status(500).json({ message: "calendars/cannot update calendar" });
-			}
+			res
+				.status(400)
+				.json({ message: "calendar-subscriptions/invalid request" });
 		}
 	}
 );
-
 router.delete(
 	"/:cal_uuid",
-	[authenticateUser, verifyUser, verifyCalendar],
+	[authenticateUser, verifyUser, verifyCalendar, isCalendarOwner],
 	async (req, res) => {
 		try {
 			const deleted = await Calendars.remove(req.calendarId);
