@@ -1,72 +1,71 @@
-🚫 Note: All lines that start with 🚫 are instructions and should be deleted before this is posted to your portfolio. This is intended to be a guideline. Feel free to add your own flare to it.
-
-🚫 The numbers 1️⃣ through 3️⃣ next to each item represent the week that part of the docs needs to be comepleted by.  Make sure to delete the numbers by the end of Labs.
-
-🚫 Each student has a required minimum number of meaningful PRs each week per the rubric.  Contributing to docs does NOT count as a PR to meet your weekly requirements.
 
 # API Documentation
 
-#### 1️⃣ Backend delpoyed at [🚫name service here](🚫add URL here) <br>
+#### 1️⃣ Backend delpoyed at [Heroku](https://lab17-makata.herokuapp.com) <br>
 
 ## 1️⃣ Getting started
 
 To get the server running locally:
 
-🚫 adjust these scripts to match your project
-
 - Clone this repo
-- **yarn install** to install all required dependencies
-- **yarn server** to start the local server
-- **yarn test** to start server using testing environment
+- **npm install** to install all required dependencies
+- **npm start** to start the local server
+
 
 ### Backend framework goes here
 
-🚫 Why did you choose this framework?
+Express.JS
 
--    Point One
--    Point Two
--    Point Three
--    Point Four
+-    Simplistic
+-    Scaleable 
+-    Flexible
+-    It's what we know how to use
 
 ## 2️⃣ Endpoints
 
-🚫This is a placeholder, replace the endpoints, access controll, and descriptioin to match your project
 
-#### Organization Routes
+
+#### Calendar Routes
 
 | Method | Endpoint                | Access Control | Description                                  |
 | ------ | ----------------------- | -------------- | -------------------------------------------- |
-| GET    | `/organizations/:orgId` | all users      | Returns the information for an organization. |
-| PUT    | `/organizatoins/:orgId` | owners         | Modify an existing organization.             |
-| DELETE | `/organizations/:orgId` | owners         | Delete an organization.                      |
+| GET    | `/api/users/calendars`  | owners         | Gets all calendars under a user.             |
+| POST   | `/api/calendars`        | owners         | Add new Calendar                             |
+| PUT    | `/api/calendars/{calendarUuid}` | owners | Update A calendar                            |
+| DELETE | `/api/calendars/{calendarUuid}` | owners | Delete A calendar                            |
+| PUT    | `/api/calendars/{calendarUuid}?subscribe=true` | owners | Subscribe to a calendar       |
+| PUT    | `/api/calendars/{calendarUuid}?subscribe=false`| owners | Unsubscribe to a calendar     |
 
 #### User Routes
 
 | Method | Endpoint                | Access Control      | Description                                        |
 | ------ | ----------------------- | ------------------- | -------------------------------------------------- |
-| GET    | `/users/current`        | all users           | Returns info for the logged in user.               |
-| GET    | `/users/org/:userId`    | owners, supervisors | Returns all users for an organization.             |
-| GET    | `/users/:userId`        | owners, supervisors | Returns info for a single user.                    |
-| POST   | `/users/register/owner` | none                | Creates a new user as owner of a new organization. |
-| PUT    | `/users/:userId`        | owners, supervisors |                                                    |
-| DELETE | `/users/:userId`        | owners, supervisors |                                                    |
+| POST   | `/auth/register`        | none                | Register a new user                                |
+| POST   | `/auth/login`           | none                | Login a user                                       |
+
+#### Event Routes
+
+| Method | Endpoint                                      | Access Control      | Description                                        |
+| ------ | --------------------------------------------- | ------------------- | -------------------------------------------------- |
+| POST   | `/api/calendars/{calendarUuid}/events`        | none                | Create Event                                       |
+| GET    | `/api/calendars/{calendarUuid}/events`        | none                | Get All Events                                     |
+| PUT    | `/api/events/{eventUuid}/events`              | none                | Update Event                                       |
+| DELETE | `/api/events/{eventUuid}`                     | none                | Delete Event                                       |
 
 # Data Model
 
-🚫This is just an example. Replace this with your data model
 
-#### 2️⃣ ORGANIZATIONS
+
+#### 2️⃣ Calendars
 
 ---
 
 ```
 {
-  id: UUID
-  name: STRING
-  industry: STRING
-  paid: BOOLEAN
-  customer_id: STRING
-  subscription_id: STRING
+  "calendarName": "string",
+  "calendarDescription": "string",
+  "calendarColor": "string",
+  "isPrivate": true
 }
 ```
 
@@ -76,59 +75,77 @@ To get the server running locally:
 
 ```
 {
-  id: UUID
-  organization_id: UUID foreign key in ORGANIZATIONS table
-  first_name: STRING
-  last_name: STRING
-  role: STRING [ 'owner', 'supervisor', 'employee' ]
-  email: STRING
-  phone: STRING
-  cal_visit: BOOLEAN
-  emp_visit: BOOLEAN
-  emailpref: BOOLEAN
-  phonepref: BOOLEAN
+  "firstName": "string",
+  "lastName": "string",
+  "email": "string",
+  "username": "string",
+  "password": "string"
+}
+```
+#### Events
+
+---
+
+```
+{
+  "eventTitle": "string",
+  "eventNote": "string",
+  "eventLocation": "string",
+  "startDate": "2019-11-20",
+  "endDate": "2019-11-20",
+  "startTime": "2019-11-17T10:00:00.000-08:00",
+  "endTime": "2019-11-17T11:15:00.000-08:00",
+  "isAllDayEvent": true,
+  "isRepeatingEvent": true
 }
 ```
 
+
 ## 2️⃣ Actions
 
-🚫 This is an example, replace this with the actions that pertain to your backend
 
-`getOrgs()` -> Returns all organizations
+`getByCalendarId(calendarId)` -> Returns Calendar
 
-`getOrg(orgId)` -> Returns a single organization by ID
+`getByUsersCalendarsId(usersCalendarsId)` -> Returns calendar
 
-`addOrg(org)` -> Returns the created org
+`getByUuid(uuid)` -> Returns by uuid
 
-`updateOrg(orgId)` -> Update an organization by ID
+`addDefaultCalendar(userId)` -> Adds Calendar
 
-`deleteOrg(orgId)` -> Delete an organization by ID
+`add(userId, calendar)` -> Add user to calendar
+
+`remove(calendarId)` -> Deletes Calendar
+
+`update(calendarId, updated)` -> Updates Calendar
+
+`subscribe(calendarId, userId)` -> Subscribes user to Calendar
+
+`unsubscribe(calendarId, userId)` -> Unsubscribes user to Calendar
 <br>
 <br>
 <br>
-`getUsers(orgId)` -> if no param all users
+`get(calendarId)` -> Gets Calendars Events
 
-`getUser(userId)` -> Returns a single user by user ID
+` getByCalendarsEventsId(calendarsEventsId)` -> Gets specific event
 
-`addUser(user object)` --> Creates a new user and returns that user. Also creates 7 availabilities defaulted to hours of operation for their organization.
+`getById(eventId)` --> Gets Specific Event
 
-`updateUser(userId, changes object)` -> Updates a single user by ID.
+`getByUuid(uuid)` -> Gets Event by Uuid
 
-`deleteUser(userId)` -> deletes everything dependent on the user
+`add(event)` -> Creates Event
+
+`addCalendarsEvents(calendarId, eventId)` -> Creates on the calendar Event
+
+`remove(eventId)` -> Deletes
+
+`update(eventId, changes)` -> Changes Event
 
 ## 3️⃣ Environment Variables
 
 In order for the app to function correctly, the user must set up their own environment variables.
 
 create a .env file that includes the following:
-
-🚫 These are just examples, replace them with the specifics for your app
-    
-    *  STAGING_DB - optional development db for using functionality not available in SQLite
-    *  NODE_ENV - set to "development" until ready for "production"
-    *  JWT_SECRET - you can generate this by using a python shell and running import random''.join([random.SystemRandom().choice('abcdefghijklmnopqrstuvwxyz0123456789!@#\$%^&amp;*(-*=+)') for i in range(50)])
-    *  SENDGRID_API_KEY - this is generated in your Sendgrid account
-    *  stripe_secret - this is generated in the Stripe dashboard
+No need for .env file
     
 ## Contributing
 
