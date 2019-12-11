@@ -78,7 +78,7 @@ exports.up = function(knex) {
 				.boolean("isRepeatingEvent")
 				.notNullable()
 				.defaultTo(false);
-			table.string("recurrence");
+			table.string("rrule");
 			table.string("eventColor").defaultTo("#1A73E8");
 			table.boolean("isPrivate").defaultTo(true);
 			table
