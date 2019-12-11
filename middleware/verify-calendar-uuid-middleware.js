@@ -9,7 +9,7 @@ const verifyCalendarUuid = async (req, res, next) => {
 	try {
 		const calendar = await Calendars.getByUuid(cal_uuid);
 		if (!calendar) {
-			res.status(200).json({ message: "Invalid calendar uuid." });
+			res.status(400).json({ message: "Invalid calendar uuid." });
 		}
 
 		req.calendarId = calendar.calendarId;

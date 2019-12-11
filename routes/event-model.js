@@ -14,8 +14,9 @@ module.exports = {
 
 function get(calendarId) {
 	return db("calendarsEvents as ce")
-		.where({ calendarId })
+		.where({ "ce.calendarId": calendarId })
 		.join("events", "ce.eventId", "events.eventId")
+		.join("calendars as c", "ce.calendarId", "c.calendarId")
 		.select(
 			"eventTitle",
 			"eventNote",
@@ -26,8 +27,8 @@ function get(calendarId) {
 			"endTime",
 			"isAllDayEvent",
 			"isRepeatingEvent",
-			"isPrivate",
-			"eventColor",
+			"c.isPrivate",
+			"c.calendarColor",
 			"events.uuid"
 		);
 }

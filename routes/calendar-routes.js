@@ -7,6 +7,7 @@ const verifyUser = require("../auth/verify-user-middleware");
 const verifyCalendar = require("../middleware/verify-calendar-uuid-middleware");
 const isCalendarPublic = require("../middleware/verify-calendar-public-middleware");
 const isCalendarOwner = require("../middleware/verify-calendar-owner-middleware");
+const isCalendarSubscriber = require("../middleware/verify-calendar-subscriber-middleware");
 
 router.post("/", [authenticateUser, verifyUser], async (req, res) => {
 	try {
@@ -19,10 +20,25 @@ router.post("/", [authenticateUser, verifyUser], async (req, res) => {
 		res.status(400).json({ message: "calendars/error adding calendar" });
 	}
 });
+router.get(
+	"/:cal_uuid",
+	[authenticateUser, verifyUser, verifyCalendar],
+	async (req, res) => {
+		try {
+			const calendar = await Calendars.getByCalendarId(req.calendarId);
 
+			res.status(200).json(calendar);
+		} catch (error) {
+			console.log("calendars/error getting calendar detail", err);
+			res
+				.status(400)
+				.json({ message: "calendars/error getting calendar detail" });
+		}
+	}
+);
 router.get(
 	"/:cal_uuid/events/",
-	[authenticateUser, verifyUser, verifyCalendar, isCalendarOwner],
+	[authenticateUser, verifyUser, verifyCalendar, isCalendarSubscriber],
 	async (req, res) => {
 		try {
 			const events = await Events.get(req.calendarId);

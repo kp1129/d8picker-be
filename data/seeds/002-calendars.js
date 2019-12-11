@@ -37,7 +37,7 @@ exports.seed = function(knex) {
 				{
 					calendarName: "Primary",
 					calendarDescription: "Default calendar",
-					isDefault: false,
+					isDefault: true,
 					isPrivate: true,
 					uuid: uuidv1()
 				}
