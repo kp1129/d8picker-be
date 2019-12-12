@@ -6,6 +6,26 @@ const verifyEvent = require("../middleware/verify-event-uuid-middleware");
 
 const Events = require("./event-model");
 
+router.get("/upcoming", [authenticateUser, verifyUser], async (req, res) => {
+	let defaultLimit = 10;
+
+	if (Object.keys(req.query).length > 0) {
+		const { limit } = req.query;
+		if (limit) {
+			defaultLimit = limit;
+		}
+	}
+	const userId = req.user.userId;
+	const events = await Events.getUpcoming(userId, defaultLimit);
+
+	res.status(200).json(events);
+
+	try {
+	} catch (error) {
+		console.log("events/cannot get events", err);
+		res.status(500).json({ message: "events/cannot get events" });
+	}
+});
 router.delete(
 	"/:event_uuid",
 	[authenticateUser, verifyUser, verifyEvent],
@@ -16,9 +36,7 @@ router.delete(
 			res.status(200).json(response);
 		} catch (err) {
 			console.log("events/cannot delete event", err);
-			res
-				.status(500)
-				.json({ message: "events/cannot delete event", error: `${err}` });
+			res.status(500).json({ message: "events/cannot delete event" });
 		}
 	}
 );
@@ -33,9 +51,7 @@ router.put(
 			res.status(200).json(response);
 		} catch (err) {
 			console.log("events/cannot update event", err);
-			res
-				.status(500)
-				.json({ message: "events/cannot update event", error: `${err}` });
+			res.status(500).json({ message: "events/cannot update event" });
 		}
 	}
 );

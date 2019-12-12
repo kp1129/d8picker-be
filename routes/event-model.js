@@ -1,7 +1,8 @@
 const db = require("../data/db-config.js");
 const uuidv1 = require("uuid/v1");
-
+const moment = require("moment");
 module.exports = {
+	getUpcoming,
 	get,
 	getByCalendarsEventsId,
 	getByUuid,
@@ -11,6 +12,32 @@ module.exports = {
 	remove,
 	update
 };
+
+function getUpcoming(userId, limit) {
+	const today = moment().format("YYYY-MM-DD");
+	return db("calendarsEvents as ce")
+		.where("events.startDate", ">=", today)
+		.andWhere("uc.userId", userId)
+		.join("events", "ce.eventId", "events.eventId")
+		.join("calendars as c", "ce.calendarId", "c.calendarId")
+		.join("usersCalendars as uc", "c.calendarId", "uc.calendarId")
+		.select(
+			"eventTitle",
+			"eventNote",
+			"eventLocation",
+			"startDate",
+			"endDate",
+			"startTime",
+			"endTime",
+			"isAllDayEvent",
+			"isRepeatingEvent",
+			"c.isPrivate",
+			"c.calendarColor",
+			"events.uuid"
+		)
+		.limit(limit)
+		.orderBy("events.startDate", "asc");
+}
 
 function get(calendarId) {
 	return db("calendarsEvents as ce")
