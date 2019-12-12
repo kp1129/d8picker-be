@@ -12,31 +12,7 @@ const {
 } = require("../auth/auth-router-middleware");
 
 const verifyCalendarSubscriptionOnboarding = require("../middleware/verify-calendar-subscription-onboard");
-/**
- * @swagger
- * definitions:
- *
- * 	NewUser:
- * 		type: object
- * 		required:
- * 			- firstName
- * 			- lastName
- * 			- email
- * 			- username
- * 			- password
- * 		properties:
- * 			firstName:
- * 				type:string
- * 			lastName:
- * 				type:string
- * 			email:
- * 				type:string
- * 			username:
- * 				type:string
- * 			password:
- * 				type:string
- *
- */
+
 router.post("/register", validateRegistration, async (req, res) => {
 	// implement registration
 	const { firstName, lastName, username, email, password } = req.body;

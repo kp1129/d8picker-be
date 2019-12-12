@@ -15,7 +15,7 @@ const verifyCalendarSubcriptionOnboarding = async (req, res, next) => {
 
 			if (
 				invitation &&
-				invitation.isUsed === 0 &&
+				Boolean(invitation.isUsed) &&
 				moment().isBefore(invitation.expired_at)
 			) {
 				if (calendar) {
