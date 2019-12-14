@@ -20,22 +20,7 @@ router.post("/", [authenticateUser, verifyUser], async (req, res) => {
 		res.status(400).json({ message: "calendars/error adding calendar" });
 	}
 });
-router.get(
-	"/:cal_uuid",
-	[authenticateUser, verifyUser, verifyCalendar],
-	async (req, res) => {
-		try {
-			const calendar = await Calendars.getByCalendarId(req.calendarId);
 
-			res.status(200).json(calendar);
-		} catch (error) {
-			console.log("calendars/error getting calendar detail", err);
-			res
-				.status(400)
-				.json({ message: "calendars/error getting calendar detail" });
-		}
-	}
-);
 router.get(
 	"/:cal_uuid/events/",
 	[authenticateUser, verifyUser, verifyCalendar, isCalendarSubscriber],
@@ -79,9 +64,24 @@ router.post(
 		}
 	}
 );
-
 router.get(
-	"/:cal_uuid/",
+	"/:cal_uuid",
+	[authenticateUser, verifyUser, verifyCalendar],
+	async (req, res) => {
+		try {
+			const calendar = await Calendars.getByCalendarId(req.calendarId);
+
+			res.status(200).json(calendar);
+		} catch (error) {
+			console.log("calendars/error getting calendar detail", err);
+			res
+				.status(400)
+				.json({ message: "calendars/error getting calendar detail" });
+		}
+	}
+);
+router.get(
+	"/:cal_uuid/subscribableLink",
 	[
 		authenticateUser,
 		verifyUser,
@@ -92,7 +92,7 @@ router.get(
 	async (req, res) => {
 		const { subscribableLink } = req.query;
 		const { cal_uuid } = req.params;
-
+		console.log("link ");
 		let url = process.env.URL;
 
 		if (subscribableLink) {
@@ -105,6 +105,7 @@ router.get(
 					message: "calendars/cannot create subscribable calendar link"
 				});
 			}
+		} else {
 		}
 
 		res.status(200).json("no link");
