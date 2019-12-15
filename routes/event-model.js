@@ -33,7 +33,8 @@ function getUpcoming(userId, limit) {
 			"isRepeatingEvent",
 			"c.isPrivate",
 			"c.calendarColor",
-			"events.uuid"
+			"events.uuid",
+			"rrule"
 		)
 		.limit(limit)
 		.orderBy("events.startDate", "asc");
@@ -56,7 +57,8 @@ function get(calendarId) {
 			"isRepeatingEvent",
 			"c.isPrivate",
 			"c.calendarColor",
-			"events.uuid"
+			"events.uuid",
+			"rrule"
 		);
 }
 
@@ -76,7 +78,8 @@ function getByCalendarsEventsId(calendarsEventsId) {
 			"isRepeatingEvent",
 			"isPrivate",
 			"eventColor",
-			"events.uuid"
+			"events.uuid",
+			"rrule"
 		)
 		.first();
 }
@@ -95,7 +98,8 @@ function getById(eventId) {
 			"isRepeatingEvent",
 			"eventColor",
 			"isPrivate",
-			"uuid"
+			"uuid",
+			"rrule"
 		)
 		.first();
 }
@@ -115,7 +119,8 @@ function getByUuid(uuid) {
 			"isRepeatingEvent",
 			"eventColor",
 			"isPrivate",
-			"uuid"
+			"uuid",
+			"rrule"
 		)
 		.first();
 }
