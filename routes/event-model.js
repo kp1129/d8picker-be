@@ -129,7 +129,7 @@ function add(event) {
 	event.endDate = event.isAllDayEvent
 		? moment(event.endDate)
 				.add(1, "days")
-				.format("YYYY-MM-DD")
+				.format()
 		: event.endDate;
 	return db("events")
 		.insert(event, "eventId")
