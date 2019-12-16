@@ -126,6 +126,11 @@ function getByUuid(uuid) {
 }
 function add(event) {
 	event.uuid = uuidv1();
+	event.endDate = event.isAllDayEvent
+		? moment(event.endDate)
+				.add(1, "days")
+				.format("YYYY-MM-DD")
+		: event.endDate;
 	return db("events")
 		.insert(event, "eventId")
 		.then(ids => {
