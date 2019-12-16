@@ -66,8 +66,8 @@ exports.up = function(knex) {
 			table.string("eventNote", 255).notNullable();
 			table.string("eventLocation", 255);
 			table.string("timeZone", 255);
-			table.date("startDate").notNullable();
-			table.date("endDate").notNullable();
+			table.timestamp("startDate").notNullable();
+			table.timestamp("endDate").notNullable();
 			table.timestamp("startTime");
 			table.timestamp("endTime");
 			table
