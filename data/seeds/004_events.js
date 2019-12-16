@@ -9,7 +9,7 @@ exports.seed = function(knex) {
 			// Inserts seed entries
 			return knex("events").insert([
 				{
-					eventTitle: "Team Standup",
+					eventTitle: "Partial Team Standup",
 					eventNote: "Discussing team performance.",
 					eventLocation: "The Quad",
 					startDate: moment()
@@ -36,7 +36,7 @@ exports.seed = function(knex) {
 					uuid: uuidv1()
 				},
 				{
-					eventTitle: "Fundraising Plan",
+					eventTitle: "All Day Fundraising",
 					eventNote: "Planning fundraising in nearby shopping malls.",
 					eventLocation: "Building 1A, Birmingham HS",
 					startDate: moment()
@@ -51,14 +51,14 @@ exports.seed = function(knex) {
 					uuid: uuidv1()
 				},
 				{
-					eventTitle: "Regular Zoom conference",
+					eventTitle: "Recurring conference",
 					eventNote: "Discussing players training plan.",
 					eventLocation: "Online",
 					startDate: moment()
 						.days(4)
 						.format("YYYY-MM-DD"),
 					endDate: moment()
-						.add(30, "days")
+						.days(4, "days")
 						.format("YYYY-MM-DD"),
 					startTime: moment()
 						.days(4)
@@ -67,16 +67,17 @@ exports.seed = function(knex) {
 						.seconds(0)
 						.toISOString(true),
 					endTime: moment()
-						.add(30, "days")
+						.days(4)
 						.hours(14)
-						.minutes(45)
+						.minutes(0)
 						.seconds(0)
 						.toISOString(true),
 					isAllDayEvent: false,
 					isRepeatingEvent: true,
 					isPrivate: true,
 					uuid: uuidv1(),
-					rrule: "RRULE:FREQ=WEEKLY;COUNT=10;INTERVAL=1;WKST=SU"
+					rrule:
+						"DTSTART:20191219T130000 RRULE:FREQ=WEEKLY;COUNT=10;INTERVAL=1;WKST=SU;UNTIL=20191221T130000"
 				}
 			]);
 		});

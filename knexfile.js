@@ -22,7 +22,7 @@ module.exports = {
 	staging: {
 		client: "pg",
 		connection: {
-			database: "makata",
+			database: "postgres",
 			host: "127.0.0.1",
 			user: "postgres",
 			password: ""
