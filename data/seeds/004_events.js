@@ -77,7 +77,7 @@ exports.seed = function(knex) {
 					isPrivate: true,
 					uuid: uuidv1(),
 					rrule:
-						"DTSTART:20191219T130000 RRULE:FREQ=WEEKLY;COUNT=10;INTERVAL=1;WKST=SU;UNTIL=20191221T130000"
+						"DTSTART:20191219T130000 RRULE:FREQ=WEEKLY;COUNT=10;INTERVAL=1;WKST=SU;UNTIL=20200119T130000"
 				}
 			]);
 		});
