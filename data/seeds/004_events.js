@@ -12,19 +12,26 @@ exports.seed = function(knex) {
 					eventTitle: "Team Standup",
 					eventNote: "Discussing team performance.",
 					eventLocation: "The Quad",
-					startDate: moment().format("YYYY-MM-DD"),
+					startDate: moment()
+						.days(1)
+						.format("YYYY-MM-DD"),
 					endDate: moment()
-						.add(1, "days")
+						.days(1)
 						.format("YYYY-MM-DD"),
 					startTime: moment()
-						.startOf("hour")
+						.days(1)
+						.hours(9)
+						.minutes(0)
+						.seconds(0)
 						.toISOString(true),
 					endTime: moment()
-						.startOf("hour")
-						.add(2, "hours")
+						.days(1)
+						.hours(10)
+						.minutes(15)
+						.seconds(0)
 						.toISOString(true),
 					isAllDayEvent: false,
-					isRepeatingEvent: true,
+					isRepeatingEvent: false,
 					isPrivate: true,
 					uuid: uuidv1()
 				},
@@ -33,21 +40,13 @@ exports.seed = function(knex) {
 					eventNote: "Planning fundraising in nearby shopping malls.",
 					eventLocation: "Building 1A, Birmingham HS",
 					startDate: moment()
-						.add(7, "days")
+						.days(3)
 						.format("YYYY-MM-DD"),
 					endDate: moment()
-						.add(7, "days")
+						.days(3)
 						.format("YYYY-MM-DD"),
-					startTime: moment()
-						.startOf("hour")
-						.subtract(3, "hours")
-						.toISOString(true),
-					endTime: moment()
-						.startOf("hour")
-						.subtract(2, "hours")
-						.toISOString(true),
-					isAllDayEvent: false,
-					isRepeatingEvent: true,
+					isAllDayEvent: true,
+					isRepeatingEvent: false,
 					isPrivate: true,
 					uuid: uuidv1()
 				},
@@ -56,23 +55,28 @@ exports.seed = function(knex) {
 					eventNote: "Discussing players training plan.",
 					eventLocation: "Online",
 					startDate: moment()
-						.add(1, "months")
+						.days(4)
 						.format("YYYY-MM-DD"),
 					endDate: moment()
-						.add(1, "months")
+						.add(30, "days")
 						.format("YYYY-MM-DD"),
 					startTime: moment()
-						.startOf("hour")
-						.add(1, "months")
+						.days(4)
+						.hours(13)
+						.minutes(0)
+						.seconds(0)
 						.toISOString(true),
 					endTime: moment()
-						.startOf("hour")
-						.add(1, "months")
+						.add(30, "days")
+						.hours(14)
+						.minutes(45)
+						.seconds(0)
 						.toISOString(true),
 					isAllDayEvent: false,
 					isRepeatingEvent: true,
 					isPrivate: true,
-					uuid: uuidv1()
+					uuid: uuidv1(),
+					rrule: "RRULE:FREQ=WEEKLY;COUNT=10;INTERVAL=1;WKST=SU"
 				}
 			]);
 		});
