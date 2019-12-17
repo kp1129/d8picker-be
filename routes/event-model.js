@@ -154,6 +154,11 @@ function remove(eventId) {
 }
 
 function update(eventId, changes) {
+	changes.endDate = changes.isAllDayEvent
+		? moment(changes.endDate)
+				.add(1, "days")
+				.format()
+		: changes.endDate;
 	return db("events")
 		.where({ eventId })
 		.update(changes)
