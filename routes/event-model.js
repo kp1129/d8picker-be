@@ -154,9 +154,19 @@ function remove(eventId) {
 }
 
 function update(eventId, changes) {
+	changes.startDate = changes.isAllDayEvent
+		? moment(changes.startDate)
+				.hours(0)
+				.minutes(0)
+				.seconds(0)
+				.format()
+		: changes.startDate;
 	changes.endDate = changes.isAllDayEvent
 		? moment(changes.endDate)
 				.add(1, "days")
+				.hours(0)
+				.minutes(0)
+				.seconds(0)
 				.format()
 		: changes.endDate;
 	return db("events")
