@@ -27,6 +27,7 @@
 		"cors": "^2.8.5",
 		"dotenv": "^8.2.0",
 		"express": "^4.17.1",
+		"googleapis": "^39.2.0",
 		"helmet": "^3.21.2",
 		"jest": "^24.9.0",
 		"jsonwebtoken": "^8.5.1",
@@ -40,6 +41,7 @@
 		"sqlite3": "^4.1.0",
 		"swagger-jsdoc": "^3.4.0",
 		"swagger-ui-express": "^4.1.2",
+		"twilio": "^3.39.1",
 		"uuid": "^3.3.3",
 		"yamljs": "^0.3.0"
 	},
