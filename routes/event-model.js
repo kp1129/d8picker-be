@@ -85,7 +85,9 @@ function getByCalendarsEventsId(calendarsEventsId) {
 }
 function getById(eventId) {
 	return db("events")
-		.where({ eventId })
+		.where({ "events.eventId": eventId })
+		.join("calendarsEvents as ce", "events.eventId", "ce.eventId")
+		.join("calendars as c", "ce.calendarId", "c.calendarId")
 		.select(
 			"eventTitle",
 			"eventNote",
@@ -97,9 +99,10 @@ function getById(eventId) {
 			"isAllDayEvent",
 			"isRepeatingEvent",
 			"eventColor",
-			"isPrivate",
-			"uuid",
-			"rrule"
+			"events.isPrivate",
+			"events.uuid",
+			"rrule",
+			"c.uuid as calendarUuid"
 		)
 		.first();
 }
@@ -153,7 +156,7 @@ function remove(eventId) {
 		.del();
 }
 
-function update(eventId, changes) {
+function update(eventId, changes, calendarId) {
 	changes.startDate = changes.isAllDayEvent
 		? moment(changes.startDate)
 				.hours(0)
