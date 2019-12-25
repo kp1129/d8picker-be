@@ -4,6 +4,7 @@ const authenticateUser = require("../auth/authenticate-middleware");
 const verifyUser = require("../auth/verify-user-middleware");
 const verifyEvent = require("../middleware/verify-event-uuid-middleware");
 
+const Calendars = require("./calendar-model");
 const Events = require("./event-model");
 
 router.get("/upcoming", [authenticateUser, verifyUser], async (req, res) => {
@@ -44,9 +45,19 @@ router.delete(
 router.put(
 	"/:event_uuid",
 	[authenticateUser, verifyUser, verifyEvent],
+
 	async (req, res) => {
+		const uuid = req.body.calendarUuid;
+
+		delete req.body.calendarUuid;
 		try {
-			const response = await Events.update(req.eventId, req.body);
+			const calendar = await Calendars.getByUuid(uuid);
+
+			const response = await Events.update(
+				req.eventId,
+				req.body,
+				calendar.calendarId
+			);
 
 			res.status(200).json(response);
 		} catch (err) {
