@@ -92,8 +92,8 @@ router.get(
 	async (req, res) => {
 		const { subscribableLink } = req.query;
 		const { cal_uuid } = req.params;
-		console.log("link ");
-		let url = process.env.URL;
+
+		let url = process.env.URL || "http://localhost:3000";
 
 		if (subscribableLink) {
 			try {
@@ -106,9 +106,8 @@ router.get(
 				});
 			}
 		} else {
+			res.status(200).json("no link");
 		}
-
-		res.status(200).json("no link");
 	}
 );
 
