@@ -1,4 +1,5 @@
-const db = require("../data/db-config.js");
+const config = require("../config");
+const { db } = config;
 const uuidv1 = require("uuid/v1");
 const moment = require("moment");
 module.exports = {

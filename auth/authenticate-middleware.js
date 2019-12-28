@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
-const secrets = require("../config/secrets");
+const config = require("../config");
+const { secrets } = config;
 
 module.exports = (req, res, next) => {
 	const authorizationHeader = req.headers.authorization;
@@ -11,7 +12,7 @@ module.exports = (req, res, next) => {
 		const token = bearer[1];
 
 		if (token) {
-			jwt.verify(token, secrets.jwtSecrets, (err, decodedToken) => {
+			jwt.verify(token, secrets.jwt, (err, decodedToken) => {
 				if (err) {
 					console.log(err);
 					res.status(401).json({ message: "YOU SHALL NOT PASS!" });

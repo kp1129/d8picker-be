@@ -1,18 +1,20 @@
+const config = require("../config");
+const { secrets } = config;
 const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const uuidv1 = require("uuid/v1");
-
+const shortId = require("shortid");
 const Users = require("../routes/user-model.js");
 const Calendars = require("../routes/calendar-model");
-const secrets = require("../config/secrets.js");
+
 const {
 	validateRegistration,
 	validateLogin
 } = require("../auth/auth-router-middleware");
 
 const verifyCalendarSubscriptionOnboarding = require("../middleware/verify-calendar-subscription-onboard");
-
+const verifyExistingGoogleUser = require("./verify-existing-google-user-middleware");
 router.post("/register", validateRegistration, async (req, res) => {
 	// implement registration
 	const { firstName, lastName, username, email, password } = req.body;
@@ -40,7 +42,8 @@ router.post("/register", validateRegistration, async (req, res) => {
 			profile: {
 				firstName: user.firstName,
 				lastName: user.lastName,
-				email: user.email
+				email: user.email,
+				externalType: user.externalType
 			},
 			accessToken: token
 		});
@@ -71,7 +74,8 @@ router.post(
 						profile: {
 							firstName: user.firstName,
 							lastName: user.lastName,
-							email: user.email
+							email: user.email,
+							externalType: user.externalType
 						},
 
 						accessToken: token
@@ -86,6 +90,58 @@ router.post(
 			});
 	}
 );
+
+router.post("/google-log-in", [verifyExistingGoogleUser], async (req, res) => {
+	try {
+		if (req.existingAccount) {
+			const { firstName, lastName, email, username, uuid } = req.body;
+			const token = generateToken({
+				username,
+				uuid
+			});
+			res.status(200).json({
+				profile: {
+					firstName,
+					lastName,
+					email
+				},
+
+				accessToken: token
+			});
+		} else {
+			const { displayName, email, externalId } = req.body;
+			const newUser = {
+				firstName: "Makata",
+				lastName: "User",
+				username: shortId.generate(),
+				email,
+				uuid: uuidv1(),
+				externalId,
+				externalType: "google"
+			};
+			const user = await Users.add(newUser);
+			const token = generateToken({
+				username: user.username,
+				uuid: user.uuid
+			});
+			await Calendars.addDefaultCalendar(user.userId);
+			res.status(201).json({
+				profile: {
+					firstName: user.firstName,
+					lastName: user.lastName,
+					email: user.email,
+					externalType: user.externalType
+				},
+				accessToken: token
+			});
+		}
+	} catch (err) {
+		console.log(err);
+		res
+			.status(500)
+			.json({ message: "users/cannot create new user at this time" });
+	}
+});
 
 //get logout
 router.get("/logout", (req, res) => {
@@ -102,9 +158,9 @@ function generateToken(user) {
 		uuid: user.uuid
 	};
 	const options = {
-		expiresIn: "1d"
+		expiresIn: secrets.jwtExp
 	};
-	return jwt.sign(payload, secrets.jwtSecrets, options);
+	return jwt.sign(payload, secrets.jwt, options);
 }
 
 module.exports = router;

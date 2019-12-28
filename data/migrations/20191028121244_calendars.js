@@ -12,7 +12,7 @@ exports.up = function(knex) {
 				.string("email")
 				.notNullable()
 				.unique();
-			table.string("password", 255).notNullable();
+			table.string("password", 255);
 			table.integer("phoneNumber");
 			table
 				.boolean("isAdmin")
@@ -22,6 +22,8 @@ exports.up = function(knex) {
 				.string("uuid", 255)
 				.notNullable()
 				.unique();
+			table.string("externalId", 255);
+			table.string("externalType", 64);
 			table.timestamps(true, true);
 		})
 		.createTable("calendars", table => {

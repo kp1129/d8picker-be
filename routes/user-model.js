@@ -1,4 +1,5 @@
-const db = require("../data/db-config.js");
+const config = require("../config");
+const { db } = config;
 
 module.exports = {
 	add,
@@ -64,7 +65,9 @@ function getDefaultCalendar(userId) {
 }
 
 function getBy(filter) {
-	return db("users").where(filter);
+	return db("users")
+		.where(filter)
+		.first();
 }
 
 function getByUuid(uuid) {
