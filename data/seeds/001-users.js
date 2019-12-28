@@ -17,7 +17,8 @@ exports.seed = function(knex) {
 						10
 					),
 					isAdmin: 1,
-					uuid: uuidv1()
+					uuid: uuidv1(),
+					externalType: "native"
 				},
 				{
 					firstName: "Bob",
@@ -29,7 +30,8 @@ exports.seed = function(knex) {
 						10
 					),
 					isAdmin: 1,
-					uuid: uuidv1()
+					uuid: uuidv1(),
+					externalType: "native"
 				}
 			]);
 		});

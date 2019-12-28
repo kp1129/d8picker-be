@@ -1,4 +1,5 @@
-const db = require("../data/db-config.js"); // Calendar-Modal
+const config = require("../config");
+const { db } = config;
 const uuidv1 = require("uuid/v1");
 module.exports = {
 	getByCalendarId,

@@ -1,3 +1,4 @@
+require("../config");
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
@@ -15,8 +16,7 @@ const calendarRouter = require("../routes/calendar-routes");
 const eventRouter = require("../routes/event-routes");
 const invitationRouter = require("../routes/invitation-routes");
 const colorRouter = require("../routes/color-routes");
-const twilioRouter = require("../routes/twilio-routes");
-const googleCalRouter = require("../routes/google-cal-api-routes");
+
 //routes
 server.use("/users", userRouter);
 server.use("/auth", authRouter);
@@ -24,8 +24,7 @@ server.use("/api/calendars/", calendarRouter);
 server.use("/api/events/", eventRouter);
 server.use("/api/invitations/", invitationRouter);
 server.use("/api/colors", colorRouter);
-server.use("/api/twilio/", twilioRouter);
-server.use("/api/google/", googleCalRouter);
+
 swaggerDoc(server);
 
 //testing server
