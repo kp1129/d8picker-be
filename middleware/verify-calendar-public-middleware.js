@@ -5,7 +5,7 @@ const verifyCalendarIsPublic = async (req, res, next) => {
 
 	const calendar = await Calendars.getByCalendarId(calendarId);
 
-	if (Boolean(calendar.isPrivate)) {
+	if (calendar.isPrivate === 1 || calendar.isPrivate) {
 		res.status(400).json({
 			message: "calendars/the action cannot be performed on a private calendar"
 		});

@@ -5,8 +5,8 @@ const env = process.env.NODE_ENV || "development";
 const baseConfig = {
 	env,
 	port: 4000,
-	googleClientId: process.env.GOOGLE_CLIENT_ID,
 	seedPassword: process.env.SEED_PASSWORD,
+	googleClientId: process.env.GOOGLE_CLIENT_ID,
 	secrets: {
 		jwt: process.env.JWT_SECRET,
 		jwtExp: "6h"

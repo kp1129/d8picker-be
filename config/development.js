@@ -4,7 +4,6 @@ const knexConfig = require("../knexfile");
 
 const config = {
 	env: "development",
-
 	db: knex(knexConfig.development)
 };
 

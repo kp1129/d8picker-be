@@ -8,7 +8,7 @@ const verifyCalendarOwner = async (req, res, next) => {
 			req.user.userId
 		);
 
-		if (calendar.isOwner === 1) {
+		if (calendar.isOwner === 1 || calendar.isOwner) {
 			next();
 		} else {
 			res.status(401).json({
