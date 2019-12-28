@@ -43,7 +43,7 @@ exports.seed = function(knex) {
 						.days(3)
 						.format("YYYY-MM-DD"),
 					endDate: moment()
-						.days(3)
+						.days(4)
 						.format("YYYY-MM-DD"),
 					isAllDayEvent: true,
 					isRepeatingEvent: false,

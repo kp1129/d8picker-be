@@ -1,5 +1,7 @@
 const bcrypt = require("bcryptjs");
 const uuidv1 = require("uuid/v1");
+const config = require("../../config");
+const { seedPassword } = config;
 exports.seed = function(knex) {
 	// Deletes ALL existing entries
 	return knex("users")
@@ -12,10 +14,7 @@ exports.seed = function(knex) {
 					lastName: "Nguyen",
 					username: "tnguyen",
 					email: "tnguyen@email.dev",
-					password: bcrypt.hashSync(
-						process.env.SEED_PASSWORD || "password",
-						10
-					),
+					password: bcrypt.hashSync(seedPassword, 10),
 					isAdmin: 1,
 					uuid: uuidv1(),
 					externalType: "native"
@@ -25,10 +24,7 @@ exports.seed = function(knex) {
 					lastName: "Smith",
 					username: "bsmith",
 					email: "bsmith@email.dev",
-					password: bcrypt.hashSync(
-						process.env.SEED_PASSWORD || "password",
-						10
-					),
+					password: bcrypt.hashSync(seedPassword, 10),
 					isAdmin: 1,
 					uuid: uuidv1(),
 					externalType: "native"
