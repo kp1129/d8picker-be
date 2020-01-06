@@ -1,13 +1,17 @@
-const db = require("../data/db-config.js");
+const config = require("../config");
+const { db } = config;
 const shortid = require("shortid");
+const uuidv1 = require("uuid/v1");
+const moment = require("moment");
 
-function get(id) {
+function get(invitationId) {
 	return db("invitations")
-		.where(id)
+		.where({ invitationId })
 		.first();
 }
 
 function getBy(filter) {
+	console.log(filter);
 	return db("invitations")
 		.where(filter)
 		.first();
@@ -15,9 +19,16 @@ function getBy(filter) {
 
 function create(userId) {
 	return db("invitations")
-		.insert({ userId, invitationCode: shortid.generate() })
+		.insert({
+			userId,
+			invitationCode: shortid.generate(),
+			uuid: uuidv1(),
+			expired_at: moment()
+				.add(2, "hours")
+				.toISOString(true)
+		})
 		.then(ids => {
-			return get({ id: ids[0] });
+			return get(ids[0]);
 		});
 }
 

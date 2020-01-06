@@ -1,11 +1,14 @@
-const db = require("../data/db-config.js");
+const config = require("../config");
+const { db } = config;
 
 module.exports = {
 	add,
 	get,
-	getCalendar,
-	getById,
+	getCalendars,
+	getDefaultCalendar,
+	getByUserId,
 	getBy,
+	getByUuid,
 	update,
 	remove,
 	find
@@ -24,48 +27,72 @@ function get() {
 		"uuid"
 	);
 }
-function getCalendar(id) {
+function getCalendars(userId) {
 	return db("users as u")
-		.join("userCalendars as uc", "uc.userId", "u.id")
-		.join("calendars as c", "c.id", "uc.calendarId")
+		.join("usersCalendars as uc", "uc.userId", "u.userId")
+		.join("calendars as c", "c.calendarId", "uc.calendarId")
 		.select(
-			"uc.id",
 			"c.calendarName",
 			"c.calendarDescription",
-			"u.id",
-			"u.username",
-			"c.id"
+			"c.calendarColor",
+			"c.isPrivate",
+			"c.isDefault",
+			"uc.isOwner",
+			"c.uuid"
 		)
-		.where("uc.userId", id);
+		.where({ "u.userId": userId })
+		.then(calendars => {
+			return calendars;
+		});
 }
+
+function getDefaultCalendar(userId) {
+	return db("users as u")
+		.join("usersCalendars as uc", "uc.userId", "u.userId")
+		.join("calendars as c", "c.calendarId", "uc.calendarId")
+		.select(
+			"c.calendarName",
+			"c.calendarDescription",
+			"c.calendarColor",
+			"c.isPrivate",
+			"c.isDefault",
+			"c.uuid"
+		)
+		.where({ "u.userId": userId, "c.isDefault": true })
+		.then(calendars => {
+			return calendars;
+		});
+}
+
 function getBy(filter) {
-	return db("users").where(filter);
+	return db("users")
+		.where(filter)
+		.first();
 }
 
 function getByUuid(uuid) {
 	return db("users")
-		.where(uuid)
+		.where({ uuid })
 		.first();
 }
 
-function find(userId, password) {
+function find(userId) {
 	return db("users")
-		.where({ username: userId })
-		.orWhere({ email: userId })
-		.andWhere({ password })
+		.where(function() {
+			this.where("username", "=", userId).orWhere("email", "=", userId);
+		})
 		.first();
 }
 function add(user) {
 	return db("users")
-		.insert(user, "id")
-		.then(ids => {
-			const [id] = ids;
-			return getById(id);
+		.insert(user, "userId")
+		.then(userIds => {
+			return getByUserId(userIds[0]);
 		});
 }
-function getById(id) {
+function getByUserId(userId) {
 	return db("users")
-		.where({ id })
+		.where({ userId })
 		.first();
 }
 

@@ -1,62 +1,146 @@
+const config = require("../config");
+const { secrets } = config;
 const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const uuidv1 = require("uuid/v1");
-
+const shortId = require("shortid");
 const Users = require("../routes/user-model.js");
-const secrets = require("../config/secrets.js");
+const Calendars = require("../routes/calendar-model");
+
 const {
 	validateRegistration,
-	validateLogin,
-	validateInvitationCode
+	validateLogin
 } = require("../auth/auth-router-middleware");
-// post register
-router.post(
-	"/register",
-	[validateRegistration, validateInvitationCode],
-	(req, res) => {
-		// implement registration
-		const { firstName, lastName, username, email, password } = req.body;
-		const hashedPassword = bcrypt.hashSync(password, 10);
 
-		const newUser = {
-			firstName,
-			lastName,
-			username,
-			email,
-			password: hashedPassword,
-			uuid: uuidv1()
-		};
-		Users.add(newUser)
-			.then(saved => {
-				const token = generateToken(saved.uuid);
-				res.status(201).json({ accessToken: token });
+const verifyCalendarSubscriptionOnboarding = require("../middleware/verify-calendar-subscription-onboard");
+const verifyExistingGoogleUser = require("./verify-existing-google-user-middleware");
+router.post("/register", validateRegistration, async (req, res) => {
+	// implement registration
+	const { firstName, lastName, username, email, password } = req.body;
+	const hashedPassword = bcrypt.hashSync(password, 10);
+
+	const newUser = {
+		firstName,
+		lastName,
+		username,
+		email,
+		password: hashedPassword,
+		uuid: uuidv1()
+	};
+
+	try {
+		const user = await Users.add(newUser);
+
+		const token = generateToken({
+			username: user.username,
+			uuid: user.uuid
+		});
+		await Calendars.addDefaultCalendar(user.userId);
+
+		res.status(201).json({
+			profile: {
+				firstName: user.firstName,
+				lastName: user.lastName,
+				email: user.email,
+				externalType: user.externalType
+			},
+			accessToken: token
+		});
+	} catch (err) {
+		console.log(err);
+		res
+			.status(500)
+			.json({ message: "users/cannot create new user at this time" });
+	}
+});
+
+//post login
+router.post(
+	"/login",
+	[validateLogin, verifyCalendarSubscriptionOnboarding],
+	(req, res) => {
+		// implement login
+		let { userId, password } = req.body;
+
+		Users.find(userId)
+			.then(user => {
+				if (user && bcrypt.compareSync(password, user.password)) {
+					const token = generateToken({
+						username: user.username,
+						uuid: user.uuid
+					});
+					res.status(200).json({
+						profile: {
+							firstName: user.firstName,
+							lastName: user.lastName,
+							email: user.email,
+							externalType: user.externalType
+						},
+
+						accessToken: token
+					});
+				} else {
+					res.status(401).json({ message: "invalid credentials" });
+				}
 			})
 			.catch(err => {
 				console.log(err);
-				res.status(500).json(err);
+				res.status(500).json({ message: `server 500 error ${err}` });
 			});
 	}
 );
 
-//post login
-router.post("/login", validateLogin, (req, res) => {
-	// implement login
-	let { userId, password } = req.body;
+router.post("/google-log-in", [verifyExistingGoogleUser], async (req, res) => {
+	try {
+		if (req.existingAccount) {
+			const { firstName, lastName, email, username, uuid } = req.body;
+			const token = generateToken({
+				username,
+				uuid
+			});
+			res.status(200).json({
+				profile: {
+					firstName,
+					lastName,
+					email
+				},
 
-	Users.find(userId, password)
-		.then(user => {
-			if (user && bcrypt.compareSync(password, user.password)) {
-				const token = generateToken(user);
-				res.status(200).json({ accessToken: token });
-			} else {
-				res.status(401).json({ message: "invalid credentials" });
-			}
-		})
-		.catch(err => {
-			console.log(err);
-			res.status(500).json({ message: `server 500 error ${err}` });
-		});
+				accessToken: token
+			});
+		} else {
+			const { displayName, email, externalId } = req.body;
+			const newUser = {
+				firstName: "Makata",
+				lastName: "User",
+				username: shortId.generate(),
+				email,
+				uuid: uuidv1(),
+				externalId,
+				externalType: "google"
+			};
+			const user = await Users.add(newUser);
+			const token = generateToken({
+				username: user.username,
+				uuid: user.uuid
+			});
+			await Calendars.addDefaultCalendar(user.userId);
+			res.status(201).json({
+				profile: {
+					firstName: user.firstName,
+					lastName: user.lastName,
+					email: user.email,
+					externalType: user.externalType
+				},
+				accessToken: token
+			});
+		}
+	} catch (err) {
+		console.log(err);
+		res
+			.status(500)
+			.json({ message: "users/cannot create new user at this time" });
+	}
 });
 
 //get logout
@@ -74,9 +158,9 @@ function generateToken(user) {
 		uuid: user.uuid
 	};
 	const options = {
-		expiresIn: "1d"
+		expiresIn: secrets.jwtExp
 	};
-	return jwt.sign(payload, secrets.jwtSecrets, options);
+	return jwt.sign(payload, secrets.jwt, options);
 }
 
 module.exports = router;

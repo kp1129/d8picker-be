@@ -1,84 +1,184 @@
-const db = require("../data/db-config.js");
-
+const config = require("../config");
+const { db } = config;
+const uuidv1 = require("uuid/v1");
+const moment = require("moment");
 module.exports = {
+	getUpcoming,
 	get,
+	getByCalendarsEventsId,
+	getByUuid,
 	getById,
 	add,
+	addCalendarsEvents,
 	remove,
 	update
 };
 
-function get(calendarId) {
-	return db("calendarEvents")
-		.where({ calendarId })
-		.join("events", "eventsId", "events.id")
-		.select("eventName", "eventInfo");
-}
-function getAll() { 
-    return (
-        db('events')
-            .select(
-                'eventName',
-                'eventInfo',
-                'startDate',
-                'endDate',
-                'endTime',
-                'isFullDayEvent',
-                'isRecurring',
-                )
-    )
+function getUpcoming(userId, limit) {
+	const today = moment().format("YYYY-MM-DD");
+	return db("calendarsEvents as ce")
+		.where("events.startDate", ">=", today)
+		.andWhere("uc.userId", userId)
+		.join("events", "ce.eventId", "events.eventId")
+		.join("calendars as c", "ce.calendarId", "c.calendarId")
+		.join("usersCalendars as uc", "c.calendarId", "uc.calendarId")
+		.select(
+			"eventTitle",
+			"eventNote",
+			"eventLocation",
+			"startDate",
+			"endDate",
+			"startTime",
+			"endTime",
+			"isAllDayEvent",
+			"isRepeatingEvent",
+			"c.isPrivate",
+			"c.calendarColor",
+			"events.uuid",
+			"rrule"
+		)
+		.limit(limit)
+		.orderBy("events.startDate", "asc");
 }
 
-function getById(calendarId, eventsId) {
-	return db("calendarEvents")
-		.where({ calendarId, eventsId })
-		.join("events", "eventsId", "events.id")
-		.select("eventName", "eventInfo")
+function get(calendarId) {
+	return db("calendarsEvents as ce")
+		.where({ "ce.calendarId": calendarId })
+		.join("events", "ce.eventId", "events.eventId")
+		.join("calendars as c", "ce.calendarId", "c.calendarId")
+		.select(
+			"eventTitle",
+			"eventNote",
+			"eventLocation",
+			"startDate",
+			"endDate",
+			"startTime",
+			"endTime",
+			"isAllDayEvent",
+			"isRepeatingEvent",
+			"c.isPrivate",
+			"c.calendarColor",
+			"events.uuid",
+			"rrule"
+		);
+}
+
+function getByCalendarsEventsId(calendarsEventsId) {
+	return db("calendarsEvents")
+		.where({ "calendarsEvents.calendarsEventsId": calendarsEventsId })
+		.join("events", "calendarsEvents.eventId", "events.eventId")
+		.select(
+			"eventTitle",
+			"eventNote",
+			"eventLocation",
+			"startDate",
+			"endDate",
+			"startTime",
+			"endTime",
+			"isAllDayEvent",
+			"isRepeatingEvent",
+			"isPrivate",
+			"eventColor",
+			"events.uuid",
+			"rrule"
+		)
 		.first();
 }
-
-function add(calendarId, event) {
+function getById(eventId) {
 	return db("events")
-		.insert(event)
-		.then(events => {
-			return db("calendarEvents")
-				.insert({ calendarid: calendarId, eventsid: events[0] })
-				.then(calendarEvent => {
-					return getById(calendarId, calendarEvent[0]);
-				});
+		.where({ "events.eventId": eventId })
+		.join("calendarsEvents as ce", "events.eventId", "ce.eventId")
+		.join("calendars as c", "ce.calendarId", "c.calendarId")
+		.select(
+			"eventTitle",
+			"eventNote",
+			"eventLocation",
+			"startDate",
+			"endDate",
+			"startTime",
+			"endTime",
+			"isAllDayEvent",
+			"isRepeatingEvent",
+			"eventColor",
+			"events.isPrivate",
+			"events.uuid",
+			"rrule",
+			"c.uuid as calendarUuid"
+		)
+		.first();
+}
+function getByUuid(uuid) {
+	return db("events")
+		.where({ uuid })
+		.select(
+			"eventId",
+			"eventTitle",
+			"eventNote",
+			"eventLocation",
+			"startDate",
+			"endDate",
+			"startTime",
+			"endTime",
+			"isAllDayEvent",
+			"isRepeatingEvent",
+			"eventColor",
+			"isPrivate",
+			"uuid",
+			"rrule"
+		)
+		.first();
+}
+function add(event) {
+	event.uuid = uuidv1();
+	event.endDate = event.isAllDayEvent
+		? moment(event.endDate)
+				.add(1, "days")
+				.format()
+		: event.endDate;
+	return db("events")
+		.insert(event, "eventId")
+		.then(ids => {
+			return ids[0];
 		});
-} //fix
-function add(calendarId, event) {
-    return (
-        db("events")
-        .insert(event)
-        .then(events => {
-            return db("calendarEvents")
-            .insert({calendarid: calendarId, eventsid: events[0]})
-            .then(calendarEvent => {
-                return getById(calendarId, calendarEvent[0])
-            })
-        })
-    )
-} 
+}
 
-function remove(calendarId, eventsId) {
-	return db("calendarEvents")
-		.where({ calendarId, eventsId })
+function addCalendarsEvents(calendarId, eventId) {
+	const uuid = uuidv1();
+	return db("calendarsEvents")
+		.insert({ calendarId, eventId, uuid }, "calendarsEventsId")
+		.then(calendarsEventIds => {
+			return getByCalendarsEventsId(calendarsEventIds[0]);
+		});
+}
+
+function remove(eventId) {
+	return db("events")
+		.where({ eventId })
 		.del();
 }
 
-
-function update(calendarId, eventsId, changes) {
-	return db("calendarEvents")
-		.where({ calendarId, eventsId })
-		.then(calendarEvent => {
-			const id = calendarEvent[0].id;
-			return db("events")
-				.where({ id })
-				.update(changes)
-				.then(update => {
-					return update;
-				});
+function update(eventId, changes, calendarId) {
+	changes.startDate = changes.isAllDayEvent
+		? moment(changes.startDate)
+				.hours(0)
+				.minutes(0)
+				.seconds(0)
+				.format()
+		: changes.startDate;
+	changes.endDate = changes.isAllDayEvent
+		? moment(changes.endDate)
+				.add(1, "days")
+				.hours(0)
+				.minutes(0)
+				.seconds(0)
+				.format()
+		: changes.endDate;
+	return db("events")
+		.where({ eventId })
+		.update(changes)
+		.then(update => {
+			if (update === 1) {
+				return getById(eventId);
+			}
 		});
-} //fix
+}
