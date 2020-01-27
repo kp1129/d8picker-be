@@ -1,0 +1,26 @@
+{
+  "name": "school-calendar-be",
+  "version": "1.0.0",
+  "description": "To get the server running locally:",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lambda-School-Labs/school-calendar-be.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Lambda-School-Labs/school-calendar-be/issues"
+  },
+  "homepage": "https://github.com/Lambda-School-Labs/school-calendar-be#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "gitignore": "^0.6.0",
+    "mongoose": "^5.8.10",
+    "nodemon": "^2.0.2"
+  }
+}
