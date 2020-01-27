@@ -17,10 +17,12 @@ app.get('/posts',(req,res) =>{
 
 //TESTING DB KENNETH
 mongoose.connect(
-    'mongodb+srv://testdb:testing123@cluster0-hnltr.gcp.mongodb.net/test?retryWrites=true&w=majority',
- { useNewUrlParser: true }, () => {
-    console.log('connected to DB')
-})
+  "mongodb+srv://admin:yj8p6vLZjRE0zw4P@d8picker-db-qqopr.mongodb.net/test?retryWrites=true&w=majority",
+  { useNewUrlParser: true },
+  () => {
+    console.log("connected to DB");
+  }
+);
 
 
 app.listen(3000);
