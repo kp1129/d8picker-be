@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose')
 require('dotenv/config');
+
+
 //ROUTES
 app.get('/',(req, res)=> {
     res.send('this is home');
