@@ -14,12 +14,7 @@ To get the server running locally:
 
 ### Backend framework goes here
 
-Express.JS
 
--    Simplistic
--    Scaleable 
--    Flexible
--    It's what we know how to use
 
 ## 2️⃣ Endpoints
 
@@ -27,30 +22,12 @@ Express.JS
 
 #### Calendar Routes
 
-| Method | Endpoint                | Access Control | Description                                  |
-| ------ | ----------------------- | -------------- | -------------------------------------------- |
-| GET    | `/api/users/calendars`  | owners         | Gets all calendars under a user.             |
-| POST   | `/api/calendars`        | owners         | Add new Calendar                             |
-| PUT    | `/api/calendars/{calendarUuid}` | owners | Update A calendar                            |
-| DELETE | `/api/calendars/{calendarUuid}` | owners | Delete A calendar                            |
-| PUT    | `/api/calendars/{calendarUuid}?subscribe=true` | owners | Subscribe to a calendar       |
-| PUT    | `/api/calendars/{calendarUuid}?subscribe=false`| owners | Unsubscribe to a calendar     |
 
 #### User Routes
 
-| Method | Endpoint                | Access Control      | Description                                        |
-| ------ | ----------------------- | ------------------- | -------------------------------------------------- |
-| POST   | `/auth/register`        | none                | Register a new user                                |
-| POST   | `/auth/login`           | none                | Login a user                                       |
 
 #### Event Routes
 
-| Method | Endpoint                                      | Access Control      | Description                                        |
-| ------ | --------------------------------------------- | ------------------- | -------------------------------------------------- |
-| POST   | `/api/calendars/{calendarUuid}/events`        | none                | Create Event                                       |
-| GET    | `/api/calendars/{calendarUuid}/events`        | none                | Get All Events                                     |
-| PUT    | `/api/events/{eventUuid}/events`              | none                | Update Event                                       |
-| DELETE | `/api/events/{eventUuid}`                     | none                | Delete Event                                       |
 
 # Data Model
 
@@ -58,87 +35,22 @@ Express.JS
 
 #### 2️⃣ Calendars
 
----
-
-```
-{
-  "calendarName": "string",
-  "calendarDescription": "string",
-  "calendarColor": "string",
-  "isPrivate": true
-}
-```
-
+-
 #### USERS
 
----
 
-```
-{
-  "firstName": "string",
-  "lastName": "string",
-  "email": "string",
-  "username": "string",
-  "password": "string"
-}
-```
 #### Events
 
----
-
-```
-{
-  "eventTitle": "string",
-  "eventNote": "string",
-  "eventLocation": "string",
-  "startDate": "2019-11-20",
-  "endDate": "2019-11-20",
-  "startTime": "2019-11-17T10:00:00.000-08:00",
-  "endTime": "2019-11-17T11:15:00.000-08:00",
-  "isAllDayEvent": true,
-  "isRepeatingEvent": true
-}
-```
 
 
 ## 2️⃣ Actions
 
 
-`getByCalendarId(calendarId)` -> Returns Calendar
 
-`getByUsersCalendarsId(usersCalendarsId)` -> Returns calendar
-
-`getByUuid(uuid)` -> Returns by uuid
-
-`addDefaultCalendar(userId)` -> Adds Calendar
-
-`add(userId, calendar)` -> Add user to calendar
-
-`remove(calendarId)` -> Deletes Calendar
-
-`update(calendarId, updated)` -> Updates Calendar
-
-`subscribe(calendarId, userId)` -> Subscribes user to Calendar
-
-`unsubscribe(calendarId, userId)` -> Unsubscribes user to Calendar
 <br>
 <br>
 <br>
-`get(calendarId)` -> Gets Calendars Events
 
-` getByCalendarsEventsId(calendarsEventsId)` -> Gets specific event
-
-`getById(eventId)` --> Gets Specific Event
-
-`getByUuid(uuid)` -> Gets Event by Uuid
-
-`add(event)` -> Creates Event
-
-`addCalendarsEvents(calendarId, eventId)` -> Creates on the calendar Event
-
-`remove(eventId)` -> Deletes
-
-`update(eventId, changes)` -> Changes Event
 
 ## 3️⃣ Environment Variables
 
