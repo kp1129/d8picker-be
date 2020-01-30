@@ -26,7 +26,7 @@ router.get('/:id', (req, res) => {
 
 
 //POST
-router.post('/', async, (req, res) => {
+router.post('/', async (req, res) => {
     // Event.insert(request.body, (error, result) => {
     //     if(error) {
     //         return response.status(500).send(error);
@@ -41,7 +41,7 @@ router.post('/', async, (req, res) => {
     if (eventExist)
       return res.status(400).json({ message: "Event has already been created." });
 
-
+    //Create new event
         const event = new Event({
             name,
             description,
@@ -56,10 +56,10 @@ router.post('/', async, (req, res) => {
             email: newEvent.email
           });
        
-    }; 
+    }
 
  catch (error) {
-    res.status(400).send(error);
+    res.status(400).json({ message: "Error caught in .catch" });
   } 
 })
 
