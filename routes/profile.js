@@ -19,4 +19,35 @@ router.get("/:id/profile", verifyToken, async (req, res) => {
   }
 });
 
+// Update User
+router.patch("/:id", verifyToken, async (req, res) => {
+  try {
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: req.params.id },
+      {
+        $set: {
+          ...req.body
+        }
+      }
+    );
+    res.json({
+      message: `User: ${updatedUser._id} updated`
+    });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+});
+
+// Delete User
+router.delete("/:id", verifyToken, async (req, res) => {
+  try {
+    const removedUser = await User.findOneAndRemove({ _id: req.params.id });
+    res.json({
+      message: `User: ${removedUser._id} deleted`
+    });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+});
+
 module.exports = router;
