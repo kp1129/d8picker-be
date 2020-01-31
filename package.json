@@ -16,8 +16,12 @@
   "scripts": {
     "dev": "nodemon index.js",
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --watch --verbose"
   },
+  "jest": {
+    "testEnvironment": "node"
+  },
+
   "dependencies": {
     "@hapi/joi": "^17.1.0",
     "bcryptjs": "^2.4.3",

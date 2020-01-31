@@ -15,7 +15,7 @@ server.use("/api/auth", authRoute);
 server.use("/api/user", profileRoute);
 
 server.get("/", (req, res) => {
-  res.send({ api: "Ok" });
+  res.send({ api: "Ok", dbenv: process.env.DB_ENV  });
 });
 
 module.exports = server;
