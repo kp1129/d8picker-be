@@ -1,3 +1,5 @@
+## Code Climate
+[![Maintainability](https://api.codeclimate.com/v1/badges/9dbd40cc5a146921dc69/maintainability)](https://codeclimate.com/github/Lambda-School-Labs/school-calendar-be/maintainability)
 
 # API Documentation
 
