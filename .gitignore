@@ -28,3 +28,6 @@ node_modules
 
 #  peacock colors for vscode
 .vscode
+
+#  Mac Cruft
+.DS_Store
