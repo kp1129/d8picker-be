@@ -69,9 +69,9 @@ router.post('/login', async (req, res) => {
 		if (!user) return res.status(400).json({ message: "User doesn't exist" });
 
 		// check if password is correct
-		const validPassword = await bcrypt.compare(password, user.password);
-		if (!validPassword)
-			return res.status(400).json({ message: 'Invalid Password' });
+		// const validPassword = await bcrypt.compare(password, user.password);
+		// if (!validPassword)
+		// 	return res.status(400).json({ message: 'Invalid Password' });
 
 		//  create token
 		const token = jwt.sign({ id: user._id }, process.env.TOKEN_SECRET);
@@ -82,7 +82,6 @@ router.post('/login', async (req, res) => {
 				user: {
 					id: user._id,
 					name: user.name,
-					email: user.email
 				},
 				token
 			});
@@ -90,6 +89,8 @@ router.post('/login', async (req, res) => {
 		res.status(400).json(error);
 	}
 });
+
+
 
 // auth with google
 router.get(

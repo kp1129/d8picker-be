@@ -1,16 +1,18 @@
 const passport = require('passport');
-const GoogleStategy = require('passport-google-oauth20').Strategy;
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+require("dotenv").config();
 const User = require('../model/User');
 
 passport.use(
-	new GoogleStategy(
+	new GoogleStrategy(
 		{
 			clientID: process.env.CLIENT_ID,
 			clientSecret: process.env.CLIENT_SECRET,
-			callbackURL: '/auth/google/redirect'
+			callbackURL: '/api/auth/google/redirect'
 		},
 		(accessToken, refreshToken, profile, done) => {
 			// check if user already exists in DB
+		
 			User.findOne({ googleId: profile.id }).then(currentUser => {
 				if (currentUser) {
 					// already have a user
@@ -19,7 +21,6 @@ passport.use(
 					// if not, create new User in DB
 					new User({
                         name: profile.displayName,
-                        email: ,
 						googleId: profile.id
 					})
 						.save()
