@@ -1,34 +1,44 @@
-const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const passport = require("passport");
+const GoogleStrategy = require("passport-google-oauth20");
+
+const User = require("../model/User");
+
 require("dotenv").config();
-const User = require('../model/User');
+
+// Google Strategy
+const strategyConfig = {
+  clientID: process.env.CLIENT_ID,
+  clientSecret: process.env.CLIENT_SECRET,
+  callbackURL: "/api/auth/google/redirect"
+};
 
 passport.use(
-	new GoogleStrategy(
-		{
-			clientID: process.env.CLIENT_ID,
-			clientSecret: process.env.CLIENT_SECRET,
-			callbackURL: '/api/auth/google/redirect'
-		},
-		(accessToken, refreshToken, profile, done) => {
-			// check if user already exists in DB
-		
-			User.findOne({ googleId: profile.id }).then(currentUser => {
-				if (currentUser) {
-					// already have a user
-					console.log('user is:', currentUser);
-				} else {
-					// if not, create new User in DB
-					new User({
-                        name: profile.displayName,
-						googleId: profile.id
-					})
-						.save()
-						.then(newUser => {
-							console.log('new user created:', newUser);
-						});
-				}
-			});
-		}
-	)
+  new GoogleStrategy(
+    strategyConfig,
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        // Should get full user profile
+        console.log("profile", profile);
+        console.log("accessToken", accessToken);
+        console.log("refreshToken", refreshToken);
+        // Find user by data from token
+        const existingUser = await User.findOne({ "google.id": profile.id });
+        if (existingUser) {
+          return done(null, existingUser);
+        }
+
+        const newUser = new User({
+          name: profile.displayName,
+          googleId: profile.id,
+          email: profile.emails[0].value,
+          photoUrl: profile.photos[0].value
+        });
+
+        await newUser.save();
+        done(null, newUser);
+      } catch (error) {
+        done(error, false, error.message);
+      }
+    }
+  )
 );
