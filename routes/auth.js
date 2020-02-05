@@ -69,9 +69,9 @@ router.post('/login', async (req, res) => {
 		if (!user) return res.status(400).json({ message: "User doesn't exist" });
 
 		// check if password is correct
-		// const validPassword = await bcrypt.compare(password, user.password);
-		// if (!validPassword)
-		// 	return res.status(400).json({ message: 'Invalid Password' });
+		const validPassword = await bcrypt.compare(password, user.password);
+		if (!validPassword)
+			return res.status(400).json({ message: 'Invalid Password' });
 
 		//  create token
 		const token = jwt.sign({ id: user._id }, process.env.TOKEN_SECRET);
@@ -99,8 +99,11 @@ router.get(
 		scope: ['profile']
 	})
 );
+
 // callback route for google to redirect to
+// This endpoint is referenced in passport-setup
 router.get('/google/redirect', passport.authenticate('google'), (req, res) => {
 	res.status(200).json({ message: 'You reached the callback URI' });
 });
+
 module.exports = router;
