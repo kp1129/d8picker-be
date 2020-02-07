@@ -4,12 +4,16 @@ const helmet = require("helmet");
 // require("../middleware/passport");
 const authRoute = require("../routes/auth");
 const profileRoute = require("../routes/profile");
+const cookieSession = require('cookie-session');
 
 const server = express();
 
 server.use(helmet());
 server.use(cors());
 server.use(express.json());
+server.use(cookieSession({
+  maxAge: 24*60*60*1000
+}))
 
 server.use("/api/auth", authRoute);
 server.use("/api/user", profileRoute);
