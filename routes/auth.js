@@ -18,16 +18,18 @@ router.get(
       "https://www.googleapis.com/auth/calendar.events"
     ]
   }),
-  (req, res) => {
-    const token = jwt.sign({ id: req.user._id }, process.env.TOKEN_SECRET);
-    res.status(200).json({ token });
-  }
+  
 );
 
 // callback route for google to redirect to
 router.get(
   "/google/redirect",
-  passport.authenticate("google", { session: false })
+  passport.authenticate("google", { session: false }),
+  (req, res) => {
+    // const token = jwt.sign({ id: req.user._id }, process.env.TOKEN_SECRET);
+    // res.status(200).json({ token });
+res.redirect('http://localhost:3001/home')
+  }
 );
 
 module.exports = router;
