@@ -6,6 +6,7 @@ const authRoute = require("../routes/auth");
 const profileRoute = require("../routes/profile");
 const cookieSession = require('cookie-session');
 require("dotenv").config();
+const passport = require('passport');
 
 const server = express();
 
@@ -16,6 +17,10 @@ server.use(cookieSession({
   maxAge: 24*60*60*1000,
   keys:[process.env.SESSION_KEYS]
 }))
+
+server.use(passport.initialize());
+server.use(passport.session())
+
 
 server.use("/api/auth", authRoute);
 server.use("/api/user", profileRoute);
