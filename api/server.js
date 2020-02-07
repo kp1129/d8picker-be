@@ -5,6 +5,7 @@ const helmet = require("helmet");
 const authRoute = require("../routes/auth");
 const profileRoute = require("../routes/profile");
 const cookieSession = require('cookie-session');
+require("dotenv").config();
 
 const server = express();
 
@@ -12,7 +13,8 @@ server.use(helmet());
 server.use(cors());
 server.use(express.json());
 server.use(cookieSession({
-  maxAge: 24*60*60*1000
+  maxAge: 24*60*60*1000,
+  keys:[process.env.SESSION_KEYS]
 }))
 
 server.use("/api/auth", authRoute);
