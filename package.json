@@ -16,7 +16,10 @@
   "scripts": {
     "dev": "nodemon index.js",
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --watch --verbose"
+  },
+  "jest": {
+    "testEnvironment": "node"
   },
   "dependencies": {
     "@hapi/joi": "^17.1.0",
@@ -26,7 +29,9 @@
     "express": "^4.17.1",
     "helmet": "^3.21.2",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.8.10"
+    "mongoose": "^5.8.10",
+    "passport": "^0.4.1",
+    "passport-google-oauth20": "^2.0.0"
   },
   "devDependencies": {
     "@shelf/jest-mongodb": "^1.1.3",
