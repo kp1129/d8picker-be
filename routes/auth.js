@@ -1,33 +1,34 @@
 const express = require("express");
-const passport = require("passport");
-const jwt = require("jsonwebtoken");
+const googleUtil = require("../utils/google-util");
+const setCookie = require("../middleware/setCookie");
 
-require("../config/passport-setup");
 require("dotenv").config();
 
 const router = express.Router();
 
-// auth with google
-router.get(
-  "/google",
-  passport.authenticate("google", {
-    session: false,
-    scope: [
-      "profile",
-      "email",
-      "https://www.googleapis.com/auth/calendar.events"
-    ]
-  }),
-  (req, res) => {
-    const token = jwt.sign({ id: req.user._id }, process.env.TOKEN_SECRET);
-    res.status(200).json({ token });
-  }
-);
+// Redirect for authentication uri
+router.get("/login", (req, res) => {
+  res.redirect(googleUtil.urlGoogle());
+});
 
-// callback route for google to redirect to
-router.get(
-  "/google/redirect",
-  passport.authenticate("google", { session: false })
-);
+// callback route for google redirect
+router.get("/success", setCookie, (req, res) => {
+  // TODO: Should check if needed
+  // TODO: change to environment variable
+  res.redirect("http://localhost:3000/redirect");
+});
+
+// Delete session and logout
+// Should redirect on the front end
+router.get("/logout", (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      console.log(err);
+      // res.redirect("/");
+    }
+    res.clearCookie("sid");
+    // res.redirect("/");
+  });
+});
 
 module.exports = router;
