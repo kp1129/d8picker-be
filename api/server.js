@@ -4,12 +4,10 @@ const cors = require("cors");
 const helmet = require("helmet");
 const session = require("express-session");
 const authRoute = require("../routes/auth");
-const profileRoute = require("../routes/profile");
+// const profileRoute = require("../routes/profile");
 const eventsRoute = require("../routes/events");
 
-//Outside libraries
-const cookieSession = require('cookie-session');
-const passport = require('passport');
+
 
 //Require env variables
 require("dotenv").config();
@@ -35,7 +33,7 @@ server.use(
 
 //Invoke routes
 server.use("/api/auth", authRoute);
-server.use("/api/user", profileRoute);
+// server.use("/api/user", profileRoute);
 server.use("/api/events", eventsRoute);
 
 //GET endpoint for checking app
