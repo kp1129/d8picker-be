@@ -2,10 +2,10 @@
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
-
-//Pull in routes
+const session = require("express-session");
 const authRoute = require("../routes/auth");
 const profileRoute = require("../routes/profile");
+const eventsRoute = require("../routes/events");
 
 //Outside libraries
 const cookieSession = require('cookie-session');
@@ -18,21 +18,25 @@ const server = express();
 //Invoke middleware
 server.use(helmet());
 server.use(cors());
-server.use(express.json()); 
-
-// Set cookie with 24hr session
-server.use(cookieSession({
-  maxAge: 24*60*60*1000,
-  keys:[process.env.SESSION_KEYS]
-}))
-
-//Initialize passport session
-server.use(passport.initialize());
-server.use(passport.session())
+server.use(express.json());
+server.use(
+  session({
+    name: "sid",
+    saveUninitialized: false,
+    resave: false,
+    secret: "super super secret phrase",
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 2,
+      sameSite: true,
+      secure: process.env.NODE_ENV === "production"
+    }
+  })
+);
 
 //Invoke routes
 server.use("/api/auth", authRoute);
 server.use("/api/user", profileRoute);
+server.use("/api/events", eventsRoute);
 
 //GET endpoint for checking app
 server.get("/", (req, res) => {
