@@ -67,18 +67,18 @@ const getGoogleAccountFromCode = async (code, cb) => {
         photoUrl: res.data.picture
       };
       // Find user by data from token
-      const existingUser = await User.findOne({ googleId: res.data.id });
-      if (existingUser) {
-        return done(null, existingUser);
-      }
-      const newUser = new User({
-        googleId: res.data.id,
-        name: res.data.name,
-        email: res.data.email,
-        photoUrl: res.data.picture,
-        accessToken: tokens.access_token
-      });
-      await newUser.save();
+      // const existingUser = await User.findOne({ googleId: res.data.id });
+      // if (existingUser) {
+      //   return cb(null, existingUser);
+      // }
+      // const newUser = new User({
+      //   googleId: res.data.id,
+      //   name: res.data.name,
+      //   email: res.data.email,
+      //   photoUrl: res.data.picture,
+      //   accessToken: tokens.access_token
+      // });
+      // await newUser.save();
       // Should be able to pass newUser
       cb(null, userProfile);
     }
