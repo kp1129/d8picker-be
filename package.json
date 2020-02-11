@@ -23,7 +23,12 @@
     "testEnvironment": "node",
     "setupFiles": [
       "dotenv/config"
-    ]
+    ],
+    "collectCoverageFrom": [
+      "**/*.{js,jsx}",
+      "!**/node_modules/**",
+      "!**/vendor/**"
+    ]	    
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
