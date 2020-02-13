@@ -1,5 +1,5 @@
 const { google } = require("googleapis");
-const User = require("../model/User");
+// const User = require("../model/User");
 
 require("dotenv").config();
 
@@ -7,7 +7,7 @@ require("dotenv").config();
 const googleConfig = {
   clientId: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  redirect: "http://localhost:4000/api/auth/success"
+  redirect: process.env.GOOGLE_CLIENT_REDIRECT
 };
 
 // scopes use for the application
