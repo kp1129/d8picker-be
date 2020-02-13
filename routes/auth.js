@@ -1,10 +1,9 @@
-const express = require("express");
+require("dotenv").config();
+const router = require("express").Router();
 const googleUtil = require("../utils/google-util");
 const setCookie = require("../middleware/setCookie");
 
 require("dotenv").config();
-
-const router = express.Router();
 
 // Redirect for authentication uri
 router.get("/login", (req, res) => {
@@ -15,7 +14,7 @@ router.get("/login", (req, res) => {
 router.get("/success", setCookie, (req, res) => {
   // TODO: Should check if needed
   // TODO: change to environment variable
-  res.redirect("http://localhost:3000/redirect");
+  res.redirect(process.env.REDIRECT_URL);
 });
 
 // Delete session and logout
