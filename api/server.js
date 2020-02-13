@@ -7,7 +7,6 @@ const authRoute = require("../routes/auth");
 const eventsRoute = require("../routes/events");
 
 
-
 //Require env variables
 require("dotenv").config();
 const server = express();
@@ -21,7 +20,7 @@ server.use(
     name: "sid",
     saveUninitialized: false,
     resave: false,
-    secret: "super super secret phrase",
+    secret: process.env.SESSION_SECRET,
     cookie: {
       maxAge: 1000 * 60 * 60 * 2,
       sameSite: true,
