@@ -55,6 +55,7 @@ const getGoogleAccountFromCode = async (code, cb) => {
   const { tokens } = await auth.getToken(code);
   auth.setCredentials(tokens);
   const user = await getOAuth2(auth);
+  console.log('Utils User from Access token', user)
   user.userinfo.get(async (err, res) => {
     if (err) {
       cb(err);
