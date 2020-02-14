@@ -21,10 +21,9 @@ server.use(
 		resave: false,
 		secret: process.env.SESSION_SECRET,
 		cookie: {
-			httpOnly: true,
 			maxAge: 1000 * 60 * 60 * 2,
 			sameSite: true,
-			secure: true
+			secure: process.env.NODE_ENV === 'production'
 		}
 	})
 );
