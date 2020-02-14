@@ -24,7 +24,7 @@ server.use(
 			httpOnly: true,
 			maxAge: 1000 * 60 * 60 * 2,
 			sameSite: true,
-			secure: process.env.COOKIE_SECURE 
+			secure: true
 		}
 	})
 );
