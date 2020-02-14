@@ -22,7 +22,7 @@ server.use(
 		secret: process.env.SESSION_SECRET,
 		cookie: {
 			maxAge: 1000 * 60 * 60 * 2,
-			// sameSite: true,
+			sameSite: false,
 			secure: process.env.NODE_ENV === 'production'
 		}
 	})
