@@ -24,7 +24,7 @@ server.use(
 			httpOnly: false,
 			maxAge: 1000 * 60 * 60 * 2,
 			sameSite: true,
-			secure: process.env.NODE_ENV === 'production'
+			secure: process.env.COOKIE_SECURE 
 		}
 	})
 );
