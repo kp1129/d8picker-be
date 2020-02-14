@@ -7,7 +7,7 @@ const setCookie = async (req, res, next) => {
       // Redirect to login endpoint
       res.redirect("/api/auth/login");
     } else {
-      console.log('Cookie Res:', res)
+      // console.log('Cookie Res:', res)
       req.session.user = res;
     }
     next();

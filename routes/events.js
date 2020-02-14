@@ -16,13 +16,13 @@ router.get("/", async (req, res) => {
 
     // get calendar events by passing oauth2 client
     googleCalenderService.listEvents(oauth2Client, events => {
-      console.log('events BE:',events);
+      // console.log('events BE:',events);
 
       const data = {
         ...req.session.user,
         events: events
       };
-      console.log('events',data);
+      // console.log('events',data);
       res.json(data);
     });
   } else {
