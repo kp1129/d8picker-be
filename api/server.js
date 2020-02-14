@@ -22,8 +22,9 @@ server.use(
 		secret: process.env.SESSION_SECRET,
 		cookie: {
 			maxAge: 1000 * 60 * 60 * 2,
-			sameSite: 'lax',
-			secure: process.env.NODE_ENV === 'production'
+			secure: process.env.NODE_ENV === 'production',
+      sameSite: 'none',
+      httpOnly: true
 		}
 	})
 );
