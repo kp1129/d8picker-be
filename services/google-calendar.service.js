@@ -14,7 +14,7 @@ const listEvents = (auth, cb) => {
       if (err) return console.log("The API returned an error: " + err);
       const events = res.data.items;
       if (events.length) {
-        console.log("events: ", events);
+        // console.log("events: ", events);
         cb(events);
       } else {
         console.log("No upcoming events found.");

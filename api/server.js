@@ -2,7 +2,8 @@
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
-const session = require('express-session');
+// const session = require('express-session');
+const session = require('cookie-session');
 const authRoute = require('../routes/auth');
 const eventsRoute = require('../routes/events');
 
@@ -23,7 +24,7 @@ server.use(
 		cookie: {
 			maxAge: 1000 * 60 * 60 * 2,
 			secure: process.env.NODE_ENV === 'production',
-      sameSite: 'none',
+      sameSite: false,
       httpOnly: true
 		}
 	})
