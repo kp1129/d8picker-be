@@ -21,7 +21,7 @@ server.use(
 		resave: false,
 		secret: process.env.SESSION_SECRET,
 		cookie: {
-			httpOnly: false,
+			httpOnly: true,
 			maxAge: 1000 * 60 * 60 * 2,
 			sameSite: true,
 			secure: process.env.COOKIE_SECURE 
