@@ -22,7 +22,7 @@ router.get("/", async (req, res) => {
         ...req.session.user,
         events: events
       };
-      console.log(data);
+      console.log('events',data);
       res.json(data);
     });
   } else {
