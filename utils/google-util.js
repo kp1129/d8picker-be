@@ -59,6 +59,8 @@ const getGoogleAccountFromCode = async (code, cb) => {
     if (err) {
       cb(err);
     } else {
+      // console.log('Utils Tokens:', tokens)
+      // console.log('ResData:', res.data)
       const userProfile = {
         googleId: res.data.id,
         accessToken: tokens.access_token,

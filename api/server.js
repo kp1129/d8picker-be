@@ -7,6 +7,8 @@ const authRoute = require('../routes/auth');
 const eventsRoute = require('../routes/events');
 const { db } = require('../db');
 
+//Require env variables
+require('dotenv').config();
 const server = express();
 
 let corsOptions = {

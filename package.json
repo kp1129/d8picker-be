@@ -16,10 +16,19 @@
   "scripts": {
     "dev": "nodemon index.js",
     "start": "node index.js",
-    "test": "jest --watch --verbose"
+    "test": "jest --detectOpenHandles --forceExit",
+    "coverage": "jest --coverage --detectOpenHandles --forceExit || true"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "setupFiles": [
+      "dotenv/config"
+    ],
+    "collectCoverageFrom": [
+      "**/*.{js,jsx}",
+      "!**/node_modules/**",
+      "!**/vendor/**"
+    ]	    
   },
   "dependencies": {
     "connect-mongo": "^3.2.0",

@@ -4,8 +4,6 @@ const setSession = require('../middleware/setSession');
 
 require('dotenv').config();
 
-const router = express.Router();
-
 // Redirect for authentication uri
 router.get('/login', (req, res) => {
   res.redirect(googleUtil.urlGoogle());
