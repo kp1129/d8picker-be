@@ -1,36 +1,37 @@
-const express = require("express");
-const cors = require("cors");
-const helmet = require("helmet");
-const session = require("express-session");
-const authRoute = require("../routes/auth");
-const profileRoute = require("../routes/profile");
-const eventsRoute = require("../routes/events");
+const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
+const authRoute = require('../routes/auth');
+const eventsRoute = require('../routes/events');
+const { db } = require('../db');
 
 const server = express();
 
+let corsOptions = {
+  origin: process.env.FRONTEND_URL,
+  allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept'
+};
+
 server.use(helmet());
-server.use(cors());
+server.use(cors(corsOptions));
 server.use(express.json());
 server.use(
   session({
-    name: "sid",
+    name: 'sid',
     saveUninitialized: false,
     resave: false,
-    secret: "super super secret phrase",
-    cookie: {
-      maxAge: 1000 * 60 * 60 * 2,
-      sameSite: true,
-      secure: process.env.NODE_ENV === "production"
-    }
+    secret: process.env.SESSION_SECRET,
+    store: new MongoStore({ mongooseConnection: db })
   })
 );
 
-server.use("/api/auth", authRoute);
-server.use("/api/user", profileRoute);
-server.use("/api/events", eventsRoute);
+server.use('/api/auth', authRoute);
+server.use('/api/events', eventsRoute);
 
-server.get("/", (req, res) => {
-  res.send({ api: "Ok", dbenv: process.env.DB_ENV });
+server.get('/', (req, res) => {
+  res.send({ api: 'Ok', dbenv: process.env.DB_ENV });
 });
 
 module.exports = server;
