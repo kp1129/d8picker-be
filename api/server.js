@@ -1,42 +1,39 @@
-//Setup middleware
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
-// const session = require('express-session');
-const session = require('cookie-session');
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
 const authRoute = require('../routes/auth');
 const eventsRoute = require('../routes/events');
+const { db } = require('../db');
 
 //Require env variables
 require('dotenv').config();
 const server = express();
 
-//Invoke middleware
+let corsOptions = {
+  origin: process.env.FRONTEND_URL,
+  allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept'
+};
+
 server.use(helmet());
-server.use(cors());
+server.use(cors(corsOptions));
 server.use(express.json());
 server.use(
-	session({
-		name: 'sid',
-		saveUninitialized: false,
-		resave: false,
-		secret: process.env.SESSION_SECRET,
-		cookie: {
-			maxAge: 1000 * 60 * 60 * 2,
-			secure: process.env.NODE_ENV === 'production',
-      sameSite: false,
-      httpOnly: true
-		}
-	})
+  session({
+    name: 'sid',
+    saveUninitialized: false,
+    resave: false,
+    secret: process.env.SESSION_SECRET,
+    store: new MongoStore({ mongooseConnection: db })
+  })
 );
 
-//Invoke routes
 server.use('/api/auth', authRoute);
 server.use('/api/events', eventsRoute);
 
-//GET endpoint for checking app
 server.get('/', (req, res) => {
-	res.send({ api: 'Ok', dbenv: process.env.DB_ENV });
+  res.send({ api: 'Ok', dbenv: process.env.DB_ENV });
 });
 
 module.exports = server;
