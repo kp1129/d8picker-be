@@ -13,7 +13,7 @@ router.get('/login', (req, res) => {
 router.get('/success', setSession, (req, res) => {
   // TODO: Should check if needed
   // TODO: change to environment variable
-  res.redirect(`${process.env.FRONTEND_URL}/redirect`);
+  res.redirect(`https://d8picker.netlify.com/redirect`);
 });
 
 // Delete session and logout
