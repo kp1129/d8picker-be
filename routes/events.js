@@ -1,12 +1,13 @@
-const express = require("express");
-const { google } = require("googleapis");
-const googleCalenderService = require("../services/google-calendar.service");
+const express = require('express');
+const { google } = require('googleapis');
+const googleCalenderService = require('../services/google-calendar.service');
 
 const router = express.Router();
 
 // Get Events
-router.get("/", async (req, res) => {
+router.get('/', async (req, res) => {
   // check for valid session
+  console.log('req.session', req.session);
   if (req.session.user) {
     // get oauth2 client
     const oauth2Client = new google.auth.OAuth2();
@@ -27,7 +28,7 @@ router.get("/", async (req, res) => {
     });
   } else {
     // Should check for session on front end and redirect
-    res.json({ message: "Not Authorized" });
+    res.json({ message: 'Not Authorized' });
   }
 });
 

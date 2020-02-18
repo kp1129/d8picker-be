@@ -1,7 +1,7 @@
-const request = require("supertest");
+const request = require('supertest');
 
-const server = require("./server.js");
-const Users = require("../routes/profile");
+const server = require('./server.js');
+const Users = require('../routes/profile');
 
 // describe("server.js", function() {
 //   describe("environment", function() {
@@ -10,10 +10,10 @@ const Users = require("../routes/profile");
 //     });
 //   });
 
-it("should return a 200 OK", function() {
+it('should return a 200 OK', function() {
   // spin up the server
   return request(server)
-    .get("/")
+    .get('/')
     .then(res => {
       expect(res.status).toBe(200);
     });
@@ -22,33 +22,33 @@ it("should return a 200 OK", function() {
   // }
 });
 
-it("should return a JSON", function() {
+it('should return a JSON', function() {
   return request(server)
-    .get("/")
+    .get('/')
     .then(res => {
       expect(res.type).toMatch(/json/i);
     });
 });
 it("should return {api: 'Ok'}", function() {
   return request(server)
-    .get("/")
+    .get('/')
     .then(res => {
-      expect(res.body.api).toBe("Ok");
+      expect(res.body.api).toBe('Ok');
     });
 });
 
-describe("Login receives a 200", function() {
-  it("login returns a 200", async function() {
+describe('Login receives a 200', function() {
+  it('login returns a 200', async function() {
     request(server)
-      .post("/api/auth/login")
-      .send({ email: "keith@who.band", password: "thewho" })
+      .post('/api/auth/login')
+      .send({ email: 'keith@who.band', password: 'thewho' })
       .then(res => {
         expect(res.status).toBe(200);
       });
   });
 
-  it.skip("register function returns a 200", function() {
-    return request(server).post("api/auth/register", async (req, res) => {
+  it.skip('register function returns a 200', function() {
+    return request(server).post('api/auth/register', async (req, res) => {
       // validate data before creating user
       // const { error } = registerValidation(req.body);
       // if (error) {

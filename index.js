@@ -1,6 +1,6 @@
-const server = require("./api/server.js");
-const db = require("./db");
-require("dotenv").config();
+const server = require('./api/server.js');
+const db = require('./db');
+require('dotenv').config();
 
 db.connect(process.env.DB_CONNECT);
 

@@ -1,23 +1,23 @@
-const { google } = require("googleapis");
+const { google } = require('googleapis');
 
 const listEvents = (auth, cb) => {
-  const calendar = google.calendar({ version: "v3", auth });
+  const calendar = google.calendar({ version: 'v3', auth });
   calendar.events.list(
     {
-      calendarId: "primary",
+      calendarId: 'primary',
       timeMin: new Date().toISOString(),
-      maxResults: 10,
+      maxResults: 25,
       singleEvents: true,
-      orderBy: "startTime"
+      orderBy: 'startTime'
     },
     (err, res) => {
-      if (err) return console.log("The API returned an error: " + err);
+      if (err) return console.log('The API returned an error: ' + err);
       const events = res.data.items;
       if (events.length) {
-        console.log("events: ", events);
+        console.log('events: ', events);
         cb(events);
       } else {
-        console.log("No upcoming events found.");
+        console.log('No upcoming events found.');
       }
     }
   );
