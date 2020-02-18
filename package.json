@@ -28,7 +28,7 @@
       "**/*.{js,jsx}",
       "!**/node_modules/**",
       "!**/vendor/**"
-    ]	    
+    ]
   },
   "dependencies": {
     "connect-mongo": "^3.2.0",

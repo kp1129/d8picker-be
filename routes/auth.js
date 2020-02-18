@@ -1,4 +1,4 @@
-const express = require('express');
+const router = require('express').Router();
 const googleUtil = require('../utils/google-util');
 const setSession = require('../middleware/setSession');
 
