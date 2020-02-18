@@ -1,20 +1,20 @@
-const { google } = require("googleapis");
-const User = require("../model/User");
+const { google } = require('googleapis');
+// const User = require("../model/User");
 
-require("dotenv").config();
+require('dotenv').config();
 
 // google app config
 const googleConfig = {
   clientId: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  redirect: "http://localhost:4000/api/auth/success"
+  redirect: `${process.env.BASE_URL}/api/auth/success`
 };
 
 // scopes use for the application
 const defaultScope = [
-  "https://www.googleapis.com/auth/calendar.events",
-  "profile",
-  "email"
+  'https://www.googleapis.com/auth/calendar.events',
+  'profile',
+  'email'
 ];
 
 // oauth2 client
@@ -29,8 +29,8 @@ const createConnection = () => {
 // generate authentication url
 const getConnectionUrl = auth => {
   return auth.generateAuthUrl({
-    access_type: "offline",
-    prompt: "consent",
+    access_type: 'offline',
+    prompt: 'consent',
     scope: defaultScope
   });
 };
@@ -46,7 +46,7 @@ const urlGoogle = () => {
 const getOAuth2 = auth => {
   return google.oauth2({
     auth: auth,
-    version: "v2"
+    version: 'v2'
   });
 };
 
@@ -66,19 +66,19 @@ const getGoogleAccountFromCode = async (code, cb) => {
         email: res.data.email,
         photoUrl: res.data.picture
       };
-      // Find user by data from token
-      const existingUser = await User.findOne({ googleId: res.data.id });
-      if (existingUser) {
-        return done(null, existingUser);
-      }
-      const newUser = new User({
-        googleId: res.data.id,
-        name: res.data.name,
-        email: res.data.email,
-        photoUrl: res.data.picture,
-        accessToken: tokens.access_token
-      });
-      await newUser.save();
+      // // Find user by data from token
+      // const existingUser = await User.findOne({ googleId: res.data.id });
+      // if (existingUser) {
+      //   return done(null, existingUser);
+      // }
+      // const newUser = new User({
+      //   googleId: res.data.id,
+      //   name: res.data.name,
+      //   email: res.data.email,
+      //   photoUrl: res.data.picture,
+      //   accessToken: tokens.access_token
+      // });
+      // await newUser.save();
       // Should be able to pass newUser
       cb(null, userProfile);
     }
