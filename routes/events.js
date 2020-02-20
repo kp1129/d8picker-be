@@ -1,18 +1,21 @@
 const express = require('express');
 const { google } = require('googleapis');
 const googleCalenderService = require('../services/google-calendar.service');
+const setSession = require('../middleware/setSession');
 
 const router = express.Router();
 
 // Get Events
-router.get('/', async (req, res) => {
+router.get('/', setSession, async (req, res) => {
   // check for valid session
   console.log('req.session', req.session);
   if (req.session.user) {
     // get oauth2 client
     const oauth2Client = new google.auth.OAuth2();
+
     oauth2Client.setCredentials({
-      access_token: req.session.user.accessToken
+      access_token: req.session.user.accessToken,
+      refresh_token: req.session.refresh_token
     });
 
     // get calendar events by passing oauth2 client
