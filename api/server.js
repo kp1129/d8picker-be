@@ -5,6 +5,7 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const authRoute = require('../routes/auth');
 const eventsRoute = require('../routes/events');
+const profileRoute = require('../routes/profile');
 const { db } = require('../db');
 
 //Require env variables
@@ -12,12 +13,12 @@ require('dotenv').config();
 const server = express();
 
 let corsOptions = {
-  origin: [process.env.FRONTEND_URL, process.env.STAGING_FRONTEND_URL, process.env.PRODUCTION_FRONTEND_URL ],
+  origin: process.env.FRONTEND_URL, // process.env.FRONTEND_URL,
   allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept'
 };
 
 server.use(helmet());
-server.use(cors(corsOptions));
+server.use(cors());
 server.use(express.json());
 server.use(
   session({
@@ -31,6 +32,7 @@ server.use(
 
 server.use('/api/auth', authRoute);
 server.use('/api/events', eventsRoute);
+server.use('/api/profile', profileRoute);
 
 server.get('/', (req, res) => {
   res.send({ api: 'Ok', dbenv: process.env.DB_ENV });
