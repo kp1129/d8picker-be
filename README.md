@@ -1,6 +1,8 @@
 ## Code Climate
 [![Maintainability](https://api.codeclimate.com/v1/badges/9dbd40cc5a146921dc69/maintainability)](https://codeclimate.com/github/Lambda-School-Labs/school-calendar-be/maintainability)
 
+[![Test Coverage](https://api.codeclimate.com/v1/badges/9dbd40cc5a146921dc69/test_coverage)](https://codeclimate.com/github/Lambda-School-Labs/school-calendar-be/test_coverage)
+
 # API Documentation
 
 #### 1️⃣ Backend delpoyed at [Heroku](https://lab17-makata.herokuapp.com) <br>

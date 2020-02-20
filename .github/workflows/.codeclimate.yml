@@ -20,6 +20,8 @@ jobs:
       - run: npm test
         env:
           CI: true
+          GOOGLE_CLIENT_ID: ${{secrets.GOOGLE_CLIENT_ID}}
+          GOOGLE_CLIENT_SECRET: ${{secrets.GOOGLE_CLIENT_SECRET}}
   coverage:
     name: Test and publish test coverage
     runs-on: ubuntu-latest
@@ -32,6 +34,8 @@ jobs:
       - uses: paambaati/codeclimate-action@v2.4.0
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CodeClimateReporterId }}
+          GOOGLE_CLIENT_ID: ${{secrets.GOOGLE_CLIENT_ID}}
+          GOOGLE_CLIENT_SECRET: ${{secrets.GOOGLE_CLIENT_SECRET}}
         with:
           coverageCommand: npm run coverage
           debug: true
