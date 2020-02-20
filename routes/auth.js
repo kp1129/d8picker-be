@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const googleUtil = require('../utils/google-util');
-const setSession = require('../middleware/setSession');
+// const setSession = require('../middleware/setSession');
 
 require('dotenv').config();
 
@@ -9,12 +9,12 @@ router.get('/login', (req, res) => {
   res.redirect(googleUtil.urlGoogle());
 });
 
-// callback route for google redirect
-router.get('/success', setSession, (req, res) => {
-  // TODO: Should check if needed
-  // TODO: change to environment variable
-  res.redirect(`https://d8picker.netlify.com/redirect`);
-});
+// // callback route for google redirect
+// router.get('/success', setSession, (req, res) => {
+//   // TODO: Should check if needed
+//   // TODO: change to environment variable
+//   res.redirect(`https://d8picker.netlify.com/redirect`);
+// });
 
 // Delete session and logout
 // Should redirect on the front end
