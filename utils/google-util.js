@@ -7,7 +7,7 @@ require('dotenv').config();
 const googleConfig = {
   clientId: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  redirect: `${process.env.BASE_URL}/api/auth/success`
+  redirect: `${process.env.FRONTEND_URL}/authenticate/google`
 };
 
 // scopes use for the application
