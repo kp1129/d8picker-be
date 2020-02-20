@@ -27,7 +27,8 @@
     "collectCoverageFrom": [
       "**/*.{js,jsx}",
       "!**/node_modules/**",
-      "!**/vendor/**"
+      "!**/vendor/**",
+      "!**/__tests__/**"
     ]
   },
   "dependencies": {
