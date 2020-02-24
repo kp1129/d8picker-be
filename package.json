@@ -20,10 +20,6 @@
     "coverage": "jest --coverage --detectOpenHandles --forceExit || true"
   },
   "jest": {
-    "testEnvironment": "node",
-    "setupFiles": [
-      "dotenv/config"
-    ],
     "collectCoverageFrom": [
       "**/*.{js,jsx}",
       "!**/node_modules/**",
