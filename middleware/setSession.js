@@ -8,7 +8,7 @@ const setSession = async (req, res, next) => {
     await googleUtil.getGoogleAccountFromCode(code, (err, res) => {
       if (err) {
         // Redirect to login endpoint
-        res.redirect(`${process.env.FRONT_END_URL}/authenticate/google`);
+        res.redirect((process.env.NODE_ENV !== 'development') ? `${process.env.PRODUCTION_FRONTEND_URL}/authenticate/google` : `${process.env.FRONTEND_URL}/authenticate/google`);
       } else {
         req.session.user = res;
         // Should setCredentails to get access to tokens

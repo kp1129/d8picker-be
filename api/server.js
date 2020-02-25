@@ -13,7 +13,7 @@ require('dotenv').config();
 const server = express();
 
 let corsOptions = {
-  origin: process.env.FRONTEND_URL, // process.env.FRONTEND_URL,
+  origin: (process.env.NODE_ENV !== 'development') ? `${process.env.PRODUCTION_FRONTEND_URL}` : `${process.env.FRONTEND_URL}` ,
   allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept'
 };
 
