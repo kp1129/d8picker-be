@@ -4,8 +4,10 @@ const Template = require('../model/Template');
 
 // GET global posts
 router.get('/', async (req, res) => {
+  const googleId = req.headers['googleId'];
+
 	try {
-		const template = await Template.find().limit(10);
+		const template = await Template.findById(googleId).limit(10);
 		res.status(200).json(template);
 	} catch (err) {
 		res.status(500).json({ message: err });
@@ -26,5 +28,15 @@ router.post('/', async (req, res) => {
 	} catch (err) {
     res.status(500).json({ message: err });
 	}
+});
+
+// GET specific post by id
+router.get('/:postId', async (req, res) => {
+  try {
+      const post = await Post.findById(req.params.postId);
+      res.json(post);
+  } catch (err) {
+      res.json({ message: err });
+  }
 });
 module.exports = router;
