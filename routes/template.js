@@ -6,9 +6,9 @@ const Template = require('../model/Template');
 router.get('/', async (req, res) => {
 	try {
 		const template = await Template.find().limit(10);
-		res.json(template);
+		res.status(200).json(template);
 	} catch (err) {
-		res.json({ message: err });
+		res.status(500).json({ message: err });
 	}
 });
 // POST to DB
@@ -17,13 +17,14 @@ router.post('/', async (req, res) => {
 		summary: req.body.summary,
     description: req.body.description,
     starttime:req.body.starttime,
-    endtime: req.body.endtime
+    endtime: req.body.endtime,
+    googleId: req.body.googleId
 	});
 	try {
 		const savedTemplate = await template.save();
-		res.json(savedTemplate);
+		res.status(201).json(savedTemplate);
 	} catch (err) {
-		res.json({ message: err });
+    res.status(500).json({ message: err });
 	}
 });
 module.exports = router;

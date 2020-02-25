@@ -24,6 +24,12 @@ const templateSchema = new mongoose.Schema({
     required: true,
     min: 6,
     max: 8
+  },
+  googleId: {
+    type: String,
+    required: true,
+    min: 6,
+    max: 32
   }
 });
 
