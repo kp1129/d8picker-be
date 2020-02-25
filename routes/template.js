@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const template = require('../model/Template');
+const Template = require('../model/Template');
 
 
 // GET global posts
@@ -14,8 +14,10 @@ router.get('/', async (req, res) => {
 // POST to DB
 router.post('/', async (req, res) => {
 	const template = new Template({
-		title: req.body.title,
-		description: req.body.description
+		summary: req.body.summary,
+    description: req.body.description,
+    starttime:req.body.starttime,
+    endtime: req.body.endtime
 	});
 	try {
 		const savedTemplate = await template.save();
