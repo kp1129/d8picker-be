@@ -6,6 +6,7 @@ const MongoStore = require('connect-mongo')(session);
 const authRoute = require('../routes/auth');
 const eventsRoute = require('../routes/events');
 const profileRoute = require('../routes/profile');
+const templateRoute = require('../routes/template');
 const { db } = require('../db');
 
 //Require env variables
@@ -33,6 +34,7 @@ server.use(
 server.use('/api/auth', authRoute);
 server.use('/api/events', eventsRoute);
 server.use('/api/profile', profileRoute);
+server.use('/api/template', templateRoute);
 
 server.get('/', (req, res) => {
   res.send({ api: 'Ok', dbenv: process.env.DB_ENV });
