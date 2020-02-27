@@ -21,7 +21,7 @@ const setSession = async (req, res, next) => {
             // store the refresh_token in my database!
             req.session.refresh_token = tokens.refresh_token;
           }
-          console.log(tokens.access_token);
+          //console.log(tokens.access_token);
         });
       }
       next();

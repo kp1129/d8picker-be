@@ -31,9 +31,10 @@ router.post('/', async (req, res) => {
 });
 
 // DELETE a specific post
-router.delete('/:id', async (req, res) => {
+router.delete('/:templateId', async (req, res) => {
+	console.log(req.params.templateId)
 	try {
-		const removedTemplate = await Template.remove({ _id: req.params.postId });
+		const removedTemplate = await Template.deleteOne({ _id: req.params.templateId });
 		res.status(200).json(removedTemplate);
 	} catch (err) {
 		res.status(500).json({ message: err });
