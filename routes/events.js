@@ -8,7 +8,7 @@ const router = express.Router();
 // Get Events
 router.get('/', setSession, async (req, res) => {
   // check for valid session
-  console.log('req.session', req.session);
+  //console.log('req.session', req.session);
   if (req.session.user) {
     // get oauth2 client
     const oauth2Client = new google.auth.OAuth2();
