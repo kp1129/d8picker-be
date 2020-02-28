@@ -28,6 +28,7 @@ router.post('/', async (req, res) => {
   }
 });
 
+
 // DELETE a specific post
 router.delete('/:templateId', async (req, res) => {
 	console.log(req.params.templateId)
