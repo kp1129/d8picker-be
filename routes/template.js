@@ -3,10 +3,8 @@ const Template = require('../model/Template');
 
 // GET global posts
 router.get('/', async (req, res) => {
-  const googleId = req.headers['googleId'];
-  console.log('GET', googleId);
   try {
-    const template = await Template.find(googleId).limit(10);
+    const template = await Template.find().limit(10);
     res.status(200).json(template);
   } catch (err) {
     res.status(500).json({ message: err });
