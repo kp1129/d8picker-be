@@ -2,9 +2,10 @@ const router = require('express').Router();
 const Template = require('../model/Template');
 
 // GET global posts
-router.get('/', async (req, res) => {
+router.get('/:googleId', async (req, res) => {
+  const googleId = req.params.googleId
   try {
-    const template = await Template.find().limit(10);
+    const template = await Template.find().where('googleId').equals(googleId).limit(10);
     res.status(200).json(template);
   } catch (err) {
     res.status(500).json({ message: err });
