@@ -3,7 +3,6 @@ const cors = require('cors');
 const helmet = require('helmet');
 const templateRoute = require('../routes/template');
 
-
 //Require env variables
 require('dotenv').config();
 const server = express();
