@@ -1,9 +1,12 @@
 const router = require('express').Router();
 const Template = require('../model/Template');
 
+
 // GET global posts
 router.get('/:googleId', async (req, res) => {
   const googleId = req.params.googleId;
+
+
   try {
     const template = await Template.find()
       .where('googleId')

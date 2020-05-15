@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
-const templateRoute = require('../routes/template');
+const templateRouter = require('../routes/templateRouter');
 
 //Require env variables
 require('dotenv').config();
@@ -10,7 +10,7 @@ server.use(helmet());
 server.use(cors());
 server.use(express.json());
 
-server.use('/api/template', templateRoute);
+server.use('/api/template', templateRouter);
 
 server.get('/', (req, res) => {
   res.send({ api: 'Ok', dbenv: process.env.DB_ENV });
