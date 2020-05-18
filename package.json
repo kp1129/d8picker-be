@@ -16,7 +16,7 @@
   "scripts": {
     "dev": "nodemon index.js",
     "start": "node index.js",
-    "test": "jest --detectOpenHandles --forceExit",
+    "test": "jest --detectOpenHandles --forceExit --watch",
     "coverage": "jest --coverage --detectOpenHandles --forceExit || true"
   },
   "jest": {
