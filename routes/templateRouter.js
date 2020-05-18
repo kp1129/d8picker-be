@@ -10,7 +10,7 @@ router.get('/:googleId', (req, res) => {
         if(templates.length === 0){
             res.status(200).json({ message: 'no templates' })
         } else {
-            res.status(200).json(templates)
+            res.status(200).json({ templates : templates })
         }
     })
     .catch(err => {
