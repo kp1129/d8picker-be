@@ -3,9 +3,9 @@ const request = require('supertest');
 const server = require('../api/server.js');
 
 // test data
-testGoogleID = 123;
+testGoogleID = 125;
 testTemplate = {
-    title: 'test Template',
+    title: 'test Template 2',
     notes: 'test notes',
     starttime: '123',
     endtime: '123'
