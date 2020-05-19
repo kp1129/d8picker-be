@@ -22,7 +22,8 @@ router.get('/:googleId', (req, res) => {
 
 // POST to DB
 router.post('/', (req, res) => {
-    const template = req.body;  
+    const template = req.body; 
+    console.log('POST REQUEST HEADER', req.headers); 
     Template.addTemplate(template)
     .then(templates => {
         if(templates.length === 0){
@@ -33,7 +34,7 @@ router.post('/', (req, res) => {
     })
     .catch(err => {
       console.log('addTemplate', err);
-      res.status(500).json(err);
+      res.status(500).json({errorMessageCatch: err});
     });
   
 });
