@@ -5,7 +5,8 @@ module.exports = {
     findTemplatesByGoogleId,
     findTemplateById,
     addTemplate,
-    removeTemplate
+    removeTemplate,
+    updateTemplate
 }
 
 // get all templates
@@ -34,3 +35,8 @@ function removeTemplate(templateId) {
         .del();
 }
 
+function updateTemplate(templateId, changes) {
+    return db("templates")
+        .where("id", templateId)
+        .update(changes)
+}

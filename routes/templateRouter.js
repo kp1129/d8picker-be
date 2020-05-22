@@ -39,11 +39,27 @@ router.post('/', (req, res) => {
   
 });
 
-// DELETE a specific post
+// DELETE a specific template
 router.delete('/:templateId', validateTemplateID, (req, res) => {
     const templateId = req.params.templateId;
     Template.removeTemplate(templateId)
     .then(response => res.status(200).json({ message: 'template deleted successfully' }))
+    .catch(err => res.status(500).json(err))
+});
+
+// EDIT a specific template
+router.put('/:templateId', validateTemplateID, (req, res) => {
+    const templateId = req.params.templateId;
+    const changes = req.body;
+    Template.updateTemplate(templateId, changes)
+    .then(response => {
+        if(response === 1){
+            res.status(200).json({ message: 'template updated successfully' })
+        }
+        else {
+            res.status(500).json({ message: 'error updating template'})
+        }
+    })
     .catch(err => res.status(500).json(err))
 });
 
