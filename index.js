@@ -1,8 +1,8 @@
 const server = require('./api/server.js');
-const db = require('./db');
+// const db = require('./db');
 require('dotenv').config();
 
-db.connect(process.env.DB_CONNECT);
+// db.connect(process.env.DB_CONNECT);
 
 const PORT = process.env.PORT || 4000;
 server.listen(PORT, () => {
