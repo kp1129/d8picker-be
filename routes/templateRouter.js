@@ -8,7 +8,7 @@ router.get('/:googleId', (req, res) => {
   Template.findTemplatesByGoogleId(googleId)
     .then(templates => {
         if(templates.length === 0){
-            res.status(200).json({ message: 'no templates' })
+            res.status(200).json({ templates: [] })
         } else {
             res.status(200).json({templates: templates})
         }
