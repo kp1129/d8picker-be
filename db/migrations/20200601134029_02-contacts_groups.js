@@ -21,14 +21,16 @@ exports.up = function(knex) {
         })
         .createTable('contact_admin', tbl => {
             tbl.increments('id');
-            tbl.string('googleId')
+            tbl.integer('adminId')
                 .notNullable()
-                .references('admin.googleId')
+                .references('id')
+                .inTable('admin')
                 .onDelete('CASCADE')
                 .onUpdate('CASCADE');
-            tbl.string('contactId')
+            tbl.integer('contactId')
                 .notNullable()
-                .references('contacts.id')
+                .references('id')
+                .inTable('contacts')
                 .onDelete('CASCADE')
                 .onUpdate('CASCADE');;
         })
@@ -37,8 +39,9 @@ exports.up = function(knex) {
             tbl.string('groupName', 128)
                 .notNullable();
             tbl.text('groupDescription');
-            tbl.string('googleId')
-                .references('admin.googleId')
+            tbl.integer('adminId')
+                .references('admin')
+                .inTable('admin')
                 .onDelete('CASCADE')
                 .onUpdate('CASCADE');
         })
@@ -48,8 +51,8 @@ exports.up = function(knex) {
                 .references('contacts.id')
                 .onDelete('CASCADE')
                 .onUpdate('CASCADE');;
-            tbl.string('googleId')
-                .references('admin.googleId')
+            tbl.integer('adminId')
+                .references('admin.id')
                 .onDelete('CASCADE')
                 .onUpdate('CASCADE');;
         })
