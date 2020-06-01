@@ -51,10 +51,10 @@ exports.up = function(knex) {
                 .references('contacts.id')
                 .onDelete('CASCADE')
                 .onUpdate('CASCADE');;
-            tbl.integer('adminId')
-                .references('admin.id')
+            tbl.integer('groupId')
+                .references('groups.id')
                 .onDelete('CASCADE')
-                .onUpdate('CASCADE');;
+                .onUpdate('CASCADE');
         })
   
     )}
