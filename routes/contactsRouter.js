@@ -28,7 +28,7 @@ router.get('/:contactId/groups', validateContactId, (req, res) => {
 
     Groups.findGroupsByContact(contactId)
         .then(groups => {
-            res.status(200).json(groups);
+            res.status(200).json({...req.contact, groups: groups});
         })
         .catch(err => res.status(500).json(err));
 })

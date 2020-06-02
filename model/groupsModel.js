@@ -4,6 +4,7 @@ module.exports = {
     findGroupsByAdminId,
     addGroup, 
     findGroupByGroupId,
+    findContactsByGroupId,
     addContact,
     deleteContactFromGroup,
     findGroupsByContact,
@@ -16,8 +17,6 @@ module.exports = {
 function findGroupsByAdminId(adminId){
     return db("groups")
             .where({adminId})
-            // .join('contact_group','groups.id', 'contact_group.groupId')
-            // .groupBy('groups.id')
 }
 
 // add group
@@ -27,18 +26,23 @@ function addGroup(newGroupInfo){
 }
 
 // find group by groupId
-function findGroupByGroupId(groupId){
+function findGroupByGroupId(id){
     return db("groups")
-    .where({groupId})
-    .join('contact_group', 'groups.id', 'contact_group.groupId')
-    .groupBy('groups.id')
+    .where({id})
     .first();
+}
+
+// find contacts for a group
+function findContactsByGroupId(groupId) {
+    return db('contacts')
+        .join('contact_group', 'contact_group.contactId', 'contacts.id')
+        .where({'contact_group.groupId': groupId});
 }
 
 // add contact to a group
 function addContact(contactId, groupId){
     return db('contact_group')
-        .insert({contactId, groupId});
+        .insert({contactId: contactId, groupId: groupId});
 
 }
 
@@ -51,7 +55,7 @@ function deleteContactFromGroup(){
 
 // find groups for a contact
 function findGroupsByContact(contactId) {
-    return ('contact_group')
+    return db('contact_group')
         .where({contactId})
         .join('groups', 'groups.id', 'contact_group.groupId');
 }

@@ -18,7 +18,12 @@ router.get('/', (req, res) => {
 
 // GET Group by groupId
 router.get('/:groupId', validateGroupId, (req, res) => {
-    res.status(200).json(req.group)
+    Groups.findContactsByGroupId(req.params.groupId)
+        .then(response => {
+            req.group.contacts = response;
+            res.status(200).json(req.group)
+        })
+        .catch(err => console.log(err));
 })
 
 // POST Group 
@@ -110,6 +115,7 @@ function validateContactId(req, res, next){
     // find the contact using contactId
     Contacts.findContactById(contactId)
         .then(contact => {
+            console.log('from validateContactId', contact);
             // check if admin is same as adminId from request
             if(contact.adminId == adminId) {
                 req.contact = contact;
@@ -132,6 +138,7 @@ function validateGroupId(req, res, next) {
     Groups.findGroupByGroupId(groupId)
         .then(group => {
             // check if admin is same as adminId from request
+            console.log('from validateGroupId', group);
             if(group.adminId == adminId) {
                 req.group = group;
                 next();
@@ -149,6 +156,7 @@ function validateContactInGroup(req, res, next) {
     
     Groups.findGroupsByContact(contactId)
         .then(groups => {
+            console.log('from validateContactInGroup', groups);
             const group = groups.find(g => g.groupId == groupId);
             if (!group) {
                 res.status(404).json({ error: `contact does not belong to the groupId ${groupId}`});
