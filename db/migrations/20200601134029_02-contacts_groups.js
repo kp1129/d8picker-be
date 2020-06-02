@@ -32,7 +32,7 @@ exports.up = function(knex) {
                 .references('id')
                 .inTable('contacts')
                 .onDelete('CASCADE')
-                .onUpdate('CASCADE');;
+                .onUpdate('CASCADE');
         })
         .createTable('groups', tbl => {
             tbl.increments('id');
@@ -40,7 +40,7 @@ exports.up = function(knex) {
                 .notNullable();
             tbl.text('groupDescription');
             tbl.integer('adminId')
-                .references('admin')
+                .references('id')
                 .inTable('admin')
                 .onDelete('CASCADE')
                 .onUpdate('CASCADE');

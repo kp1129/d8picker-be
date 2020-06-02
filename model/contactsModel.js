@@ -1,11 +1,13 @@
 const db = require('../db/dbConfig');
 
 module.exports = {
-    findContacts
+    findContactsByAdmin
 }
 
-function findContacts(googleId){
+function findContactsByAdmin(id){
     return db('contact_admin')
         .join('contacts', 'contactId', 'id')
-        .where({googleId})
+        .where('adminId', id);
 }
+
+// function find
