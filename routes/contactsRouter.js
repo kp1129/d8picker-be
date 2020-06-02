@@ -18,30 +18,31 @@ router.get('/', (req, res) => {
 
 // GET contact by contactId
 router.get('/:contactId', validateContactId, (req, res) => {
-    const contactId = req.params.contactId;
-
     res.status(200).json(req.contact);
 })
 
 // POST contact
 router.post('/', (req, res) => {
     const adminId = req.body.adminId
-    const newContactInfo = req.body; 
+    const {firstName, lastName, phoneNumber, email} = req.body; 
 
-    Contacts.addContact(adminId, newContactInfo)
+    // console.log('from add contact', adminId, {firstName, lastName, email, phoneNumber});
+    Contacts.addContact(adminId, {firstName, lastName, email, phoneNumber})
     .then(response => {
+        console.log('postResponse: ', response)
         res.status(201).json(response)
     })
     .catch(error => {
+        console.log(error)
         res.status(500).json(error)
     })
 })
 // PUT contact
 router.put('/:contactId', validateContactId, (req, res) => {
-    const newContactInfo = req.body;
+    const {firstName, lastName, phoneNumber, email} = req.body;
     const contactId = req.params.contactId;
 
-    Contacts.updateContact(contactId, newContactInfo)
+    Contacts.updateContact(contactId, {firstName, lastName, phoneNumber, email})
     .then(response => {
         console.log('updateResponse: ', response)
         res.status(201).json({ response: response })
@@ -72,19 +73,19 @@ function validateContactId(req, res, next){
     const contactId = req.params.contactId;
     const adminId = req.body.adminId;
 
-    Contacts.findContactsByAdmin(adminId)
-    .then(async response => {
-        const contact = await response.filter(c => {
-            c.contactId === contactId
+    // find the contact using contactId
+    Contacts.findContactById(contactId)
+        .then(contact => {
+            // check if admin is same as adminId from request
+            if(contact.adminId == adminId) {
+                req.contact = contact;
+                next();
+            } else {
+                // if not respond with error message
+                res.status(404).json({ error: 'invalid contact id'});
+            }
         })
-        if(contact.length === 0){
-            res.status(404).json({message: 'invalid contact id.'})
-        }else {
-            req.contact = await contact[0];
-            next();
-        }
-    })
-    .catch(error => {
-        res.status(500).json(error)
-    })
+        .catch(error => {
+                res.status(500).json(error)
+            });
 }

@@ -2,6 +2,7 @@ const db = require('../db/dbConfig');
 
 module.exports = {
     findContactsByAdmin,
+    findContactById,
     updateContact,
     addContact,
     deleteContact
@@ -10,11 +11,19 @@ module.exports = {
 // find all contacts by adminId
 function findContactsByAdmin(id){
     return db('contact_admin')
-        .join('contacts', 'contactId', 'id')
+        .join('contacts', 'contact_admin.contactId', 'contacts.id')
         .where('adminId', id)
         .select('adminId', 'contactId', 'firstName', 'lastName', 'phoneNumber', 'email');
 }
 
+// get a specific contact
+function findContactById(id){
+    return db('contact_admin')
+        .join('contacts', 'contact_admin.contactId', 'contacts.id')
+        .where('contactId', id)
+        .select('contact_admin.adminId', 'contact_admin.contactId', 'contacts.firstName', 'contacts.lastName', 'contacts.phoneNumber', 'contacts.email')
+        .first();
+}
 
 // update a contact
 function updateContact(id, newContactInfo){
@@ -27,15 +36,16 @@ function updateContact(id, newContactInfo){
 async function addContact(adminId, newContactInfo){
 
     // add contact to the contacts table
-    const newContactId = await db('contacts')
-        .insert(newContactInfo);
+    return await db('contacts')
+        .insert(newContactInfo)
+        .then(response => {
+            console.log('from addContact', response);
+            // add relationship to contact_admin
+            return db('contact_admin')
+            .insert({adminId, contactId: response[0]});
+        })
+        .catch(err => {console.log('error from addContact', err)})
 
-    // add relationship in contact_admin table
-    await db('contact_admin')
-        .insert({adminId, contactId: newContactId});
-
-    // return the new contact id
-    return newContactId;
 }
 // delete a contact
 function deleteContact(id){
