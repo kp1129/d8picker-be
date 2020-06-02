@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const Contacts = require('../model/contactsModel');
+const Groups = require('../model/groupsModel');
 
 // GET contacts for admin Id
 router.get('/', (req, res) => {
@@ -19,6 +20,17 @@ router.get('/', (req, res) => {
 // GET contact by contactId
 router.get('/:contactId', validateContactId, (req, res) => {
     res.status(200).json(req.contact);
+})
+
+// GET groups for a contact
+router.get('/:contactId/groups', validateContactId, (req, res) => {
+    const contactId = req.params.contactId;
+
+    Groups.findGroupsByContact(contactId)
+        .then(groups => {
+            res.status(200).json(groups);
+        })
+        .catch(err => res.status(500).json(err));
 })
 
 // POST contact
