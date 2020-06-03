@@ -12,7 +12,11 @@
     // 2. error case -  invalid contactID
 
 // GET groups for a contact
-    // 1. happy case - valid contactID - groups existing
+    
+    // describe('GET groups for contact', function() {
+    //     // 1. happy case - valid contactID - groups existing
+    //     it.should('')
+    // })
     // 2. happy case - valid contactID - no groups
 
 // PUT contact
