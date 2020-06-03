@@ -109,12 +109,17 @@ describe('testing groups router', () => {
                         testContactId = res.body[0]
                     })
         })
-        // it('should have the group in the contact info', function(){
-        //     return request(server)
-        //         .get(`/api/contacts/${testContactId}`)
-        //         .set('authorization', token)
-        // })
 
+        // check groups for a particular contact - groups empty
+        it('should have the group in the contact info', function(){
+            return request(server)
+                .get(`/api/contacts/${testContactId}/groups`)
+                .send({adminId: testAdminId})
+                .set('authorization', token)
+                .then(res => {
+                    expect(res.body.groups).toHaveLength(0);
+                })
+        })
         // 1. happy case - valid groupID & contactID
         it('should successfully post relationship to contact_group with valid groupId and contactId', function(){
             return request(server)//
@@ -125,6 +130,16 @@ describe('testing groups router', () => {
                         expect(res.status).toBe(201)
                         expect(res.body.message).toBe('contact added successfylly to the group')
                     })
+        })
+        // check groups for a particular contact - groups have test group
+        it('should have the group in the contact info', function(){
+            return request(server)
+                .get(`/api/contacts/${testContactId}/groups`)
+                .send({adminId: testAdminId})
+                .set('authorization', token)
+                .then(res => {
+                    expect(res.body.groups[0].id).toBe(testGroupId);
+                })
         })
         // 2. error case - valid groupID & invalid contactID
         it('error response when groupId is valid but not contactId', function(){

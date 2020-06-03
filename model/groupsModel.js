@@ -57,7 +57,7 @@ function deleteContactFromGroup(){
 function findGroupsByContact(contactId) {
     return db('contact_group')
         .where({contactId})
-        .join('groups', 'groups.id', 'contact_group.groupId');
+        .join('groups', 'contact_group.groupId', 'groups.id');
 }
 
 // update group
