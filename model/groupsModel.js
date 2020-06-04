@@ -47,9 +47,13 @@ function addContact(contactId, groupId){
 }
 
 // delete contact from a group
-function deleteContactFromGroup(){
-    return ('contact_group')
-    .whereIn(['contactId', 'groupId'], [contactId, groupId])
+function deleteContactFromGroup(contactId, groupId){
+    return db('contact_group')
+        .where({contactId})
+        .where({groupId})
+        // .delete();
+        // .whereIn(['contactId', 'groupId'], [contactId, groupId])
+        .delete();
             
 }
 
@@ -69,7 +73,8 @@ function updateGroup(id, newGroupInfo){
 
 // delete group
 function deleteGroup(id){
+    console.log('I am running');
     return db('groups')
-    .where({id})
-    .delete()
+        .where({id})
+        .delete();
 }

@@ -7,11 +7,14 @@ const newAdminInfo = {
     email: 'test_admin@gmail.com',
     googleId: `test123`
 }
-// const token = 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjQ5MjcxMGE3ZmNkYjE1Mzk2MGNlMDFmNzYwNTIwYTMyYzg0NTVkZmYiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXpwIjoiOTk2OTk3OTMyNDUzLTJnaGE1Njg1cjRpZW0yMjdjYmM0dmpmcDFzbWUxazJ0LmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiOTk2OTk3OTMyNDUzLTJnaGE1Njg1cjRpZW0yMjdjYmM0dmpmcDFzbWUxazJ0LmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTA4NDQ1NjA4MDU1NjQ0MzQ4NTA3IiwiZW1haWwiOiJhYmFsYW56YXI3QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdF9oYXNoIjoiek1ldU95Uzh6ZXlEN2U4OWo3TG91ZyIsIm5hbWUiOiJBbGRhaXIgQmFsYW56YXIiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDQuZ29vZ2xldXNlcmNvbnRlbnQuY29tLy1YNjVpOEl5dDZCOC9BQUFBQUFBQUFBSS9BQUFBQUFBQUFBQS9BTVp1dWNtU1hyblJWUXRwY2ZiMTNPZ24zeXBTRHdiTmZnL3M5Ni1jL3Bob3RvLmpwZyIsImdpdmVuX25hbWUiOiJBbGRhaXIiLCJmYW1pbHlfbmFtZSI6IkJhbGFuemFyIiwibG9jYWxlIjoiZW4iLCJpYXQiOjE1OTEyMTk1MTcsImV4cCI6MTU5MTIyMzExNywianRpIjoiYWM2ZDMwOWNiMDVhOWM2ZDU1NzExYTQ5OTc5NDM4OTg5YmVjNGRmZiJ9.lTsbQUcB6Vj2SBNd-6DwfSUMHQ7TIuI1o8sDl333VizqqwH0HCxwdHQV75uSo3qkzYcIL4835Vhhyv9TcPgsFbTKVLkWIjGHQh_cfZ9KqTBOmjkoCxH9XdfekKKvE8xvF5wcPTE5mJnPHyI9pnrr9oeLro9hxDEZyZ6egM41d1cMWiatX6rFHQSdPDYrZdlsKYFdsdmFq8ugfAboNqDyE5aG7c2QdKE6krnHEMnyHR6GBtIeZE1QvAT19FkCuzsZ3DvCStMZO1jhJpeYMAQF0cP7ZxgNfkaKryHIbtzSFIvrpXQGRXKhl021zG--q9qb5SkBHzAXowVEqfypu6RsnQ';
 const group = {
     groupName: 'Success Group',
     groupDescription: 'This better work', 
 };
+const changedGroup = {
+    groupName: 'Success Group Changed',
+    groupDescription: 'I hope it worked!'
+}; 
 const contact = {
     firstName: 'Test Contact',
     lastName: 'Test Contact',
@@ -21,6 +24,8 @@ const contact = {
 let testAdminId;
 let testContactId;
 let testGroupId;
+
+
 describe('testing groups router', () => {
     describe('get adminId', () => {
         it('should get adminId', function(){
@@ -44,7 +49,6 @@ describe('testing groups router', () => {
                     .send({...group, adminId: testAdminId})
                     .set('authorization', token)
                     .then(res => {
-                        console.log('from post group test', res.status, res.body);
                         expect(res.status).toBe(201)
                     })
         });
@@ -111,7 +115,7 @@ describe('testing groups router', () => {
         })
 
         // check groups for a particular contact - groups empty
-        it('should have the group in the contact info', function(){
+        it('should not have the group in the contact info', function(){
             return request(server)
                 .get(`/api/contacts/${testContactId}/groups`)
                 .send({adminId: testAdminId})
@@ -123,12 +127,24 @@ describe('testing groups router', () => {
         // 1. happy case - valid groupID & contactID
         it('should successfully post relationship to contact_group with valid groupId and contactId', function(){
             return request(server)//
-                    .post(`/api/groups/${testGroupId}`)
+                    .post(`/api/groups/${testGroupId}/contacts`)
                     .send({contactId: testContactId, adminId: testAdminId})
                     .set('authorization', token)
                     .then(res => {
                         expect(res.status).toBe(201)
                         expect(res.body.message).toBe('contact added successfylly to the group')
+                    })
+        })
+        // 2. error case - valid groupID & invalid contactID
+        it('error response when groupId is valid but not contactId', function(){
+            return request(server)//
+                    .post(`/api/groups/${testGroupId}/contacts`)
+                    .send({contactId: '99999', adminId: testAdminId})
+                    .set('authorization', token)
+                    .then(res => {
+                        expect(res.status).toBe(404)
+                        console.log('res.body', res.body);
+                        expect(res.body.error).toBe('invalid contact id')
                     })
         })
         // check groups for a particular contact - groups have test group
@@ -141,17 +157,9 @@ describe('testing groups router', () => {
                     expect(res.body.groups[0].id).toBe(testGroupId);
                 })
         })
-        // 2. error case - valid groupID & invalid contactID
-        it('error response when groupId is valid but not contactId', function(){
-            return request(server)
-                    .post(`/api/groups/${testGroupId}`)
-                    .send({contactId: '123456', adminId: testAdminId})
-                    .set('authorization', token)
-                    .then(res => {
-                        expect(res.status).toBe(500)
-                    })
-        })
+        
     })
+
     // GET group by groupID
     describe('get particular group', () => {
         // 1. happy case - valid groupID - **check for contacts field**
@@ -161,7 +169,6 @@ describe('testing groups router', () => {
                     .send({adminId: testAdminId})
                     .set('authorization', token)
                     .then(res => {
-                        console.log('####from get group by id######', testGroupId, res.status, res.body)
                         expect(res.status).toBe(200)
                         expect(res.body.id).toBe(testGroupId)
                         expect(res.body.contacts[0].firstName).toBe(contact.firstName);
@@ -174,19 +181,77 @@ describe('testing groups router', () => {
                     .send({adminId: testAdminId})
                     .set('authorization', token)
                     .then(res => {
-                        expect(res.status).toBe(500)
+                        expect(res.status).toBe(404)
+                        expect(res.body.error).toBe('invalid group id')
                     })
         })
     })
-})
-// DELETE Contact from a group
-    // 1. happy case - valid groupID & contactID and contact in given group
+    // DELETE Contact from a group
+    describe('DELETE /groups/:groupId', () => {
+        it('should delete the contact from a group', function(){
+            return request(server)
+            .delete(`/api/groups/${testGroupId}/contacts`)
+            .send({contactId: testContactId, adminId: testAdminId})
+            .set('authorization', token)
+            .then(res => {
+                expect(res.status).toBe(201)
+                expect(res.body.message).toBe('contact removed from the group successfully!');
+            });
+        });
     // 2. error case - valid groupID & contactID , contact not in the group
-// PUT group
+        it('should throw error with invalid groupId', () => {
+            return request(server)
+                .delete('/api/groups/3368')
+                .then(res => {
+                    expect(res.status).toBe(500);
+                });
+        });
+    });
+    // PUT group
     // 1. happy case - edit group with valid groupID
-    // 2. error case - edit group with invalid adminID
+    describe('put request', function() {
+        it('should edit group with valid groupID', function(){
+            return request(server)
+                .put(`/api/groups/${testGroupId}`)
+                .send({adminId: testAdminId, ...changedGroup})
+                .set('authorization', token)
+                .then(res => {
+                    expect(res.status).toBe(201);
+                });
+            });
+        // error case
+        it('should return 500, no update info provided', function() {
+            return request(server)
+                .put(`/api/groups/${testGroupId}`)
+                .then(res => {
+                    expect(res.status).toBe(500)
+                });
+        });
+    });
 // DELETE group
-    // 1. happy case - edit group with valid groupID
-    // 2. error case - edit group with invalid adminID
+    // 1. happy case - delete group with valid groupID
+    describe('DELETE group', () => {
+        it('should delete successfully when groupID is valid', function() {
+            return request(server)
+                .delete(`/api/groups/${testGroupId}`)
+                .send({adminId: testAdminId})
+                .set('authorization', token)
+                .then(res => {
+                    expect(res.status).toBe(201)
+                    expect(res.body.message).toBe('group deleted successfully!')
+                });
+        });
+      // error case 
+        it('should throw error with invalid adminId', () => {
+            return request(server)
+                .delete('/api/groups/41')
+                .send({adminId: testAdminId})
+                .then(res => {
+                    expect(res.status).toBe(500);
+                });
+        });
+    });
+})
+
 
 

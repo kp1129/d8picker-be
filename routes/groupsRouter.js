@@ -24,6 +24,7 @@ router.get('/:groupId', validateGroupId, (req, res) => {
             res.status(200).json(req.group)
         })
         .catch(err => console.log(err));
+
 })
 
 // POST Group 
@@ -43,7 +44,7 @@ router.post('/', (req, res) => {
 })
 
 // POST Contact to the group
-router.post('/:groupId', validateGroupId, validateContactId, (req, res) => {
+router.post('/:groupId/contacts', validateGroupId, validateContactId, (req, res) => {
     const groupId = req.params.groupId;
     const contactId = req.body.contactId;
 
@@ -57,24 +58,15 @@ router.post('/:groupId', validateGroupId, validateContactId, (req, res) => {
         });
 })
 // Delete Contact from the group
-router.delete('/:groupId', validateGroupId, validateContactId, validateContactInGroup, (req, res) => {
+router.delete('/:groupId/contacts', validateGroupId, validateContactId, validateContactInGroup, (req, res) => {
     const contactId = req.body.contactId;
     const groupId = req.params.groupId;
 
-    Contacts.findContactById(id) 
-    .then(contact => {
-        if(contact.length === 0) {
-    Groups.deleteContactFromGroup(groupId)
-    .then(response => {
-        res.status(201).json(response)
-    })
-    } else {
-        res.status(404).json({ message: 'failed to delete group'})
-    }
-    })  
-    .catch(error => {
-        res.status(500).json(error)
-    })
+    Groups.deleteContactFromGroup(contactId, groupId)
+            .then(response => {
+                res.status(201).json({message: 'contact removed from the group successfully!'})
+            })
+            .catch(err => res.status(500).json(err));
 })
 
 // PUT Group
@@ -95,15 +87,11 @@ router.put('/:groupId', validateGroupId, (req, res) => {
 
 // Delete Group
 router.delete('/:groupId', validateGroupId, (req, res) => {
-    const groupId = req.params.groupId;
-    
-    Groups.deleteGroup(groupId)
+    Groups.deleteGroup(req.params.groupId)
     .then(response => {
-        res.status(201).json({ message: 'group deleted successsfuly!' })
+        res.status(201).json({message: 'group deleted successfully!'})
     })
-    .catch(error => {
-        res.status(500).json(error)
-    })
+    .catch(err => {console.log(err); res.status(500).json(err)})
 })
 
 
@@ -117,7 +105,10 @@ function validateContactId(req, res, next){
         .then(contact => {
             console.log('from validateContactId', contact);
             // check if admin is same as adminId from request
-            if(contact.adminId == adminId) {
+            if(!contact) {
+                // if contact not found, respond with error
+                res.status(404).json({ error: 'invalid contact id'});
+            } else if(contact.adminId == adminId) {
                 req.contact = contact;
                 next();
             } else {
@@ -139,8 +130,12 @@ function validateGroupId(req, res, next) {
         .then(group => {
             // check if admin is same as adminId from request
             console.log('from validateGroupId', group);
-            if(group.adminId == adminId) {
+            if(!group) {
+                // if group not found, respond with error
+                res.status(404).json({ error: 'invalid group id'});
+            } else if(group.adminId == adminId) {
                 req.group = group;
+                console.log('moving on!')
                 next();
             } else {
                 // respond with error
@@ -163,6 +158,10 @@ function validateContactInGroup(req, res, next) {
             } else {
                 next();
             }
+        })
+        .catch(err => {
+            console.log('I AM FAILING', err);
+            res.status(500).json(err);
         })
 }
 
