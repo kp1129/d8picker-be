@@ -22,8 +22,7 @@ router.get('/:googleId', (req, res) => {
 
 // POST to DB
 router.post('/', (req, res) => {
-    const template = req.body; 
-    console.log('POST REQUEST HEADER', req.headers); 
+    const template = req.body;  
     Template.addTemplate(template)
     .then(templates => {
         if(templates.length === 0){
