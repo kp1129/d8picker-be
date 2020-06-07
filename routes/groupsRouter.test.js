@@ -201,7 +201,7 @@ describe('testing groups router', () => {
     // 2. error case - valid groupID & contactID , contact not in the group
         it('should throw error with invalid groupId', () => {
             return request(server)
-                .delete('/api/groups/3368')
+                .delete('/api/groups/3368/contacts')
                 .then(res => {
                     expect(res.status).toBe(500);
                 });
@@ -244,8 +244,8 @@ describe('testing groups router', () => {
       // error case 
         it('should throw error with invalid adminId', () => {
             return request(server)
-                .delete('/api/groups/41')
-                .send({adminId: testAdminId})
+                .delete(`/api/groups/${testGroupId}`)
+                .send({adminId: '4567'})
                 .then(res => {
                     expect(res.status).toBe(500);
                 });
