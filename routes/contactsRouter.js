@@ -26,7 +26,7 @@ router.get('/:contactId', validateContactId, (req, res) => {
 })
 
 // GET groups for a contact
-router.get('/:contactId/groups', validateContactId, (req, res) => {
+router.get('/:adminId/:contactId/groups', validateContactId, (req, res) => {
     const contactId = req.params.contactId;
 
     Groups.findGroupsByContact(contactId)
