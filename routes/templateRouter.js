@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const Template = require('../model/templateModel');
 
+// middleware checks for templateID
+const {validateTemplateID} = require('../api/middleware/authenticator');
 
 // GET global posts
 router.get('/:googleId', (req, res) => {
@@ -65,16 +67,3 @@ router.put('/:templateId', validateTemplateID, (req, res) => {
 
 module.exports = router;
 
-
-// middleware checks for templateID
-function validateTemplateID(req, res, next){
-    Template.findTemplateById(req.params.templateId)
-        .then(template => {
-            if(!template) {
-                res.status(404).json({ message: 'template ID does not exist' });
-            } else {
-                next();
-            }
-        })
-        .catch(err => res.status(500).json({ error: 'error finding template' }));
-}

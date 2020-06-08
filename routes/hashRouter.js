@@ -2,8 +2,11 @@ const router = require('express').Router();
 const Hash = require('../model/hashModel');
 const Groups = require('../model/groupsModel');
 
+// middleware functions
+const {validateUser, validateGroupId} = require('../api/middleware/authenticator');
+
 // find hash in database and get admin and group info - groupId, adminId, and groupInviteHash in the req.body
-router.get('/', (req, res) => {
+router.get('/verify', (req, res) => {
     const groupInviteHash = req.body.groupInviteHash;
 
     // find group using the hash provided
@@ -35,6 +38,30 @@ router.get('/', (req, res) => {
         });
 })
 
+// get groupInviteHash from the database for groupId
+router.get('/', validateUser, validateGroupId, (req, res) => {
+    const groupId = req.body.groupId;
+
+    // find group using groupId
+    Groups.findGroupByGroupId(groupId)
+        .then(group => {
+            // check if groupInviteHash exists
+            if(!group.groupInviteHash) {
+                // respond with the hash
+                res.status(404).json({error: 'group invite hash does not exists'});
+            } else {
+                // respond with the hash
+                res.status(200).json({groupInviteHash: group.groupInviteHash});
+            }
+            
+        })
+        .catch(err => {
+            console.log('error in finding group', err);
+            res.status(500).json(err);
+        })
+})
+
+
 // add groupInviteHash to the database - groupId, adminId, and groupInviteHash in the req.body - protected route using GAPI OAuth
 router.post('/', validateUser, validateGroupId, (req, res) => {
     const id = req.body.groupId;
@@ -51,65 +78,6 @@ router.post('/', validateUser, validateGroupId, (req, res) => {
             res.status(500).json(err);
         })
 });
-
-// Middleware functions
-// validate group if it belongs to the admin
-function validateGroupId(req, res, next) {
-    const groupId = req.body.groupId;
-    const adminId = req.body.adminId;
-
-    Groups.findGroupByGroupId(groupId)
-        .then(group => {
-            // check if admin is same as adminId from request
-            console.log('from validateGroupId', group);
-            if(!group) {
-                // if group not found, respond with error
-                res.status(404).json({ error: 'invalid group id'});
-            } else if(group.adminId == adminId) {
-                req.group = group;
-                console.log('moving on!')
-                next();
-            } else {
-                // respond with error
-                res.status(404).json({ error: 'invalid group id' });
-            }
-        })
-        .catch(err => res.status(500).json(err));
-}
-
-
-// oauth for posting hash
-const {OAuth2Client} = require('google-auth-library');
-const axios = require('axios');
-// user validation using google token
-function validateUser(req, res, next){
-    const token = req.headers.authorization;
-    const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-    async function verify() {
-      const ticket = await client.verifyIdToken({
-          idToken: token,
-          audience: process.env.GOOGLE_CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
-          // Or, if multiple clients access the backend:
-          //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
-      });
-      const payload = ticket.getPayload();
-      const userid = payload['sub'];
-      // If request specified a G Suite domain:
-      //const domain = payload['hd'];
-    }
-    verify().catch(console.error);
-    axios.get(`https://oauth2.googleapis.com/tokeninfo?id_token=${token}`)
-        .then(response => {
-        if(response.status === 200){
-            next();
-        } else{
-            res.status(400).json({ error: 'invalid user.' })
-        }
-        })
-        .catch(error => {
-        res.status(500).json({ error: 'failed to authenticate user.' })
-        })
-}
 
 
 module.exports = router;

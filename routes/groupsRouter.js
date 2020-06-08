@@ -1,7 +1,8 @@
 const router = require('express').Router();
 const Groups = require('../model/groupsModel.js');
-const Contacts = require('../model/contactsModel');
 
+// middleware functions
+const{ validateGroupId, validateContactId, validateContactInGroup} = require('../api/middleware/authenticator');
 // GET Groups by adminId
 router.get('/', (req, res) => {
     const adminId = req.body.adminId;
@@ -95,74 +96,5 @@ router.delete('/:groupId', validateGroupId, (req, res) => {
 })
 
 
-// validate contact if it belongs to the admin
-function validateContactId(req, res, next){
-    const contactId = req.body.contactId;
-    const adminId = req.body.adminId;
-
-    // find the contact using contactId
-    Contacts.findContactById(contactId)
-        .then(contact => {
-            // console.log('from validateContactId', contact);
-            // check if admin is same as adminId from request
-            if(!contact) {
-                // if contact not found, respond with error
-                res.status(404).json({ error: 'invalid contact id'});
-            } else if(contact.adminId == adminId) {
-                req.contact = contact;
-                next();
-            } else {
-                // if not respond with error message
-                res.status(404).json({ error: 'invalid contact id'});
-            }
-        })
-        .catch(error => {
-                res.status(500).json(error)
-            });
-}
-
-// validate group if it belongs to the admin
-function validateGroupId(req, res, next) {
-    const groupId = req.params.groupId;
-    const adminId = req.body.adminId;
-
-    Groups.findGroupByGroupId(groupId)
-        .then(group => {
-            // check if admin is same as adminId from request
-            // console.log('from validateGroupId', group);
-            if(!group) {
-                // if group not found, respond with error
-                res.status(404).json({ error: 'invalid group id'});
-            } else if(group.adminId == adminId) {
-                req.group = group;
-                // console.log('moving on!')
-                next();
-            } else {
-                // respond with error
-                res.status(404).json({ error: 'invalid group id' });
-            }
-        })
-        .catch(err => res.status(500).json(err));
-}
-// validate contact if it belongs to the group
-function validateContactInGroup(req, res, next) {
-    const groupId = req.params.groupId;
-    const contactId = req.body.contactId;
-    
-    Groups.findGroupsByContact(contactId)
-        .then(groups => {
-            // console.log('from validateContactInGroup', groups);
-            const group = groups.find(g => g.groupId == groupId);
-            if (!group) {
-                res.status(404).json({ error: `contact does not belong to the groupId ${groupId}`});
-            } else {
-                next();
-            }
-        })
-        .catch(err => {
-            console.log('I AM FAILING', err);
-            res.status(500).json(err);
-        })
-}
 
 module.exports = router;

@@ -1,6 +1,10 @@
 const router = require('express').Router();
 const Admin = require('../model/adminModel');
 
+// middleware to check whether user exists
+const {checkforAdmin} = require('../api/middleware/authenticator');
+
+
 // post endpoint to add admin to the table
 router.post('/', checkforAdmin, (req, res) => {
     // get the admin info from request body
@@ -21,21 +25,5 @@ router.post('/', checkforAdmin, (req, res) => {
             res.status(500).json({error: 'Error posting the admin'})
         })
 })
-
-// middleware to check whether user exists
-function checkforAdmin(req, res, next) {
-    const googleId = req.body.googleId;
-    Admin.findAdminByGoogleId(googleId)
-        .then(response => {
-            console.log('did i find you?', response);
-            // if googleId is not found, proceed to add admin to the database
-            if(!response) {
-                next();
-            }
-            // if admin is found respond with the adminId
-            res.status(200).json({message: 'admin exists in database', adminId: response.id});
-        })
-        .catch(err => console.log(err));
-}
 
 module.exports = router;
