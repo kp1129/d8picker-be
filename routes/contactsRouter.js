@@ -2,6 +2,9 @@ const router = require('express').Router();
 const Contacts = require('../model/contactsModel');
 const Groups = require('../model/groupsModel');
 
+// middleware function to see if contact belongs to the admin
+const {validateContactId} = require('../api/middleware/authenticator');
+
 // GET contacts for admin Id
 router.get('/', (req, res) => {
     // get adminId from request body
@@ -79,25 +82,3 @@ router.delete('/:contactId', validateContactId, (req, res) => {
 
 
 module.exports = router;
-
-// middleware function to see if contact belongs to the admin
-function validateContactId(req, res, next){
-    const contactId = req.params.contactId;
-    const adminId = req.body.adminId;
-
-    // find the contact using contactId
-    Contacts.findContactById(contactId)
-        .then(contact => {
-            // check if admin is same as adminId from request
-            if(contact.adminId == adminId) {
-                req.contact = contact;
-                next();
-            } else {
-                // if not respond with error message
-                res.status(404).json({ error: 'invalid contact id'});
-            }
-        })
-        .catch(error => {
-                res.status(500).json(error)
-            });
-}
