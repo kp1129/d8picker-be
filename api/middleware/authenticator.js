@@ -39,7 +39,7 @@ function validateUser(req, res, next){
 function validateGroupId(req, res, next) {
 
     const groupId = req.params.groupId ? req.params.groupId : req.body.groupId;
-    const adminId = req.body.adminId;
+    const adminId = req.params.adminId ? req.params.adminId : req.body.adminId;
 
     Groups.findGroupByGroupId(groupId)
         .then(group => {
@@ -66,7 +66,7 @@ function validateGroupId(req, res, next) {
 // validate contact if it belongs to the admin
 function validateContactId(req, res, next){
     const contactId = req.params.contactId ? req.params.contactId : req.body.contactId;
-    const adminId = req.body.adminId;
+    const adminId = req.params.adminId ? req.params.adminId : req.body.adminId;
 
     // find the contact using contactId
     Contacts.findContactById(contactId)
