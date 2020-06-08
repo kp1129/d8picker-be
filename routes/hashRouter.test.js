@@ -94,7 +94,7 @@ describe('hash route testing', () => {
                 .send({
                     groupInviteHash: testGroupInviteHash
                 })
-                .set('authorization', token)
+                // .set('authorization', token)
                 .then(res => {
                     // status 200
                     expect(res.status).toBe(200);
@@ -120,7 +120,7 @@ describe('hash route testing', () => {
                 .send({
                     groupInviteHash: 'randomHash'
                 })
-                .set('authorization', token)
+                // .set('authorization', token)
                 .then(res => {
                     // status 404
                     expect(res.status).toBe(404);

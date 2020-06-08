@@ -35,8 +35,8 @@ router.get('/', (req, res) => {
         });
 })
 
-// add groupInviteHash to the database - groupId, adminId, and groupInviteHash in the req.body
-router.post('/', validateGroupId, (req, res) => {
+// add groupInviteHash to the database - groupId, adminId, and groupInviteHash in the req.body - protected route using GAPI OAuth
+router.post('/', validateUser, validateGroupId, (req, res) => {
     const id = req.body.groupId;
     const groupInviteHash = req.body.groupInviteHash;
 
@@ -76,5 +76,40 @@ function validateGroupId(req, res, next) {
         })
         .catch(err => res.status(500).json(err));
 }
+
+
+// oauth for posting hash
+const {OAuth2Client} = require('google-auth-library');
+const axios = require('axios');
+// user validation using google token
+function validateUser(req, res, next){
+    const token = req.headers.authorization;
+    const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+    async function verify() {
+      const ticket = await client.verifyIdToken({
+          idToken: token,
+          audience: process.env.GOOGLE_CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
+          // Or, if multiple clients access the backend:
+          //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+      });
+      const payload = ticket.getPayload();
+      const userid = payload['sub'];
+      // If request specified a G Suite domain:
+      //const domain = payload['hd'];
+    }
+    verify().catch(console.error);
+    axios.get(`https://oauth2.googleapis.com/tokeninfo?id_token=${token}`)
+        .then(response => {
+        if(response.status === 200){
+            next();
+        } else{
+            res.status(400).json({ error: 'invalid user.' })
+        }
+        })
+        .catch(error => {
+        res.status(500).json({ error: 'failed to authenticate user.' })
+        })
+}
+
 
 module.exports = router;
