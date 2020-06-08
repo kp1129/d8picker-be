@@ -20,7 +20,7 @@ server.use('/api/admin', validateUser, adminRouter);
 server.use('/api/template', validateUser, templateRouter);
 server.use('/api/contacts', validateUser, contactsRouter);
 server.use('/api/groups', validateUser, groupsRouter);
-server.use('/api/inviteToGroup', validateUser, hashRouter);
+server.use('/api/inviteToGroup', hashRouter);
 
 server.get('/', (req, res) => {
   res.send({ api: 'Ok', dbenv: process.env.DB_ENV });
