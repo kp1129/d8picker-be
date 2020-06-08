@@ -50,6 +50,7 @@ describe('testing groups router', () => {
                     .set('authorization', token)
                     .then(res => {
                         expect(res.status).toBe(201)
+                        expect(res.body.groups).toBeDefined();
                     })
         });
             // 2. error case - invalid adminID in the request

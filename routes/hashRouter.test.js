@@ -43,7 +43,7 @@ describe('hash route testing', () => {
                     .then(res => {
                         // status 201
                         expect(res.status).toBe(201);
-                        testGroupId = res.body[0];
+                        testGroupId = res.body.newGroupId;
                     })
         })
     })

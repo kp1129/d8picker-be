@@ -35,8 +35,13 @@ router.post('/', (req, res) => {
     
     Groups.addGroup({groupName, groupDescription, adminId})
         .then(response => {
-            // console.log('group postResponse', response)
-            res.status(201).json(response)
+            Groups.findGroupsByAdminId(adminId)
+                .then(groups => {
+                    res.status(201).json({
+                        newGroupId: response[0], 
+                        groups: groups
+                    })
+                })
         })
         .catch(error => {
             console.log('Group post error',error)
