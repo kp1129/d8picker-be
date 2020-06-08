@@ -39,8 +39,8 @@ router.get('/verify', (req, res) => {
 })
 
 // get groupInviteHash from the database for groupId
-router.get('/', validateUser, validateGroupId, (req, res) => {
-    const groupId = req.body.groupId;
+router.get('/:adminId/:groupId', validateUser, validateGroupId, (req, res) => {
+    const groupId = req.params.groupId;
 
     // find group using groupId
     Groups.findGroupByGroupId(groupId)

@@ -37,8 +37,8 @@ describe('hash route testing', () => {
     describe('get groupId', () => {
         it('should get groupId', function(){
             return request(server)
-                    .post('/api/groups')
-                    .send({...testGroupInfo, adminId: testAdminId})
+                    .post(`/api/groups/${testAdminId}`)
+                    .send({...testGroupInfo})
                     .set('authorization', token)
                     .then(res => {
                         // status 201
@@ -52,10 +52,10 @@ describe('hash route testing', () => {
         // error case
         it('should return an error with groupInviteHash not found', function(){
             return request(server)
-                .get('/api/inviteToGroup')
-                .send({groupId: testGroupId, adminId: testAdminId})
+                .get(`/api/inviteToGroup/${testAdminId}/${testGroupId}`)
                 .set('authorization', token)
                 .then(res => {
+                    console.log('*****', res.status, res.body);
                     // status 404
                     expect(res.status).toBe(404);
 
@@ -77,7 +77,6 @@ describe('hash route testing', () => {
                 })
                 .set('authorization', token)
                 .then(res => {
-                    console.log('***********', res.status, res.body);
                     // status 201
                     expect(res.status).toBe(201);
                     // success message
@@ -108,8 +107,7 @@ describe('hash route testing', () => {
         // happy case - groupId and adminId is valid & hash exists
         it('should return the groupInviteHash', function(){
             return request(server)
-                .get('/api/inviteToGroup')
-                .send({groupId: testGroupId, adminId: testAdminId})
+                .get(`/api/inviteToGroup/${testAdminId}/${testGroupId}`)
                 .set('authorization', token)
                 .then(res => {
                     // status 200

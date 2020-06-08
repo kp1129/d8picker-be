@@ -45,19 +45,20 @@ describe('testing groups router', () => {
         // 1. happy case - post group and map it to adminID
         it('should successfully post the group info', function(){
             return request(server)
-                    .post('/api/groups')
-                    .send({...group, adminId: testAdminId})
+                    .post(`/api/groups/${testAdminId}`)
+                    .send({...group})
                     .set('authorization', token)
                     .then(res => {
                         expect(res.status).toBe(201)
                         expect(res.body.groups).toBeDefined();
+                        testGroupId = res.body.newGroupId;
                     })
         });
             // 2. error case - invalid adminID in the request
         it('should return error when invalid adminId in the request', function(){
             return request(server)
-                    .post('/api/groups')
-                    .send({...group, adminId: 100})
+                    .post(`/api/groups/4056`)
+                    .send({...group})
                     .set('authorization', token)
                     .then(res => {
                         expect(res.status).toBe(500)
@@ -69,8 +70,7 @@ describe('testing groups router', () => {
          // 1. happy case - adminId is valid and admin has groups
         it('should successfully get all groups for provided adminId', function(){
             return request(server)
-                    .get('/api/groups')
-                    .send({adminId: testAdminId})
+                    .get(`/api/groups/${testAdminId}`)
                     .set('authorization', token)
                     .then(res => {
                         // console.log('from get groups test', res.status, res.body);
@@ -82,8 +82,7 @@ describe('testing groups router', () => {
         // 2. happy case - adminId is valid but he does not have any groups
         it('adminId is valid but does not have any groups', function(){
             return request(server)
-                    .get('/api/groups')
-                    .send({adminId: testAdminId})
+                    .get(`/api/groups/${testAdminId}`)
                     .set('authorization', token)
                     .then(res => {
                         expect(res.status).toBe(200)
@@ -93,8 +92,7 @@ describe('testing groups router', () => {
         // 3. error case - invalid adminId
         it('error response when adminId is invalid', function(){
             return request(server)
-                    .get('/api/groups')
-                    .send({adminId: 100})
+                    .get(`/api/groups/200`)
                     .set('authorization', token)
                     .then(res => {
                         expect(res.status).toBe(200)
@@ -118,8 +116,7 @@ describe('testing groups router', () => {
         // check groups for a particular contact - groups empty
         it('should not have the group in the contact info', function(){
             return request(server)
-                .get(`/api/contacts/${testContactId}/groups`)
-                .send({adminId: testAdminId})
+                .get(`/api/contacts/${testAdminId}/${testContactId}/groups`)
                 .set('authorization', token)
                 .then(res => {
                     expect(res.body.groups).toHaveLength(0);
@@ -128,8 +125,8 @@ describe('testing groups router', () => {
         // 1. happy case - valid groupID & contactID
         it('should successfully post relationship to contact_group with valid groupId and contactId', function(){
             return request(server)//
-                    .post(`/api/groups/${testGroupId}/contacts`)
-                    .send({contactId: testContactId, adminId: testAdminId})
+                    .post(`/api/groups/${testAdminId}/${testGroupId}/contacts`)
+                    .send({contactId: testContactId})
                     .set('authorization', token)
                     .then(res => {
                         expect(res.status).toBe(201)
@@ -139,8 +136,8 @@ describe('testing groups router', () => {
         // 2. error case - valid groupID & invalid contactID
         it('error response when groupId is valid but not contactId', function(){
             return request(server)//
-                    .post(`/api/groups/${testGroupId}/contacts`)
-                    .send({contactId: '99999', adminId: testAdminId})
+                    .post(`/api/groups/${testAdminId}/${testGroupId}/contacts`)
+                    .send({contactId: '99999'})
                     .set('authorization', token)
                     .then(res => {
                         expect(res.status).toBe(404)
@@ -151,8 +148,7 @@ describe('testing groups router', () => {
         // check groups for a particular contact - groups have test group
         it('should have the group in the contact info', function(){
             return request(server)
-                .get(`/api/contacts/${testContactId}/groups`)
-                .send({adminId: testAdminId})
+                .get(`/api/contacts/${testAdminId}/${testContactId}/groups`)
                 .set('authorization', token)
                 .then(res => {
                     expect(res.body.groups[0].id).toBe(testGroupId);
@@ -166,8 +162,7 @@ describe('testing groups router', () => {
         // 1. happy case - valid groupID - **check for contacts field**
         it('should successfully get group with provided groupId', function(){
             return request(server)
-                    .get(`/api/groups/${testGroupId}`)
-                    .send({adminId: testAdminId})
+                    .get(`/api/groups/${testAdminId}/${testGroupId}`)
                     .set('authorization', token)
                     .then(res => {
                         expect(res.status).toBe(200)
@@ -178,8 +173,7 @@ describe('testing groups router', () => {
         // 2. error case -  invalid groupID
         it('error response when provided with invalid groupId', function(){
             return request(server)
-                    .get('/api/groups/99999')
-                    .send({adminId: testAdminId})
+                    .get(`/api/groups/${testAdminId}/99999`)
                     .set('authorization', token)
                     .then(res => {
                         expect(res.status).toBe(404)
@@ -191,8 +185,8 @@ describe('testing groups router', () => {
     describe('DELETE /groups/:groupId', () => {
         it('should delete the contact from a group', function(){
             return request(server)
-            .delete(`/api/groups/${testGroupId}/contacts`)
-            .send({contactId: testContactId, adminId: testAdminId})
+            .delete(`/api/groups/${testAdminId}/${testGroupId}/contacts`)
+            .send({contactId: testContactId})
             .set('authorization', token)
             .then(res => {
                 expect(res.status).toBe(201)
@@ -202,7 +196,7 @@ describe('testing groups router', () => {
     // 2. error case - valid groupID & contactID , contact not in the group
         it('should throw error with invalid groupId', () => {
             return request(server)
-                .delete('/api/groups/3368/contacts')
+                .delete(`/api/groups/${testAdminId}/3368/contacts`)
                 .then(res => {
                     expect(res.status).toBe(500);
                 });
@@ -213,8 +207,8 @@ describe('testing groups router', () => {
     describe('put request', function() {
         it('should edit group with valid groupID', function(){
             return request(server)
-                .put(`/api/groups/${testGroupId}`)
-                .send({adminId: testAdminId, ...changedGroup})
+                .put(`/api/groups/${testAdminId}/${testGroupId}`)
+                .send({...changedGroup})
                 .set('authorization', token)
                 .then(res => {
                     expect(res.status).toBe(201);
@@ -223,7 +217,7 @@ describe('testing groups router', () => {
         // error case
         it('should return 500, no update info provided', function() {
             return request(server)
-                .put(`/api/groups/${testGroupId}`)
+                .put(`/api/groups/${testAdminId}/${testGroupId}`)
                 .then(res => {
                     expect(res.status).toBe(500)
                 });
@@ -234,8 +228,7 @@ describe('testing groups router', () => {
     describe('DELETE group', () => {
         it('should delete successfully when groupID is valid', function() {
             return request(server)
-                .delete(`/api/groups/${testGroupId}`)
-                .send({adminId: testAdminId})
+                .delete(`/api/groups/${testAdminId}/${testGroupId}`)
                 .set('authorization', token)
                 .then(res => {
                     expect(res.status).toBe(201)
@@ -245,8 +238,7 @@ describe('testing groups router', () => {
       // error case 
         it('should throw error with invalid adminId', () => {
             return request(server)
-                .delete(`/api/groups/${testGroupId}`)
-                .send({adminId: '4567'})
+                .delete(`/api/groups/4567/${testGroupId}`)
                 .then(res => {
                     expect(res.status).toBe(500);
                 });

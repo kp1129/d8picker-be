@@ -4,10 +4,9 @@ const Groups = require('../model/groupsModel.js');
 // middleware functions
 const{ validateGroupId, validateContactId, validateContactInGroup} = require('../api/middleware/authenticator');
 // GET Groups by adminId
-router.get('/', (req, res) => {
-    const adminId = req.body.adminId;
-
-    Groups.findGroupsByAdminId(adminId)
+router.get('/:adminId', (req, res) => {
+    
+    Groups.findGroupsByAdminId(req.params.adminId)
         .then(response => {
             res.status(200).json({ groups: response })
         })
@@ -18,7 +17,7 @@ router.get('/', (req, res) => {
 });
 
 // GET Group by groupId
-router.get('/:groupId', validateGroupId, (req, res) => {
+router.get('/:adminId/:groupId', validateGroupId, (req, res) => {
     Groups.findContactsByGroupId(req.params.groupId)
         .then(response => {
             req.group.contacts = response;
@@ -29,8 +28,8 @@ router.get('/:groupId', validateGroupId, (req, res) => {
 })
 
 // POST Group 
-router.post('/', (req, res) => {
-    const adminId = req.body.adminId;
+router.post('/:adminId', (req, res) => {
+    const adminId = req.params.adminId;
     const {groupName, groupDescription} = req.body;
     
     Groups.addGroup({groupName, groupDescription, adminId})
@@ -50,7 +49,7 @@ router.post('/', (req, res) => {
 })
 
 // POST Contact to the group
-router.post('/:groupId/contacts', validateGroupId, validateContactId, (req, res) => {
+router.post('/:adminId/:groupId/contacts', validateGroupId, validateContactId, (req, res) => {
     const groupId = req.params.groupId;
     const contactId = req.body.contactId;
 
@@ -64,7 +63,7 @@ router.post('/:groupId/contacts', validateGroupId, validateContactId, (req, res)
         });
 })
 // Delete Contact from the group
-router.delete('/:groupId/contacts', validateGroupId, validateContactId, validateContactInGroup, (req, res) => {
+router.delete('/:adminId/:groupId/contacts', validateGroupId, validateContactId, validateContactInGroup, (req, res) => {
     const contactId = req.body.contactId;
     const groupId = req.params.groupId;
 
@@ -76,7 +75,7 @@ router.delete('/:groupId/contacts', validateGroupId, validateContactId, validate
 })
 
 // PUT Group
-router.put('/:groupId', validateGroupId, (req, res) => {
+router.put('/:adminId/:groupId', validateGroupId, (req, res) => {
     const {groupName, groupDescription} = req.body;
     const groupId = req.params.groupId;
 
@@ -92,7 +91,7 @@ router.put('/:groupId', validateGroupId, (req, res) => {
 })
 
 // Delete Group
-router.delete('/:groupId', validateGroupId, (req, res) => {
+router.delete('/:adminId/:groupId', validateGroupId, (req, res) => {
     Groups.deleteGroup(req.params.groupId)
     .then(response => {
         res.status(201).json({message: 'group deleted successfully!'})
