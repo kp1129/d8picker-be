@@ -143,7 +143,7 @@ describe('testing groups router', () => {
                     .set('authorization', token)
                     .then(res => {
                         expect(res.status).toBe(404)
-                        console.log('res.body', res.body);
+                        // console.log('res.body', res.body);
                         expect(res.body.error).toBe('invalid contact id')
                     })
         })

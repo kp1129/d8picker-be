@@ -34,7 +34,7 @@ router.post('/', (req, res) => {
     
     Groups.addGroup({groupName, groupDescription, adminId})
         .then(response => {
-            console.log('group postResponse', response)
+            // console.log('group postResponse', response)
             res.status(201).json(response)
         })
         .catch(error => {
@@ -76,7 +76,7 @@ router.put('/:groupId', validateGroupId, (req, res) => {
 
     Groups.updateGroup(groupId, {groupName, groupDescription})
     .then(response => {
-        console.log('Group Updated', response)
+        // console.log('Group Updated', response)
         res.status(201).json({ response: response })
     })
     .catch(error => {
@@ -103,7 +103,7 @@ function validateContactId(req, res, next){
     // find the contact using contactId
     Contacts.findContactById(contactId)
         .then(contact => {
-            console.log('from validateContactId', contact);
+            // console.log('from validateContactId', contact);
             // check if admin is same as adminId from request
             if(!contact) {
                 // if contact not found, respond with error
@@ -129,13 +129,13 @@ function validateGroupId(req, res, next) {
     Groups.findGroupByGroupId(groupId)
         .then(group => {
             // check if admin is same as adminId from request
-            console.log('from validateGroupId', group);
+            // console.log('from validateGroupId', group);
             if(!group) {
                 // if group not found, respond with error
                 res.status(404).json({ error: 'invalid group id'});
             } else if(group.adminId == adminId) {
                 req.group = group;
-                console.log('moving on!')
+                // console.log('moving on!')
                 next();
             } else {
                 // respond with error
@@ -151,7 +151,7 @@ function validateContactInGroup(req, res, next) {
     
     Groups.findGroupsByContact(contactId)
         .then(groups => {
-            console.log('from validateContactInGroup', groups);
+            // console.log('from validateContactInGroup', groups);
             const group = groups.find(g => g.groupId == groupId);
             if (!group) {
                 res.status(404).json({ error: `contact does not belong to the groupId ${groupId}`});
