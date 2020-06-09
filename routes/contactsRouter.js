@@ -6,9 +6,9 @@ const Groups = require('../model/groupsModel');
 const {validateContactId} = require('../api/middleware/authenticator');
 
 // GET contacts for admin Id
-router.get('/', (req, res) => {
+router.get('/:adminId', (req, res) => {
     // get adminId from request body
-    const adminId = req.body.adminId;
+    const adminId = req.params.adminId;
     // get contacts using adminId
     Contacts.findContactsByAdmin(adminId)
         .then(contacts => {
