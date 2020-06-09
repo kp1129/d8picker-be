@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const Hash = require('../model/hashModel');
 const Groups = require('../model/groupsModel');
+const Contacts = require('../model/contactsModel');
 
 // middleware functions
 const {validateUser, validateGroupId} = require('../api/middleware/authenticator');
@@ -39,8 +40,8 @@ router.get('/verify', (req, res) => {
 })
 
 // get groupInviteHash from the database for groupId
-router.get('/', validateUser, validateGroupId, (req, res) => {
-    const groupId = req.body.groupId;
+router.get('/:adminId/:groupId', validateUser, validateGroupId, (req, res) => {
+    const groupId = req.params.groupId;
 
     // find group using groupId
     Groups.findGroupByGroupId(groupId)
@@ -79,5 +80,39 @@ router.post('/', validateUser, validateGroupId, (req, res) => {
         })
 });
 
+router.post('/addContact', validateGroupId, (req, res) => {
+    const adminId = req.body.adminId;
+    const newContactInfo = {
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        phoneNumber: req.body.phoneNumber
+    };
+    // add contact to the database
+    Contacts.addContact(adminId, newContactInfo)
+        .then(response => {
+            console.log('postResponse: ', response)
+            // fetch contactId from response
+            const contactId = response[0];
+
+            // add contact to the group
+            Groups.addContact(contactId, req.body.groupId)
+                .then(groupResponse => {
+                    // send back response with success message and contactId
+                    res.status(201).json({ 
+                        message: 'contact added successfylly to the group', 
+                        contactId: contactId
+                    });
+                })
+                .catch(error => {
+                    console.log('Add contact to the group error',error)
+                    res.status(500).json(error)
+                });
+        })
+        .catch(error => {
+            console.log('Add Contact error', error)
+            res.status(500).json(error)
+        })
+})
 
 module.exports = router;

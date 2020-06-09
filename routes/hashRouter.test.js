@@ -12,6 +12,13 @@ const testGroupInfo = {
     groupDescription: 'This better work', 
 };
 
+const testContactInfo = {
+    firstName: 'test one',
+    lastName: 'test',
+    email: 'test1@test.com',
+    phoneNumber: '1234567890'
+};
+
 const testGroupInviteHash = 'TestGroupTestAdminInviteHash';
 let testAdminId;
 let testGroupId;
@@ -37,8 +44,8 @@ describe('hash route testing', () => {
     describe('get groupId', () => {
         it('should get groupId', function(){
             return request(server)
-                    .post('/api/groups')
-                    .send({...testGroupInfo, adminId: testAdminId})
+                    .post(`/api/groups/${testAdminId}`)
+                    .send({...testGroupInfo})
                     .set('authorization', token)
                     .then(res => {
                         // status 201
@@ -52,8 +59,7 @@ describe('hash route testing', () => {
         // error case
         it('should return an error with groupInviteHash not found', function(){
             return request(server)
-                .get('/api/inviteToGroup')
-                .send({groupId: testGroupId, adminId: testAdminId})
+                .get(`/api/inviteToGroup/${testAdminId}/${testGroupId}`)
                 .set('authorization', token)
                 .then(res => {
                     // status 404
@@ -77,7 +83,6 @@ describe('hash route testing', () => {
                 })
                 .set('authorization', token)
                 .then(res => {
-                    console.log('***********', res.status, res.body);
                     // status 201
                     expect(res.status).toBe(201);
                     // success message
@@ -108,8 +113,7 @@ describe('hash route testing', () => {
         // happy case - groupId and adminId is valid & hash exists
         it('should return the groupInviteHash', function(){
             return request(server)
-                .get('/api/inviteToGroup')
-                .send({groupId: testGroupId, adminId: testAdminId})
+                .get(`/api/inviteToGroup/${testAdminId}/${testGroupId}`)
                 .set('authorization', token)
                 .then(res => {
                     // status 200
@@ -143,7 +147,7 @@ describe('hash route testing', () => {
 
                     // groupInfo
                     expect(res.body.groupInfo).toBeDefined();
-                    expect(res.body.groupInfo.id).toBe(testGroupId);
+                    // expect(res.body.groupInfo.id).toBe(testGroupId);
                     expect(res.body.groupInfo.groupName).toBe(testGroupInfo.groupName);
                 })
         })
@@ -164,11 +168,30 @@ describe('hash route testing', () => {
                 })
         })
     })
+    // Add contact to the group
+    describe('addContact to the group by invitee', function(){
+        // 1. happy case - successfully add contact to the group when groupId is valid
+        it('should successfully add contact to the group', () => {
+            return request(server)
+                .post('/api/inviteToGroup/addContact')
+                .send({...testContactInfo, adminId: testAdminId, groupId: testGroupId})
+                .then(res => {
+                    // status 201
+                    expect(res.status).toBe(201);
+
+                    // success message
+                    expect(res.body.message).toBe('contact added successfylly to the group');
+
+                    // contactId
+                    expect(res.body.contactId).toBeDefined();
+                })
+        })
+    })
     // Delete the group from the database
     describe('should delete the test group', function(){
         it('should delete successfully when groupID is valid', function() {
             return request(server)
-                .delete(`/api/groups/${testGroupId}`)
+                .delete(`/api/groups/${testAdminId}/${testGroupId}`)
                 .send({adminId: testAdminId})
                 .set('authorization', token)
                 .then(res => {
