@@ -1,3 +1,4 @@
+
 exports.seed = function(knex) {
   // Deletes ALL existing entries
   return knex('groups').del()
@@ -31,3 +32,9 @@ exports.seed = function(knex) {
       ]);
     });
 };
+
+
+
+
+
+
