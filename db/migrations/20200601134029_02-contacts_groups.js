@@ -44,6 +44,8 @@ exports.up = function(knex) {
                 .inTable('admin')
                 .onDelete('CASCADE')
                 .onUpdate('CASCADE');
+            tbl.string('groupColor')
+            tbl.string('groupIcon')
             tbl.string('groupInviteHash', 128);
         })
         .createTable('contact_group', tbl => {
