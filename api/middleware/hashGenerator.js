@@ -9,9 +9,12 @@ async function generateGroupInviteHash(groupId, adminId){
     const rounds = 8;
     const salt = bcrypt.genSaltSync(rounds);
     const hash = await bcrypt.hashSync(input, salt);
-    
-    // return hash
-    return hash;
+
+    // replace all '/' in the hash with 0 - to avoid issues in URL params
+    const groupInviteHash = hash.replace('/', '0');
+
+    // return groupInviteHash
+    return groupInviteHash;
 }
 
 module.exports = {generateGroupInviteHash};

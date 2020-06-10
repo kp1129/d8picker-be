@@ -7,8 +7,8 @@ const Contacts = require('../model/contactsModel');
 const {validateUser, validateGroupId} = require('../api/middleware/authenticator');
 
 // find hash in database and get admin and group info - groupId, adminId, and groupInviteHash in the req.body
-router.get('/verify', (req, res) => {
-    const groupInviteHash = req.body.groupInviteHash;
+router.get('/verify/:groupInviteHash', (req, res) => {
+    const groupInviteHash = req.params.groupInviteHash;
 
     // find group using the hash provided
     Hash.findGroupByHash(groupInviteHash)

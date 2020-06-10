@@ -78,12 +78,9 @@ describe('hash route testing', () => {
     describe('get adminInfo and groupInfo using groupInviteHash', function(){
         it('should post groupInviteHash successfully', function(){
             return request(server)
-                .get('/api/inviteToGroup/verify')
-                .send({
-                    groupInviteHash: testGroupInviteHash
-                })
-                // .set('authorization', token)
+                .get(`/api/inviteToGroup/verify/${testGroupInviteHash}`)
                 .then(res => {
+                    console.log('#######', testGroupInviteHash);
                     // status 200
                     expect(res.status).toBe(200);
 
@@ -104,10 +101,7 @@ describe('hash route testing', () => {
         // 2. error case - invalid groupInviteHash
         it('should get error when groupInviteHash is not found', function(){
             return request(server)
-                .get('/api/inviteToGroup/verify')
-                .send({
-                    groupInviteHash: 'randomHash'
-                })
+                .get('/api/inviteToGroup/verify/123567')
                 // .set('authorization', token)
                 .then(res => {
                     // status 404
