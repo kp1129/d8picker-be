@@ -3,6 +3,10 @@ const Groups = require('../model/groupsModel.js');
 
 // middleware functions
 const{ validateGroupId, validateContactId, validateContactInGroup} = require('../api/middleware/authenticator');
+// middleware to generate hash
+const {generateGroupInviteHash} = require('../api/middleware/hashGenerator');
+
+
 // GET Groups by adminId
 router.get('/:adminId', (req, res) => {
     
@@ -32,14 +36,36 @@ router.post('/:adminId', (req, res) => {
     const adminId = req.params.adminId;
     const {groupName, groupDescription, groupColor, groupIcon} = req.body;
     
+    // add group to the database
     Groups.addGroup({groupName, groupDescription, groupColor, groupIcon, adminId})
-        .then(response => {
-            Groups.findGroupsByAdminId(adminId)
-                .then(groups => {
-                    res.status(201).json({
-                        newGroupId: response[0], 
-                        groups: groups
-                    })
+        .then(async response => {
+            // get groupId
+            const groupId = response[0];
+            // generate hash for group
+            const groupInviteHash = await generateGroupInviteHash(groupId, adminId);
+
+            console.log('*************', groupInviteHash);
+
+            // add the hash to the group in database
+            Groups.updateGroup(groupId, {groupInviteHash: groupInviteHash})
+                .then(updateResponse => {
+
+                    // fetch groups
+                    Groups.findGroupsByAdminId(adminId)
+                        .then(groups => {
+                            res.status(201).json({
+                                newGroupId: groupId, 
+                                groups: groups
+                            })
+                        })
+                        .catch(err => {
+                            console.log('error in retrieving groups', err);
+                            res.status(500).json(err);
+                        })
+                })
+                .catch(err => {
+                    console.log('error in storing hash', err);
+                    res.status(500).json(err);
                 })
         })
         .catch(error => {
@@ -81,7 +107,7 @@ router.put('/:adminId/:groupId', validateGroupId, (req, res) => {
 
     Groups.updateGroup(groupId, {groupName, groupDescription})
     .then(response => {
-        // console.log('Group Updated', response)
+        console.log('Group Updated', response)
         res.status(201).json({ response: response })
     })
     .catch(error => {
