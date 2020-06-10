@@ -46,15 +46,8 @@ router.get('/:adminId/:groupId', validateUser, validateGroupId, (req, res) => {
     // find group using groupId
     Groups.findGroupByGroupId(groupId)
         .then(group => {
-            // check if groupInviteHash exists
-            if(!group.groupInviteHash) {
-                // respond with the hash
-                res.status(404).json({error: 'group invite hash does not exists'});
-            } else {
-                // respond with the hash
-                res.status(200).json({groupInviteHash: group.groupInviteHash});
-            }
-            
+            // respond with the hash
+            res.status(200).json({groupInviteHash: group.groupInviteHash});
         })
         .catch(err => {
             console.log('error in finding group', err);
@@ -62,24 +55,7 @@ router.get('/:adminId/:groupId', validateUser, validateGroupId, (req, res) => {
         })
 })
 
-
-// add groupInviteHash to the database - groupId, adminId, and groupInviteHash in the req.body - protected route using GAPI OAuth
-router.post('/', validateUser, validateGroupId, (req, res) => {
-    const id = req.body.groupId;
-    const groupInviteHash = req.body.groupInviteHash;
-
-    // add hash to the group using groupId
-    Hash.addHash(id, groupInviteHash)
-        .then(groupId => {
-            // respond with the message - invite hash added
-            res.status(201).json({message: 'group invite hash posted to the database'})
-        })
-        .catch(err => {
-            console.log('error adding hash to the database', err);
-            res.status(500).json(err);
-        })
-});
-
+// endpoint to add contact for invitee
 router.post('/addContact', validateGroupId, (req, res) => {
     const adminId = req.body.adminId;
     const newContactInfo = {
