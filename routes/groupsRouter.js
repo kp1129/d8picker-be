@@ -30,9 +30,9 @@ router.get('/:adminId/:groupId', validateGroupId, (req, res) => {
 // POST Group 
 router.post('/:adminId', (req, res) => {
     const adminId = req.params.adminId;
-    const {groupName, groupDescription} = req.body;
+    const {groupName, groupDescription, groupColor, groupIcon} = req.body;
     
-    Groups.addGroup({groupName, groupDescription, adminId})
+    Groups.addGroup({groupName, groupDescription, groupColor, groupIcon, adminId})
         .then(response => {
             Groups.findGroupsByAdminId(adminId)
                 .then(groups => {
