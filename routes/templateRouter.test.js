@@ -5,15 +5,29 @@ const token = require('./token');
 
 // test data
 testGoogleID = '106501162578996443716';
-// token = 'eyJhbGciOiJSUzI1NiIsImtpZCI6ImZiOGNhNWI3ZDhkOWE1YzZjNjc4ODA3MWU4NjZjNmM0MGYzZmMxZjkiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXpwIjoiOTk2OTk3OTMyNDUzLTJnaGE1Njg1cjRpZW0yMjdjYmM0dmpmcDFzbWUxazJ0LmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiOTk2OTk3OTMyNDUzLTJnaGE1Njg1cjRpZW0yMjdjYmM0dmpmcDFzbWUxazJ0LmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTA2NTAxMTYyNTc4OTk2NDQzNzE2IiwiZW1haWwiOiJ2YW5zaGlrYXB1bmRpcjkyQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdF9oYXNoIjoiblNjV1BpZWNRODB4SnZGOU9TS0FHQSIsIm5hbWUiOiJWYW5zaGlrYSBQdW5kaXIiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDUuZ29vZ2xldXNlcmNvbnRlbnQuY29tLy1JY1g0cWdVMGxYTS9BQUFBQUFBQUFBSS9BQUFBQUFBQUFBQS9BTVp1dWNteGFqWmFsUGUxeDFFdjN6Q0tfa2dvaHJ3SGh3L3M5Ni1jL3Bob3RvLmpwZyIsImdpdmVuX25hbWUiOiJWYW5zaGlrYSIsImZhbWlseV9uYW1lIjoiUHVuZGlyIiwibG9jYWxlIjoiZW4iLCJpYXQiOjE1OTEyMTgxODIsImV4cCI6MTU5MTIyMTc4MiwianRpIjoiY2I2YzIwZDg2OWZmZjQ3OWFkNTk4ODIwYjJjYTk2OTZmOGY4NzIwMSJ9.jOwgEveZ2KEHCZ6mlTU09fZaSnfWKS08EJsQ6_KI3tkIgejjmxJwB77yu8--WytzMWRx3Y5GbmMy1Qnn6hEszH0jfa5Dg0qGWOkf5vj63ouuHBoNOknv7cQRIyBd4gVKbdTueO20L0_WJDXFkmlqo2A7S4Th1DbK1xx6ajLC8ZbYO7SbfT92VGEbKb1zw_Rd3obxlvHgj3dsAoQLAGaBTRsh8mTEVhsNtEU0AyhiJ_XUrvc9kNLIjl2QPx6Fj8X1fO4w7THW7s1kEwlO9PP4B0f5_heY9PPWNnLZOZN8OlG095ojcnQaOw93paJG9ibbYMHniT7Jg-RIl7QDMnjjJQ';
+
 testTemplate = {
     title: 'test Template 453',
     notes: 'test notes',
     starttime: '123',
     endtime: '123'
 }
+const newAdminInfo = {
+    name: `Test Admin`,
+    email: 'test_admin@gmail.com',
+    googleId: `test123`
+}
+const testGroupInfo = {
+    groupName: 'Success Group',
+    groupDescription: 'This better work', 
+    groupColor: 'red',
+    groupIcon : 'square'
+};
 
-testTemplateID = '';
+let testAdminId;
+let testGroupId;
+let testTemplateID = '';
+
 describe('testing template router', () => {
 
     describe('post template', function(){
@@ -47,7 +61,7 @@ describe('testing template router', () => {
                 })
         })
     })
-
+    // Get all templates
     describe('get all templates', () => {
         // happy test -  everything works fine
         it('should successfully get the templates when googleID is valid', function() {
@@ -69,7 +83,102 @@ describe('testing template router', () => {
         // error testing - googleID is invalid
         it.todo('should return error when googleID is invalid');
     })
+    // Add group to the template
+    describe('add group to the template', () => {
+        // get the adminId
+        it('should get adminId', function(){
+            return request(server)
+            .post('/api/admin')
+            .send(newAdminInfo)
+            .set('authorization', token)
+            .then(res => {
+                // status 200
+                expect(res.status).toBe(200);
+                testAdminId = res.body.adminId;
+            })
+        })
 
+        // get the groupId
+        it('should successfully post the group info', function(){
+            return request(server)
+                    .post(`/api/groups/${testAdminId}`)
+                    .send(testGroupInfo)
+                    .set('authorization', token)
+                    .then(res => {
+                        // console.log('!!!!!!!', testAdminId, res.status, res.body)
+                        expect(res.status).toBe(201)
+                        testGroupId = res.body.newGroupId;
+                    })
+        });
+
+        // add group to the template
+        it('should successfully add the group to the template', function(){
+            return request(server)
+                    .post(`/api/template/${testTemplateID}/groups`)
+                    .send({groupId: testGroupId, adminId: testAdminId})
+                    .set('authorization', token)
+                    .then(res => {
+                        expect(res.status).toBe(201)
+                        expect(res.body.message).toBe('group successfully added to the event');
+                    })
+        });
+        // add group to the template - error case - invalid groupId
+        it('should respond with the error when groupId is invalid', function(){
+            return request(server)
+                    .post(`/api/template/${testTemplateID}/groups`)
+                    .send({groupId: 4567, adminId: testAdminId})
+                    .set('authorization', token)
+                    .then(res => {
+                        expect(res.status).toBe(404)
+                        expect(res.body.error).toBe('invalid group id');
+                    })
+        });
+    })
+    // Get a template
+    describe('get a template', () => {
+        // happy case
+        it('should successfully get the template data', () => {
+            return request(server)
+                .get(`/api/template/templateInfo/${testTemplateID}`)
+                .set('authorization', token)
+                .then(res => {
+                    // status 200
+                    expect(res.status).toBe(200);
+                    // template info
+                    expect(res.body.title).toBe(testTemplate.title)
+                    // template groups
+                    expect(res.body.groups).toBeDefined();
+                    // template group data
+                    expect(res.body.groups[0].id).toBe(testGroupId);
+                })
+        })
+    })
+    
+    // Delete group from the template
+    describe('delete group from template', function(){
+        // happy case
+        it('should successfully delete the groups from the template', function(){
+            return request(server)
+                    .delete(`/api/template/${testTemplateID}/groups/${testAdminId}/${testGroupId}`)
+                    .set('authorization', token)
+                    .then(res => {
+                        expect(res.status).toBe(200)
+                        expect(res.body.message).toBe('group successfully deleted from the event');
+                    })
+        })
+
+        // error case - invalid groupId
+        it('should return error when groupId is invalid', function(){
+            return request(server)
+                    .delete(`/api/template/${testTemplateID}/groups/${testAdminId}/4567`)
+                    .set('authorization', token)
+                    .then(res => {
+                        expect(res.status).toBe(404)
+                        expect(res.body.error).toBe('invalid group id');
+                    })
+        })
+    })
+    // Delete the template
     describe('delete template', () => {
         it('should delete successfully when templateID is valid', function(){
             return request(server)
