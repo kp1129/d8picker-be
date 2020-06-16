@@ -38,7 +38,8 @@
     "helmet": "^3.21.2",
     "knex": "^0.21.1",
     "pg": "^8.2.0",
-    "sqlite3": "^4.2.0"
+    "sqlite3": "^4.2.0",
+    "twilio": "^3.46.0"
   },
   "devDependencies": {
     "cross-env": "^7.0.2",
