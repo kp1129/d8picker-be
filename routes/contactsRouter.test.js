@@ -44,7 +44,7 @@ describe('post contacts', function() {
     // happy case
     it('should successfully get a contact data', () => {
       return request(server)
-        .get(`/api/contacts/:${testContactId}`)
+        .get(`/api/contacts/${testAdminId}/:${testContactId}`)
         .set('authorization', token)
         .then(res => {
           // status 200
@@ -88,7 +88,7 @@ describe('post contacts', function() {
   describe('should delete contact', function() {
     it('should delete successfully when contactId is valid', function() {
       return request(server)
-        .delete(`/api/contacts/:${testContactId}/${testAdminId}`)
+        .delete(`/api/contacts/${testAdminId}/:${testContactId}/`)
         .set('authorization', token)
         .then(res => {
           // status 201
