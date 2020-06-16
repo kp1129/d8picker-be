@@ -84,7 +84,7 @@ function validateContactId(req, res, next){
             }
         })
         .catch(error => {
-                console.log('from validateContactId', err);
+                console.log('from validateContactId', error);
                 res.status(500).json(error)
             });
 }

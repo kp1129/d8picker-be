@@ -126,7 +126,7 @@ describe('testing groups router', () => {
         it('should successfully post relationship to contact_group with valid groupId and contactId', function(){
             return request(server)//
                     .post(`/api/groups/${testAdminId}/${testGroupId}/contacts`)
-                    .send({contactId: testContactId})
+                    .send({contacts: [testContactId]})
                     .set('authorization', token)
                     .then(res => {
                         expect(res.status).toBe(201)
@@ -137,7 +137,7 @@ describe('testing groups router', () => {
         it('error response when groupId is valid but not contactId', function(){
             return request(server)//
                     .post(`/api/groups/${testAdminId}/${testGroupId}/contacts`)
-                    .send({contactId: '99999'})
+                    .send({contacts: ['99999']})
                     .set('authorization', token)
                     .then(res => {
                         expect(res.status).toBe(404)
@@ -186,7 +186,7 @@ describe('testing groups router', () => {
         it('should delete the contact from a group', function(){
             return request(server)
             .delete(`/api/groups/${testAdminId}/${testGroupId}/contacts`)
-            .send({contactId: testContactId})
+            .send({contacts: [testContactId]})
             .set('authorization', token)
             .then(res => {
                 expect(res.status).toBe(201)

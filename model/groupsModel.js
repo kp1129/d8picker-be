@@ -9,7 +9,8 @@ module.exports = {
     deleteContactFromGroup,
     findGroupsByContact,
     deleteGroup,
-    updateGroup
+    updateGroup,
+    addContacts
 
 }
 
@@ -77,4 +78,16 @@ function deleteGroup(id){
     return db('groups')
         .where({id})
         .delete();
+}
+
+async function addContacts(contacts, groupId){
+    for(let i = 0; i < contacts.length; i++){
+        await addContact(contacts[i], groupId)
+        .then(response => {
+            
+        })
+        .catch(error => {
+            console.log('Add contact to the group error',error)
+        });
+    }
 }
