@@ -49,37 +49,43 @@ router.post('/:adminId', (req, res) => {
 })
 
 // POST Contact to the group
-router.post('/:adminId/:groupId/contacts', validateGroupId, validateContactId, (req, res) => {
+router.post('/:adminId/:groupId/contacts', validateGroupId, (req, res) => {
     const groupId = req.params.groupId;
-    const contactId = req.body.contactId;
+    const contacts = req.body.contacts
+    console.log('CONTACTS ARRAY: ', contacts)
 
-    Groups.addContact(contactId, groupId)
+   Groups.addContacts(contacts, groupId)
+   .then(response => {
+    res.status(201).json({ message: 'contacts added successfylly to the group'});
+   })
+   .catch(error => {
+       console.log(error)
+   })
+})
+// Delete Contact from the group
+router.delete('/:adminId/:groupId/contacts', validateGroupId, async (req, res) => {
+    const contacts = req.body.contacts;
+    const groupId = req.params.groupId;
+
+    for(let i = 0; i < contacts.length; i++){
+        Groups.deleteContactFromGroup(contacts[i], groupId)
         .then(response => {
-            res.status(201).json({ message: 'contact added successfylly to the group'});
+            //will send a response after map loop is done, refer to line 66
         })
         .catch(error => {
             console.log('Add contact to the group error',error)
             res.status(500).json(error)
         });
-})
-// Delete Contact from the group
-router.delete('/:adminId/:groupId/contacts', validateGroupId, validateContactId, validateContactInGroup, (req, res) => {
-    const contactId = req.body.contactId;
-    const groupId = req.params.groupId;
-
-    Groups.deleteContactFromGroup(contactId, groupId)
-            .then(response => {
-                res.status(201).json({message: 'contact removed from the group successfully!'})
-            })
-            .catch(err => res.status(500).json(err));
+    }
+    res.status(201).json({message: 'contact removed from the group successfully!'})
 })
 
 // PUT Group
 router.put('/:adminId/:groupId', validateGroupId, (req, res) => {
-    const {groupName, groupDescription} = req.body;
+    const {groupName, groupDescription, groupIcon, groupColor} = req.body;
     const groupId = req.params.groupId;
 
-    Groups.updateGroup(groupId, {groupName, groupDescription})
+    Groups.updateGroup(groupId, {groupName, groupDescription, groupIcon, groupColor})
     .then(response => {
         // console.log('Group Updated', response)
         res.status(201).json({ response: response })
