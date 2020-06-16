@@ -4,6 +4,7 @@ const authToken = process.env.TWILIO_AUTH_TOKEN;
 
 const client = require('twilio')(accountSid, authToken);
 
+// sends sms message 
 client.messages.create({
     to: process.env['MY_PHONE_NUMBER'], // my phone number
     from: process.env['TWILIO_NUMBER'], // assigned twilio phone number
