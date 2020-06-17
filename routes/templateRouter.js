@@ -19,7 +19,7 @@ router.get('/:googleId', (req, res) => {
         }
     })
     .catch(err => {
-        console.log('findTemplatesByGoogleId', err.details);
+        console.log('findTemplatesByGoogleId', err);
         res.status(500).json(err);
     });
 });
@@ -110,7 +110,16 @@ router.put('/:templateId', validateTemplateID, (req, res) => {
     Template.updateTemplate(templateId, changes)
     .then(response => {
         if(response === 1){
-            res.status(200).json({ message: 'template updated successfully' })
+            if(changes.groupId){
+                EventGroups.updateGroupForEvent(templateId, changes.groupId)
+                    .then(success => {
+                        res.status(200).json({ message: 'template updated successfully' });
+                    })
+                    .catch(err => {
+                        console.log('error in updating the group');
+                        res.status(500).json({ message: 'error updating template'})
+                    })
+            }
         }
         else {
             res.status(500).json({ message: 'error updating template'})

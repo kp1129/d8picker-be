@@ -5,6 +5,7 @@ const {findTemplateById} = require('./templateModel');
 module.exports = {
     addGroupToEvent,
     removeGroupFromEvent,
+    updateGroupForEvent,
     findGroupsByEventId,
     findEventsByGroupId
 }
@@ -12,6 +13,12 @@ module.exports = {
 function addGroupToEvent(eventId, groupId){
     return db('event_group')
         .insert({eventId: eventId, groupId: groupId});
+}
+
+function updateGroupForEvent(eventId, groupId){
+    return db('event_group')
+        .where({eventId})
+        .update({eventId, groupId});
 }
 
 function removeGroupFromEvent(eventId, groupId){
