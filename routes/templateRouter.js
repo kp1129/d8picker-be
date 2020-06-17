@@ -36,13 +36,22 @@ router.get('/templateInfo/:templateId', validateTemplateID, async (req, res) => 
 
 // POST to DB
 router.post('/', (req, res) => {
-    const template = req.body;  
-    Template.addTemplate(template)
+    const { title, notes, starttime, endtime, googleId, groupId } = req.body;  
+    Template.addTemplate({title, notes, starttime, endtime, googleId})
     .then(templates => {
         if(templates.length === 0){
             res.status(500).json({ message: 'error creating template'})
         } else {
-            res.status(201).json({ message: 'template created successfully' })
+            if(groupId){
+                EventGroups.addGroupToEvent(templates[0], groupId)
+                .then(response => {
+                    res.status(201).json({ message: 'template created successfully' });
+                })
+                .catch(err => {
+                    console.log('error in adding groups to template', err);
+                    res.status(500).json(err);
+                })
+            }
         }
     })
     .catch(err => {
