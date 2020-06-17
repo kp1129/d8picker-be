@@ -19,7 +19,7 @@ router.get('/:googleId', (req, res) => {
         }
     })
     .catch(err => {
-        console.log('findTemplatesByGoogleId', err.details);
+        console.log('findTemplatesByGoogleId', err);
         res.status(500).json(err);
     });
 });
@@ -36,13 +36,22 @@ router.get('/templateInfo/:templateId', validateTemplateID, async (req, res) => 
 
 // POST to DB
 router.post('/', (req, res) => {
-    const template = req.body;  
-    Template.addTemplate(template)
+    const { title, notes, starttime, endtime, googleId, groupId } = req.body;  
+    Template.addTemplate({title, notes, starttime, endtime, googleId})
     .then(templates => {
         if(templates.length === 0){
             res.status(500).json({ message: 'error creating template'})
         } else {
-            res.status(201).json({ message: 'template created successfully' })
+            if(groupId){
+                EventGroups.addGroupToEvent(templates[0], groupId)
+                .then(response => {
+                    res.status(201).json({ message: 'template created successfully' });
+                })
+                .catch(err => {
+                    console.log('error in adding groups to template', err);
+                    res.status(500).json(err);
+                })
+            }
         }
     })
     .catch(err => {
@@ -101,7 +110,16 @@ router.put('/:templateId', validateTemplateID, (req, res) => {
     Template.updateTemplate(templateId, changes)
     .then(response => {
         if(response === 1){
-            res.status(200).json({ message: 'template updated successfully' })
+            if(changes.groupId){
+                EventGroups.updateGroupForEvent(templateId, changes.groupId)
+                    .then(success => {
+                        res.status(200).json({ message: 'template updated successfully' });
+                    })
+                    .catch(err => {
+                        console.log('error in updating the group');
+                        res.status(500).json({ message: 'error updating template'})
+                    })
+            }
         }
         else {
             res.status(500).json({ message: 'error updating template'})
