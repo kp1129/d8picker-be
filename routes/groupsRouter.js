@@ -90,8 +90,10 @@ router.post('/:adminId/:groupId/contacts', validateGroupId,  (req, res) => {
 })
 // Delete Contact from the group
 router.delete('/:adminId/:groupId/contacts', validateGroupId, async (req, res) => {
-    const contacts = req.body.contacts;
+    const contact = req.body.contactToDelete;
     const groupId = req.params.groupId;
+    console.log('BODY: ', req.body)
+    console.log('contacts: ', contact)
 
     for(let i = 0; i < contacts.length; i++){
         Groups.deleteContactFromGroup(contacts[i], groupId)
