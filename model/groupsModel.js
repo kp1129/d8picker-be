@@ -93,14 +93,23 @@ function deleteGroup(id){
         .delete();
 }
 
-async function addContacts(contacts, groupId){
-    for(let i = 0; i < contacts.length; i++){
-        await addContact(contacts[i], groupId)
-        .then(response => {
+// async function addContacts(contacts, groupId){
+//     for(let i = 0; i < contacts.length; i++){
+//         await addContact(contacts[i], groupId)
+//         .then(response => {
             
-        })
-        .catch(error => {
-            console.log('Add contact to the group error',error)
-        });
+//         })
+//         .catch(error => {
+//             console.log('Add contact to the group error',error)
+//         });
+//     }
+// }
+
+async function addContacts(contacts, groupId){
+        let counter = 0;
+        for(let i = 0; i < contacts.length; i++){
+            await addContact(contacts[i], groupId)
+            counter++;            
+        }
+        return counter;
     }
-}

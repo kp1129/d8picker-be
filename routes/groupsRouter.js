@@ -82,7 +82,8 @@ router.post('/:adminId/:groupId/contacts', validateGroupId,  (req, res) => {
 
    Groups.addContacts(contacts, groupId)
    .then(response => {
-    res.status(201).json({ message: 'contacts added successfylly to the group'});
+       console.log('AWESOMENESS', response);
+        res.status(201).json({ message: 'contacts added successfylly to the group'});
    })
    .catch(error => {
        console.log(error)
