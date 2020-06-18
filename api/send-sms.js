@@ -7,11 +7,11 @@ const twilio = require('twilio');
 const client = new twilio(accountSid, authToken);
 
 // sends sms message 
-const sendMessage = () => {
+const sendMessage = (phoneNumber, message) => {
     client.messages.create({
-    to: process.env['MY_PHONE_NUMBER'], // my phone number
+    to: phoneNumber, // my phone number
     from: process.env['TWILIO_NUMBER'], // assigned twilio phone number
-    body: 'Hello from the backend of d8picker!'
+    body: message
 })
 .then((message) => console.log(message.sid))
 }
