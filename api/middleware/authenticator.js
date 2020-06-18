@@ -144,6 +144,7 @@ function validateTemplateID(req, res, next){
             if(!template) {
                 res.status(404).json({ message: 'template ID does not exist' });
             } else {
+                req.template = template;
                 next();
             }
         })

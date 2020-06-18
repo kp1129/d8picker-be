@@ -21,7 +21,7 @@ router.get('/:adminId', (req, res) => {
 });
 
 // GET contact by contactId
-router.get('/:contactId', validateContactId, (req, res) => {
+router.get('/:adminId/:contactId', validateContactId, (req, res) => {
     res.status(200).json(req.contact);
 })
 
@@ -67,7 +67,7 @@ router.put('/:contactId', validateContactId, (req, res) => {
     })
 })
 // DELETE contact
-router.delete('/:contactId', validateContactId, (req, res) => {
+router.delete('/:adminId/:contactId', validateContactId, (req, res) => {
     const contactId = req.params.contactId;
 
     Contacts.deleteContact(contactId)

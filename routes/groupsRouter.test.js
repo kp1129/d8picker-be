@@ -10,6 +10,8 @@ const newAdminInfo = {
 const group = {
     groupName: 'Success Group',
     groupDescription: 'This better work', 
+    groupColor: 'red',
+    groupIcon : 'square'
 };
 const changedGroup = {
     groupName: 'Success Group Changed',
@@ -49,6 +51,7 @@ describe('testing groups router', () => {
                     .send({...group})
                     .set('authorization', token)
                     .then(res => {
+                        console.log('!!!!!!!', testAdminId, res.status, res.body)
                         expect(res.status).toBe(201)
                         expect(res.body.groups).toBeDefined();
                         testGroupId = res.body.newGroupId;
