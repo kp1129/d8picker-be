@@ -112,6 +112,30 @@ function validateContactInGroup(req, res, next) {
         })
 }
 
+function validateAllContactsInGroup(req, res, next) {
+    const groupId = req.params.groupId;
+    const contacts = req.body.contacts;
+    
+    for(let i = 0; i <= contacts.length; i++){
+         // find all groups for contactId
+    Groups.findGroupsByContact(contacts[i])
+    .then(groups => {
+        // find the group with given groupId
+        const group = groups.find(g => g.groupId == groupId);
+        // if group not found, respond with error
+        if (!group) {
+            // res.status(404).json({ error: `contact does not belong to the groupId ${groupId}`});
+        } else {
+            next();
+        }
+    })
+    .catch(err => {
+        console.log('from validateContactInGroup', err);
+        res.status(500).json(err);
+    })
+    }
+}
+
 function validateTemplateID(req, res, next){
     // find template using Id
     Template.findTemplateById(req.params.templateId)
@@ -151,6 +175,7 @@ module.exports = {
     validateGroupId,
     validateContactId,
     validateContactInGroup,
+    validateAllContactsInGroup,
     validateTemplateID,
     checkforAdmin
 };
