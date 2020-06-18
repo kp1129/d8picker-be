@@ -2,7 +2,7 @@ const router = require('express').Router();
 const Groups = require('../model/groupsModel.js');
 
 // middleware functions
-const{ validateGroupId, validateContactId, validateContactInGroup} = require('../api/middleware/authenticator');
+const{ validateGroupId, validateContactId, validateContactInGroup, validateAllContactsInGroup} = require('../api/middleware/authenticator');
 // GET Groups by adminId
 router.get('/:adminId', (req, res) => {
     
@@ -49,7 +49,7 @@ router.post('/:adminId', (req, res) => {
 })
 
 // POST Contact to the group
-router.post('/:adminId/:groupId/contacts', validateGroupId, (req, res) => {
+router.post('/:adminId/:groupId/contacts', validateGroupId,  (req, res) => {
     const groupId = req.params.groupId;
     const contacts = req.body.contacts
     console.log('CONTACTS ARRAY: ', contacts)
