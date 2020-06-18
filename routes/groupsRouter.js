@@ -89,22 +89,19 @@ router.post('/:adminId/:groupId/contacts', validateGroupId,  (req, res) => {
    })
 })
 // Delete Contact from the group
-router.delete('/:adminId/:groupId/contacts/:contactId', validateGroupId, async (req, res) => {
-    const contact = req.params.contactId;
+router.delete('/:adminId/:groupId/contacts/:relationshipId', validateGroupId, async (req, res) => {
+    const contact = req.params.relationshipId;
     const groupId = req.params.groupId;
-    console.log('contacts: ', contact)
 
-    // for(let i = 0; i < contact.length; i++){
         Groups.deleteContactFromGroup(contact, groupId)
         .then(response => {
-            console.log('*****RESPONSE*****: ', response)
+            console.log('deleteContactFromGroup: ', response)
             res.status(201).json({message: 'contact removed from the group successfully!'})
         })
         .catch(error => {
             console.log('Add contact to the group error',error)
             res.status(500).json(error)
         });
-    // }
 })
 
 // PUT Group
