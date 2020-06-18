@@ -8,6 +8,7 @@ const adminRouter = require('../routes/adminRouter');
 const groupsRouter = require('../routes/groupsRouter');
 const hashRouter = require('../routes/hashRouter');
 const axios = require('axios');
+const smsRouter = require('../routes/smsRouter.js');
 
 // middleware function for OAuth
 const {validateUser} = require('./middleware/authenticator');
@@ -24,6 +25,7 @@ server.use('/api/template', validateUser, templateRouter);
 server.use('/api/contacts', validateUser, contactsRouter);
 server.use('/api/groups', validateUser, groupsRouter);
 server.use('/api/inviteToGroup', hashRouter);
+server.use('/api/sms', validateUser, smsRouter);
 
 server.get('/', (req, res) => {
   res.send({ api: 'Ok', dbenv: process.env.DB_ENV });
