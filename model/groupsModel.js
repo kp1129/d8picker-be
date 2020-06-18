@@ -50,13 +50,26 @@ function addContact(contactId, groupId){
 // delete contact from a group
 function deleteContactFromGroup(contactId, groupId){
     return db('contact_group')
-        .where({contactId})
-        .where({groupId})
+        .where({ id : contactId })
         // .delete();
         // .whereIn(['contactId', 'groupId'], [contactId, groupId])
         .delete();
             
 }
+
+// async function deleteAvailability(eventId, userId, availabilityStart) {
+// 	try {
+// 		let res = await db("event_availabilities")
+// 			.where({ eventId: eventId })
+// 			.andWhere({ userId: userId })
+// 			.andWhere({ availabilityStart: availabilityStart })
+// 			.del();
+// 		return res;
+// 	} catch (err) {
+// 		console.log(err);
+// 		return err;
+// 	}
+// }
 
 // find groups for a contact
 function findGroupsByContact(contactId) {
