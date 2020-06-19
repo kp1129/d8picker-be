@@ -12,7 +12,8 @@ module.exports = {
 
 function addGroupToEvent(eventId, groupId){
     return db('event_group')
-        .insert({eventId: eventId, groupId: groupId});
+        .insert({eventId: eventId, groupId: groupId})
+        .returning(["id"]);
 }
 
 function updateGroupForEvent(eventId, groupId){
