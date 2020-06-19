@@ -43,7 +43,8 @@ async function addContact(adminId, newContactInfo){
             console.log('from addContact', response);
             // add relationship to contact_admin
             return db('contact_admin')
-            .insert({adminId, contactId: response[0].id});
+            .insert({adminId, contactId: response[0].id})
+            .returning(["id"]);
         })
         .catch(err => {console.log('error from addContact', err)})
 
