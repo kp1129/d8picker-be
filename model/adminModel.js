@@ -7,7 +7,8 @@ module.exports = {
 
 function addAdmin(adminInfo){
     return db('admin')
-        .insert(adminInfo);
+        .insert(adminInfo)
+        .returning(["id"]);
 }
 
 function findAdminByGoogleId(googleId){
