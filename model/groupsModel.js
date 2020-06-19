@@ -24,6 +24,7 @@ function findGroupsByAdminId(adminId){
 function addGroup(newGroupInfo){
     return db('groups')
             .insert(newGroupInfo)
+            .returning(["id"])
 }
 
 // find group by groupId
