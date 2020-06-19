@@ -38,11 +38,12 @@ async function addContact(adminId, newContactInfo){
     // add contact to the contacts table
     return await db('contacts')
         .insert(newContactInfo)
+        .returning(["id"])
         .then(response => {
             console.log('from addContact', response);
             // add relationship to contact_admin
             return db('contact_admin')
-            .insert({adminId, contactId: response[0]});
+            .insert({adminId, contactId: response[0].id});
         })
         .catch(err => {console.log('error from addContact', err)})
 
