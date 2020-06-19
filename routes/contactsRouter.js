@@ -45,7 +45,7 @@ router.post('/', (req, res) => {
     Contacts.addContact(adminId, {firstName, lastName, email, phoneNumber})
     .then(response => {
         console.log('postResponse: ', response)
-        res.status(201).json([response[0].id])
+        res.status(201).json(response[0].id)
     })
     .catch(error => {
         console.log(error)
