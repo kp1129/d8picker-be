@@ -34,7 +34,8 @@ function findTemplateById(templateId) {
 // post new template
 function addTemplate(template) {
     return db('templates')
-        .insert(template);
+        .insert(template)
+        .returning(["id"]);
 }
 
 // delete specific template
