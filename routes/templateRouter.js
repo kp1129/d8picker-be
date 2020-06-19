@@ -43,7 +43,7 @@ router.post('/', (req, res) => {
             res.status(500).json({ message: 'error creating template'})
         } else {
             if(groupId){
-                EventGroups.addGroupToEvent(templates[0], groupId)
+                EventGroups.addGroupToEvent(templates[0].id, groupId)
                 .then(response => {
                     res.status(201).json({ message: 'template created successfully' });
                 })
