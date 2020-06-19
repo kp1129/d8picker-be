@@ -69,7 +69,7 @@ router.post('/addContact', validateGroupId, (req, res) => {
         .then(response => {
             console.log('postResponse: ', response)
             // fetch contactId from response
-            const contactId = response[0];
+            const contactId = response[0].id;
 
             // add contact to the group
             Groups.addContact(contactId, req.body.groupId)
