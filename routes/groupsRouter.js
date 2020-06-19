@@ -40,7 +40,7 @@ router.post('/:adminId', (req, res) => {
     Groups.addGroup({groupName, groupDescription, groupColor, groupIcon, adminId})
         .then(async response => {
             // get groupId
-            const groupId = response[0];
+            const groupId = response[0].id;
             // generate hash for group
             const groupInviteHash = await generateGroupInviteHash(groupId, adminId);
 
