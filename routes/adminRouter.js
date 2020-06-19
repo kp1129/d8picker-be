@@ -18,7 +18,7 @@ router.post('/', checkforAdmin, (req, res) => {
         .then(response => {
             console.log('Posted?', response);
             // respond with the adminId for admin created
-            res.status(200).json({ message: 'admin posted', adminId: response[0]});
+            res.status(200).json({ message: 'admin posted', adminId: response[0].id});
         })
         .catch(err => {
             console.log(err);
