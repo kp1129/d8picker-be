@@ -17,7 +17,12 @@ const {validateUser} = require('./middleware/authenticator');
 require('dotenv').config();
 const server = express();
 server.use(helmet());
-server.use(cors());
+// server.use(cors());
+let whitelist = [
+  "http://localhost:3000", 
+  "https://www.d8picker.com"
+]
+server.use(cors({ origin: whitelist }));
 server.use(express.json());
 
 server.use('/api/admin', validateUser, adminRouter);
