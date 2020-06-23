@@ -12,6 +12,7 @@ async function generateGroupInviteHash(groupId, adminId){
 
     // replace all '/' in the hash with 0 - to avoid issues in URL params
     const groupInviteHash = hash.replace('/', '0');
+    console.log(`replaced ${hash} to ${groupInviteHash}`);
 
     // return groupInviteHash
     return groupInviteHash;
