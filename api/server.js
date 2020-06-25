@@ -20,7 +20,8 @@ server.use(helmet());
 // server.use(cors());
 let whitelist = [
   "http://localhost:3000", 
-  "https://www.d8picker.com"
+  "https://www.d8picker.com",
+  "https://fervent-kilby-006061.netlify.app"
 ]
 server.use(cors({ origin: whitelist }));
 server.use(express.json());
