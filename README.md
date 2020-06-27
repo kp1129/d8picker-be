@@ -1,13 +1,10 @@
 
 # School Calendar - D8Picker
+[API documentation](https://documenter.getpostman.com/view/11813969/Szzq4EoV?version=latest)  
 
-## Backend deployed to [Heroku](https://d8picker-be.herokuapp.com/)  
+#### Backend deployed to [Heroku](https://d8picker-be.herokuapp.com/)    
 
-## [API documentation](https://documenter.getpostman.com/view/11813969/Szzq4EoV?version=latest)
-
-
-
-## 1️⃣ Getting started
+## Getting started
 
 To get the server running locally:
 
